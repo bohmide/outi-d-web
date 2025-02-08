@@ -7,8 +7,8 @@
         <link rel="icon" href="assets/img/logo.png,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
         
         <!-- Favicons -->
-  <link href="assets/img/logo.png" rel="icon">
-  <link href="assets/img/logo.png" rel="apple-touch-icon">
+  <link href="{{asset('img/logo')}}" rel="icon">
+  <link href="{{asset('img/logo')}}" rel="apple-touch-icon">
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -40,8 +40,10 @@
         
               <a href="index.html" class="logo d-flex align-items-center me-auto">
                 <!-- Uncomment the line below if you also wish to use an image logo -->
-                <!-- <img src="{{asset('img/logo11.png')}} alt="" data-aos="fade-in">-->
-                <h1 class="sitename">OUTI-D</h1>
+                
+                <!--<h1 class="sitename">OUTI-D</h1> -->
+
+                <img src="{{asset('img/logo11.png')}}" alt="" data-aos="fade-in">
               </a>
         
               <nav id="navmenu" class="navmenu">
