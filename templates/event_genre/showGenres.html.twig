@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Event Genres{% endblock %}
+
+{% block body %}
+    <h1>Event Genres</h1>
+    <a href="{{ path('app_add_event_genre') }}">Add New Genre</a>
+    <ul>
+        {% for genre in eventGenres %}
+            <li>
+                <strong>{{ genre.getNomGenre() }}</strong> ({{ genre.nbr }} events)
+                {% if genre.getImagePath() %}
+                    <br>
+                    <img src="{{ asset('uploads/event_genre_images/' ~ genre.imagePath) }}" alt="Event Genre Image" width="100">
+                {% endif %}
+            </li>
+        {% else %}
+            <li>No event genres found.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

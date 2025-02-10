@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\EventGenreRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 #[ORM\Entity(repositoryClass: EventGenreRepository::class)]
 class EventGenre
 {
@@ -13,7 +15,8 @@ class EventGenre
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message:"nom is require")]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $nom_genre = null;
 
     #[ORM\Column(nullable: true)]
