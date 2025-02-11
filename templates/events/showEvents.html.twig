@@ -1,3 +1,28 @@
-{% extends "base.html.twig" %}
+{% extends 'base.html.twig' %}
 
-{% block title %} Home - {% endblock%}
+{% block title %}Event{% endblock %}
+
+{% block body %}
+    <h1>Event</h1>
+    
+    <a href="{{ path('app_add_event') }}">Add New event</a>
+    
+    <ul>
+        {% for event in events %}
+            <li>
+                <strong>{{ event.getNomEvent() }}</strong>
+                <p>{{ event.getDescription() }}</p>
+                <p>{{ event.getDateEvent()| date }}</p>
+                <p>{{ event.getNbrMembers()}}</p>
+                <p>{{ event.genre.getNomGenre()}}</p>
+                <p> zid el sponsors </P>
+                {% if event.getImagePath() %}
+                    <br>
+                    <img src="{{ asset('uploads/events_images/' ~ event.imagePath) }}" alt="Event Image" width="100">
+                {% endif %}
+            </li>
+        {% else %}
+            <li>No event found.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

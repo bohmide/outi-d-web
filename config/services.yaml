@@ -6,6 +6,7 @@
 parameters:
     event_genre_images_directory: '%kernel.project_dir%/public/uploads/event_genre_images'
     sponsors_images_directory: '%kernel.project_dir%/public/uploads/sponsors_images'
+    events_images_directory: '%kernel.project_dir%/public/uploads/events_images'
 
 
 services:

@@ -1,0 +1,21 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+Home -
+{% endblock%}
+
+{% block body%}
+
+	<h1>Add Event</h1>
+
+	{{ form_start(form, {'attr': {'enctype': 'multipart/form-data','novalidate':'novalidate'}}) }}
+	{{ form_row(form.nom_event) }}
+	{{ form_row(form.date_event) }}
+    {{ form_row(form.nbr_members) }} 
+	{{ form_row(form.genre) }}
+	{{ form_row(form.description) }} 
+	{{ form_row(form.image_file) }}
+	<button type="submit">Save</button>
+	{{ form_end(form) }}
+
+{% endblock %}
