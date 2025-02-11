@@ -24,9 +24,7 @@ final class EventGenreController extends AbstractController
         return $this->render('event_genre/index.html.twig', [
             'controller_name' => 'EventGenreController',
         ]);
-    }
-
-    // create
+    }// create
     #[Route('/event/addGenre', name: 'app_add_event_genre')]
     public function addGenre(Request $request, ManagerRegistry $mr, EventGenreRepository $egr, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
@@ -139,4 +137,6 @@ final class EventGenreController extends AbstractController
 
         return $this->redirectToRoute('app_show_event_genre');
     }
+
+    
 }
