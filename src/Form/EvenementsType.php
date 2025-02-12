@@ -27,13 +27,13 @@ class EvenementsType extends AbstractType
             ->add('nbr_members')
             ->add('genre', EntityType::class, [
                 'class' => EventGenre::class,
-                'choice_label' => 'id',
+                'choice_label' => 'nom_genre',
             ])
-            /*->add('sponsors', EntityType::class, [
+            ->add('sponsors', EntityType::class, [
                 'class' => Sponsors::class,
-                'choice_label' => 'id',
+                'choice_label' => 'nom_sponsor',
                 'multiple' => true,
-            ])*/
+            ])
             ->add('image_file', FileType::class, [
                 'label' => 'Upload Image',
                 'mapped' => false, // This is important! It tells Symfony not to map this field to the entity directly.

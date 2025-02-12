@@ -71,6 +71,9 @@ final class EventsController extends AbstractController
                 }
             }
 
+            $eventGenre = $event->getGenre();
+            $eventGenre->setNbr($eventGenre->getNbr()+1);
+
             $mr->getManager()->persist($event);
             $mr->getManager()->flush();
             return $this->redirectToRoute('app_show_events');
@@ -89,12 +92,6 @@ final class EventsController extends AbstractController
         $form = $this->createForm(EvenementsType::class, $event);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            // check for genre name if exist
-            $existEventName = $er->findOneBy(['nom_event' => $event->getNomEvent()]);
-            if ($existEventName) {
-                $this->addFlash('error', 'This Event name already exists.');
-                return $this->redirectToRoute('app_add_event');
-            }
             // add image
             /** @var UploadedFile $imageFile */
 
@@ -131,6 +128,8 @@ final class EventsController extends AbstractController
         $event = $er->find($id);
         $manager = $managerRegistry->getManager();
         $manager->remove($event);
+        $eventGenre = $event->getGenre();
+        $eventGenre->setNbr($eventGenre->getNbr()-1);
         $manager->flush();
 
 

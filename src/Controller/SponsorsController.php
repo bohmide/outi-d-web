@@ -90,12 +90,7 @@ final class SponsorsController extends AbstractController
         $form = $this->createForm(SponsorsType::class, $sponsor);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            // check for genre name if exist
-            $existGenreName = $sr->findOneBy(['nom_sponsor' => $sponsor->getNomSponsor()]);
-            if ($existGenreName) {
-                $this->addFlash('error', 'This sponsor name already exists.');
-                return $this->redirectToRoute('app_add_sponsor');
-            }
+            
             // add image
             /** @var UploadedFile $imageFile */
 

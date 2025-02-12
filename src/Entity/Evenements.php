@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EvenementsRepository::class)]
 class Evenements
@@ -16,12 +17,14 @@ class Evenements
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotBlank(message:"nom is require")]
     #[ORM\Column(length: 255)]
     private ?string $nom_event = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
 
+    #[Assert\NotBlank(message:"date is require")]
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $date_event = null;
 
@@ -31,8 +34,9 @@ class Evenements
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image_path = null;
 
+    #[Assert\NotBlank(message:"genre is require")]
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false,onDelete: "CASCADE")]
     private ?EventGenre $genre = null;
 
     /**

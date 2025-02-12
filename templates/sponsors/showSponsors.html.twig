@@ -1,22 +1,25 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Sponsors{% endblock %}
+{% block title %}Sponsors
+{% endblock %}
 
 {% block body %}
-    <h1>Sponsors</h1>
-    <a href="{{ path('app_add_sponsor') }}">Add New Sponsor</a>
-    <ul>
-        {% for sponsor in sponsors %}
-            <li>
-                <strong>{{ sponsor.getNomSponsor() }}</strong>
-                <strong>{{ sponsor.getDescription() }}</strong>
-                {% if sponsor.getImagePath() %}
-                    <br>
-                    <img src="{{ asset('uploads/sponsors_images/' ~ sponsor.imagePath) }}" alt="Sponsor Image" width="100">
-                {% endif %}
-            </li>
-        {% else %}
-            <li>No sponsors found.</li>
-        {% endfor %}
-    </ul>
+	<h1>Sponsors</h1>
+	<a href="{{ path('app_add_sponsor') }}">Add New Sponsor</a>
+	<ul>
+		{% for sponsor in sponsors %}
+			<li>
+				<strong>{{ sponsor.getNomSponsor() }}</strong>
+				<strong>{{ sponsor.getDescription() }}</strong>
+				{% if sponsor.getImagePath() %}
+					<br>
+					<img src="{{ asset('uploads/sponsors_images/' ~ sponsor.imagePath) }}" alt="Sponsor Image" width="100">
+				{% endif %}
+			</li>
+			<a href="{{ path('app_update_sponsor', {'id':sponsor.getId()}) }}">Modify</a>
+			<a href="{{ path('app_delete_sponsor', {'id':sponsor.getId()}) }}">Delete</a>
+		{% else %}
+			<li>No sponsors found.</li>
+		{% endfor %}
+	</ul>
 {% endblock %}

@@ -13,6 +13,8 @@
                     <br>
                     <img src="{{ asset('uploads/event_genre_images/' ~ genre.imagePath) }}" alt="Event Genre Image" width="100">
                 {% endif %}
+				<a href="{{ path('app_update_event_genre', {'id':genre.getId()}) }}">Modify</a>
+				<a href="{{ path('app_delete_event_genre', {'id':genre.getId()}) }}">Delete</a>
             </li>
         {% else %}
             <li>No event genres found.</li>

@@ -8,14 +8,73 @@ Home -
 
 	<h1>Add Event</h1>
 
-	{{ form_start(form, {'attr': {'enctype': 'multipart/form-data','novalidate':'novalidate'}}) }}
-	{{ form_row(form.nom_event) }}
-	{{ form_row(form.date_event) }}
-    {{ form_row(form.nbr_members) }} 
-	{{ form_row(form.genre) }}
-	{{ form_row(form.description) }} 
-	{{ form_row(form.image_file) }}
-	<button type="submit">Save</button>
-	{{ form_end(form) }}
+	<style>
+    table {
+        border-collapse: separate;
+        border-spacing: 15px; /* Adds space between table cells */
+        width: 100%;
+    }
+
+    th, td {
+        padding: 10px; /* Adds space inside each cell */
+        text-align: left;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px; /* Adds space below labels */
+        font-weight: bold;
+    }
+
+    input, select, textarea {
+        margin-top: 5px; /* Adds space above input fields */
+        padding: 8px;
+        width: 100%; /* Makes input fields take up the full width */
+    }
+
+    button {
+        margin-top: 15px;
+        padding: 8px 15px;
+    }
+</style>
+
+<table>
+    {{ form_start(form, {'attr': {'enctype': 'multipart/form-data', 'novalidate': 'novalidate'}}) }}
+    <tr>
+        <th><label for="{{ form.nom_event.vars.id }}">Event Name</label></th>
+        <td>{{ form_widget(form.nom_event) }}</td>
+    </tr>
+    <tr>
+        <th><label for="{{ form.date_event.vars.id }}">Date</label></th>
+        <td>{{ form_widget(form.date_event) }}</td>
+    </tr>
+    <tr>
+        <th><label for="{{ form.nbr_members.vars.id }}">Number of Members</label></th>
+        <td>{{ form_widget(form.nbr_members) }}</td>
+    </tr>
+    <tr>
+        <th><label for="{{ form.genre.vars.id }}">Genre</label></th>
+        <td>{{ form_widget(form.genre) }}</td>
+    </tr>
+    <tr>
+        <th><label for="{{ form.description.vars.id }}">Description</label></th>
+        <td>{{ form_widget(form.description) }}</td>
+    </tr>
+    <tr>
+        <th><label for="{{ form.sponsors.vars.id }}">Sponsors</label></th>
+        <td>{{ form_widget(form.sponsors) }}</td>
+    </tr>
+    <tr>
+        <th><label for="{{ form.image_file.vars.id }}">Image</label></th>
+        <td>{{ form_widget(form.image_file) }}</td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align: center;">
+            <button type="submit">Save</button>
+        </td>
+    </tr>
+    {{ form_end(form) }}
+</table>
+
 
 {% endblock %}
