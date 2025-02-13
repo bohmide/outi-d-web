@@ -34,6 +34,7 @@ class EvenementsType extends AbstractType
             // ])
             ->add('date_event', DateType::class, [
                 'widget' => 'single_text',
+                'data' => new \DateTime(),
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Please select a date.',
