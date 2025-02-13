@@ -8,11 +8,41 @@ Home -
 
 	<h1>Add Sponsor</h1>
 
-	{{ form_start(form, {'attr': {'enctype': 'multipart/form-data','novalidate':'novalidate'}}) }}
-	{{ form_row(form.nom_sponsor) }} 
-	{{ form_row(form.description) }} 
-	{{ form_row(form.image_file) }}
-	<button type="submit">Save</button>
-	{{ form_end(form) }}
+	<table>
+		{{ form_start(form, {'attr': {'enctype': 'multipart/form-data', 'novalidate': 'novalidate'}}) }}
+		<tr>
+			<th>
+				<label>{{ form_label(form.nom_sponsor, 'Sponsor Name') }}</label>
+			</th>
+			<td>{{ form_widget(form.nom_sponsor) }}</td>
+			<td>
+				{{ form_errors(form.nom_sponsor) }}
+				{% for message in app.flashes('errorNameExist') %}
+					{{message}}
+				{% endfor %}	
+			</td>
+		</tr>
+		<tr>
+			<th>
+				<label>{{ form_label(form.description, 'Description') }}</label>
+			</th>
+			<td>{{ form_widget(form.description) }}</td>
+			<td>{{ form_errors(form.description) }}</td>
+		</tr>
+		<tr>
+			<th>
+				<label>{{ form_label(form.image_file, 'Image') }}</label>
+			</th>
+			<td>{{ form_widget(form.image_file) }}</td>
+			<td>{{ form_errors(form.image_file) }}</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="text-align: center;">
+				<button type="submit">Save</button>
+			</td>
+		</tr>
+		{{ form_end(form) }}
+	</table>
+
 
 {% endblock %}

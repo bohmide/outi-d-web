@@ -49,9 +49,14 @@ final class EventsController extends AbstractController
             // check for genre name if exist
             $existEventName = $er->findOneBy(['nom_event' => $event->getNomEvent()]);
             if ($existEventName) {
-                $this->addFlash('error', 'This Event name already exists.');
+                $this->addFlash('errorNameExist', 'This Event name already exists.');
                 return $this->redirectToRoute('app_add_event');
             }
+            if($event->getDateEvent()==null){
+                $this->addFlash('errorDate','date is require');
+                return $this->redirectToRoute('app_add_event');
+            }
+            
             // add image
             /** @var UploadedFile $imageFile */
 

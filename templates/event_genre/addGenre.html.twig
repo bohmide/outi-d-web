@@ -8,10 +8,32 @@ Home -
 
 	<h1>Add Event Genre</h1>
 
-	{{ form_start(form, {'attr': {'enctype': 'multipart/form-data','novalidate':'novalidate'}}) }}
-	{{ form_row(form.nom_genre) }} 
-	{{ form_row(form.image_file) }}
-	<button type="submit">Save</button>
-	{{ form_end(form) }}
+	<table>
+    {{ form_start(form, {'attr': {'enctype': 'multipart/form-data', 'novalidate': 'novalidate'}}) }}
+    <tr>
+        <th><label>{{ form_label(form.nom_genre, 'Genre Name') }}</label></th>
+        <td>{{ form_widget(form.nom_genre) }}</td>
+        <td>
+		{{ form_errors(form.nom_genre) }}
+		{% for message in app.flashes('errorNameExist') %}
+                {{message}}
+            {% endfor %}
+		</td>
+    </tr>
+    <tr>
+        <th><label>{{ form_label(form.image_file, 'Image') }}</label></th>
+        <td>{{ form_widget(form.image_file) }}</td>
+        <td>{{ form_errors(form.image_file) }}</td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align: center;">
+            <button type="submit">Save</button>
+        </td>
+    </tr>
+    {{ form_end(form) }}
+</table>
+
+
+
 
 {% endblock %}

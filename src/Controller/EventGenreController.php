@@ -35,7 +35,7 @@ final class EventGenreController extends AbstractController
             // check for genre name if exist
             $existGenreName = $egr->findOneBy(['nom_genre' => $eventGenre->getNomGenre()]);
             if ($existGenreName) {
-                $this->addFlash('error', 'This genre name already exists.');
+                $this->addFlash('errorNameExist', 'This genre name already exists.');
                 return $this->redirectToRoute('app_add_event_genre');
             }
             //initialize the nbr of the new genre
@@ -89,8 +89,6 @@ final class EventGenreController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             
-            //initialize the nbr of the new genre
-            $eventGenre->setNbr(0);
 
             // add image
             /** @var UploadedFile $imageFile */

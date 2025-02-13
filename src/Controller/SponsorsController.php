@@ -39,7 +39,7 @@ final class SponsorsController extends AbstractController
             // check for genre name if exist
             $existGenreName = $sr->findOneBy(['nom_sponsor' => $sponsor->getNomSponsor()]);
             if ($existGenreName) {
-                $this->addFlash('error', 'This sponsor name already exists.');
+                $this->addFlash('errorNameExist', 'This sponsor name already exists.');
                 return $this->redirectToRoute('app_add_sponsor');
             }
             // add image

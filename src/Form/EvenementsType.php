@@ -7,12 +7,15 @@ use App\Entity\EventGenre;
 use App\Entity\Sponsors;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class EvenementsType extends AbstractType
 {
@@ -21,8 +24,22 @@ class EvenementsType extends AbstractType
         $builder
             ->add('nom_event')
             ->add('description')
-            ->add('date_event', null, [
+            // ->add('date_event', null, [
+            //     'widget' => 'single_text',
+            //     'constraints' => [
+            //         new NotBlank([
+            //             'message' => 'Please select a date.',
+            //         ]),
+            //     ],
+            // ])
+            ->add('date_event', DateType::class, [
                 'widget' => 'single_text',
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Please select a date.',
+                    ]),
+                ],
+                'required' => true,  // Ensure this is required
             ])
             ->add('nbr_members')
             ->add('genre', EntityType::class, [

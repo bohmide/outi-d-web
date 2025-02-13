@@ -5,19 +5,39 @@
 {% block body %}
     <h1>Event Genres</h1>
     <a href="{{ path('app_add_event_genre') }}">Add New Genre</a>
-    <ul>
+    <table border="0">
+    <thead>
+        <tr>
+            <th style="padding: 10px;">Genre Name</th>
+            <th style="padding: 10px;">Number of Events</th>
+            <th style="padding: 10px;">Image</th>
+            <th style="padding: 10px;">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
         {% for genre in eventGenres %}
-            <li>
-                <strong>{{ genre.getNomGenre() }}</strong> ({{ genre.nbr }} events)
-                {% if genre.getImagePath() %}
-                    <br>
-                    <img src="{{ asset('uploads/event_genre_images/' ~ genre.imagePath) }}" alt="Event Genre Image" width="100">
-                {% endif %}
-				<a href="{{ path('app_update_event_genre', {'id':genre.getId()}) }}">Modify</a>
-				<a href="{{ path('app_delete_event_genre', {'id':genre.getId()}) }}">Delete</a>
-            </li>
+            <tr>
+                <td style="padding: 10px;"><strong>{{ genre.getNomGenre() }}</strong></td>
+                <td style="padding: 10px;">{{ genre.nbr }} events</td>
+                <td style="padding: 10px;">
+                    {% if genre.getImagePath() %}
+                        <img src="{{ asset('uploads/event_genre_images/' ~ genre.imagePath) }}" alt="Event Genre Image" height="50">
+                    {% else %}
+                        No Image
+                    {% endif %}
+                </td>
+                <td style="padding: 10px;">
+                    <a href="{{ path('app_update_event_genre', {'id': genre.getId()}) }}">Modify</a> |
+                    <a href="{{ path('app_delete_event_genre', {'id': genre.getId()}) }}">Delete</a>
+                </td>
+            </tr>
         {% else %}
-            <li>No event genres found.</li>
+            <tr>
+                <td colspan="4" style="text-align: center;">No event genres found.</td>
+            </tr>
         {% endfor %}
-    </ul>
+    </tbody>
+</table>
+
+
 {% endblock %}
