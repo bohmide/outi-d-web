@@ -7,7 +7,7 @@ Home -
 {% block body%}
 
 	<h1>Add Event</h1>
-
+    
 	<table>
     {{ form_start(form, {'attr': {'enctype': 'multipart/form-data', 'novalidate': 'novalidate'}}) }}
     <tr>
@@ -33,7 +33,12 @@ Home -
     <tr>
         <th><label>{{form_label(form.nbr_members, 'Nembre limit de participant')}}</label></th>
         <td>{{ form_widget(form.nbr_members) }}</td>
-        <td>{{ form_errors(form.nbr_members) }}</td>
+        <td>
+            {{ form_errors(form.nbr_members) }}
+            {% for message in app.flashes('errorNbrLimit') %}
+                {{message}}
+            {% endfor %}    
+        </td>
     </tr>
     <tr>
         <th><label>{{form_label(form.genre, 'Genre')}}</label></th>

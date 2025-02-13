@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 #[ORM\Entity(repositoryClass: SponsorsRepository::class)]
 class Sponsors
 {
@@ -15,6 +17,7 @@ class Sponsors
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotBlank(message:"nom is require")]
     #[ORM\Column(length: 255)]
     private ?string $nom_sponsor = null;
 

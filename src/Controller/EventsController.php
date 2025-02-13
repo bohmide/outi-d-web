@@ -97,6 +97,16 @@ final class EventsController extends AbstractController
         $form = $this->createForm(EvenementsType::class, $event);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $eventNbr= $event->getNbrMembers();
+            if ($eventNbr < 0) {
+                $this->addFlash('errorNbrLimit','number limit must be positive');
+                return $this->render('events/addEvent.html.twig', [
+                    'form' => $form,
+                ]);
+            }
+
+
             // add image
             /** @var UploadedFile $imageFile */
 

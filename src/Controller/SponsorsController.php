@@ -40,7 +40,9 @@ final class SponsorsController extends AbstractController
             $existGenreName = $sr->findOneBy(['nom_sponsor' => $sponsor->getNomSponsor()]);
             if ($existGenreName) {
                 $this->addFlash('errorNameExist', 'This sponsor name already exists.');
-                return $this->redirectToRoute('app_add_sponsor');
+                return $this->render('sponsors/addSponsors.html.twig', [
+                    'form' => $form,
+                ]);
             }
             // add image
             /** @var UploadedFile $imageFile */

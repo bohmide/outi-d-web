@@ -32,7 +32,7 @@
                 <td style="padding: 10px;"><strong>{{ event.getNomEvent() }}</strong></td>
                 <td style="padding: 10px;">{{ event.getDescription() }}</td>
                 <td style="padding: 10px;">{{ event.getDateEvent()|date }}</td>
-                <td style="padding: 10px;">{{ event.getNbrMembers() }}</td>
+                <td style="padding: 10px;">{{ event.getNbrMembers() ?? 'Illimité' }}</td>
                 <td style="padding: 10px;">{{ event.genre.getNomGenre() }}</td>
                 <td style="padding: 10px;">
                     {% for sponsor in event.getSponsors() %}
