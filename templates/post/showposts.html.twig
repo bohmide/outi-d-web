@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Posts du Forum - {{ forum.nom }}{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <h1>Posts du Forum: {{ forum.nom }}</h1>
+    <p><strong>Thème :</strong> {{ forum.theme }}</p>
+    <p><small class="text-muted">Créé le {{ forum.dateCreation|date('d/m/Y') }}</small></p>
+
+    <div class="mt-4">
+        {% for post in posts %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">{{ post.nom }}</h5>
+                    <p class="card-text"><small class="text-muted">Posté le {{ post.getDateCreation|date('d/m/Y') }}</small></p>
+                    
+                    <!-- Contenu du post -->
+                    <p class="card-text">{{ post.contenu }}</p>
+
+                    <!-- Likes et Commentaires -->
+                    <div class="d-flex justify-content-end align-items-center mt-3">
+                        <span id="like-count-{{ post.id }}">{{ post.nbLike is not null ? post.nbLike : 0 }}</span>
+                        
+                        <!-- Icône 👍 cliquable -->
+                        <span class="like-btn mx-2" data-post-id="{{ post.id }}" style="font-size: 24px; cursor: pointer;">👍</span>
+                        
+                        <span>{{ post.nbComment is not null ? post.nbComment : 0 }} 💬</span>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <p>Aucun post disponible pour ce forum.</p>
+        {% endfor %}
+    </div>
+
+    <a href="{{ path('app_addpost', {'forumId': forum.id}) }}" class="btn btn-success">Ajouter un Post</a>
+</div>
+
+<!-- Ajout du script AJAX -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".like-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                let postId = this.dataset.postId;
+                let likeCountSpan = document.getElementById("like-count-" + postId);
+
+                fetch("/post/" + postId + "/like", {
+                    method: "POST",
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest"
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    likeCountSpan.textContent = data.nbLike;
+                })
+                .catch(error => console.error("Erreur :", error));
+            });
+        });
+    });
+</script>
+
+{% endblock %}
+
