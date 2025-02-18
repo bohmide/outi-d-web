@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Cours - {% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <h1 class="text-center mb-4">Liste des Cours</h1>
+
+    <div class="row">
+        {% for cours in cours %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ cours.nom }}</h5>
+                        <p class="card-text">État : {{ cours.etat }}</p>
+                        <a href="{{ path('front_cours_show', {'id': cours.id}) }}" class="btn btn-primary">Voir les détails</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

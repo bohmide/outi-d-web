@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Cours - {% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <h1 class="text-center mb-4">Gestion des Cours</h1>
+
+    <a href="{{ path('admin_cours_new') }}" class="btn btn-primary mb-4">Créer un nouveau cours</a>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>État</th>
+                <th>Date de création</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cours in cours %}
+                <tr>
+                    <td>{{ cours.nom }}</td>
+                    <td>{{ cours.etat }}</td>
+                    <td>{{ cours.dateCreation|date('d/m/Y') }}</td>
+                    <td>
+                        <a href="{{ path('admin_cours_update', {'id': cours.id}) }}" class="btn btn-warning">Modifier</a>
+                        <form action="{{ path('admin_cours_delete', {'id': cours.id}) }}" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-danger">Supprimer</button>
+                        </form>
+                        <a href="{{ path('admin_cours_chapitres', {'id': cours.id}) }}" class="btn btn-info">Voir les chapitres</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

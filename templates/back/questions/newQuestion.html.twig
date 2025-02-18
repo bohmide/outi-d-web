@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter une question{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+
+    <h2 class="mb-4">Ajouter une nouvelle question</h2>
+
+    {# Affichage des erreurs globales du formulaire #}
+    {% if form.vars.errors|length > 0 %}
+        <div class="alert alert-danger">
+            <ul>
+                {% for error in form.vars.errors %}
+                    <li>{{ error.message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+
+    <div class="form-group mb-3">
+        {{ form_label(form.question, 'Question', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.question, {
+            'attr': {'class': 'form-control'}
+        }) }}
+        <div class="invalid-feedback">
+            {{ form_errors(form.question) }}
+        </div>
+    </div>
+
+    <div class="form-group mb-3">
+        {{ form_label(form.type, 'Type de question', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.type, {
+            'attr': {'class': 'form-control'}
+        }) }}
+        <div class="invalid-feedback">
+            {{ form_errors(form.type) }}
+        </div>
+    </div>
+
+    <div class="form-group mb-3">
+        {{ form_label(form.quiz, 'Quiz', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.quiz, {
+            'attr': {'class': 'form-control'}
+        }) }}
+        <div class="invalid-feedback">
+            {{ form_errors(form.quiz) }}
+        </div>
+    </div>
+    {{ form_end(form) }}
+
+</div>
+{% endblock %}

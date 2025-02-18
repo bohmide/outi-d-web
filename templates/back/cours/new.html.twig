@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un Cours - {% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <h1 class="text-center mb-4">Créer un Cours</h1>
+    {% for message in app.flashes('success') %}
+    <div class="alert alert-success">{{ message }}</div>
+{% endfor %}
+
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'form-horizontal'}}) }}
+
+    <div class="form-group mb-3">
+        {{ form_label(form.nom, 'Titre du cours', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+    </div>
+
+    <div class="form-group mb-3">
+        {{ form_label(form.etat, 'État du cours', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.etat, {'attr': {'class': 'form-control'}}) }}
+    </div>
+
+    <div class="form-group mb-3">
+        {{ form_label(form.dateCreation, 'Date de création', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.dateCreation, {'attr': {'class': 'form-control'}}) }}
+    </div>
+
+    {{ form_end(form) }}
+</div>
+{% endblock %}

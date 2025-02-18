@@ -1,0 +1,52 @@
+{% extends "base.html.twig" %}
+
+{% block title %} Ajouter un Chapitre {% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="bg-light p-5 rounded shadow">
+        <div class="bg-white p-4 rounded shadow">
+            <h1 class="text-primary text-center">Ajouter un Chapitre</h1>
+            <p class="text-muted text-center">Cours: <strong>{{ cours.getNom() }}</strong></p>
+
+            <hr>
+
+            {# Afficher les messages de succès #}
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success">{{ message }}</div>
+            {% endfor %}
+
+            {# Démarrer le formulaire avec l'attribut enctype pour les fichiers #}
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'form-horizontal', 'enctype': 'multipart/form-data'}}) }}
+
+                {# Champ Titre du Chapitre #}
+                <div class="mb-3">
+                    {{ form_label(form.nom_chapitre, 'Titre du Chapitre') }}
+                    {{ form_widget(form.nom_chapitre, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(form.nom_chapitre) }}
+                </div>
+
+                {# Champ Contenu Textuel #}
+                <div class="mb-3">
+                    {{ form_label(form.contenuText, 'Contenu Text du Chapitre') }}
+                    {{ form_widget(form.contenuText, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(form.contenuText) }}
+                </div>
+
+                {# Champ Upload de fichier #}
+                <div class="mb-3">
+                    {{ form_label(form.file, 'Ajouter un fichier (PDF, DOC, DOCX, PPT, PPTX)') }}
+                    {{ form_widget(form.file, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(form.file) }}
+                </div>
+
+                {# Bouton de soumission #}
+                {# <div class="text-center mt-4"> #}
+                    {#  <button type="submit" class="btn btn-success">{{ form.submit.vars.label }}</button> #}
+                    {# </div> #}
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}
