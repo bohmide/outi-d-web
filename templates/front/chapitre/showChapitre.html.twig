@@ -1,0 +1,39 @@
+{% extends "base.html.twig" %}
+
+{% block title %} Chapitres - {{ cours.nom }} {% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="bg-light p-5 rounded shadow">
+        <div class="bg-white p-4 rounded shadow">
+            <header class="text-center mb-4">
+                <h1 class="text-primary">{{ cours.nom }}</h1>
+                <p class="text-muted">Explorez les chapitres de ce cours</p>
+            </header>
+            
+            <section>
+                <h2 class="text-center text-dark mb-4">📚 Liste des chapitres</h2>
+                <div class="list-group">
+                    {% for chapitre in chapitres %}
+                        <a href="{{ path('show_chapitre_details', {id: chapitre.id}) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>📖 {{ chapitre.getNomChapitre() }}</strong>
+                                {% if chapitre.contenu %}
+                                    <span class="badge bg-success ms-2">📂 Fichier disponible</span>
+                                {% endif %}
+                            </div>
+                            <span class="btn btn-outline-primary btn-sm">Voir les détails</span>
+                        </a>
+                    {% else %}
+                        <div class="alert alert-warning text-center">🚀 Aucun chapitre disponible pour ce cours.</div>
+                    {% endfor %}
+                </div>
+            </section>
+            
+            <div class="text-center mt-4">
+                <a href="{{ path('front_cours_show', { 'id': cours.id }) }}" class="btn btn-secondary">⬅ Retour aux cours</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

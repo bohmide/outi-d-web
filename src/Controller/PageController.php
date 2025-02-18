@@ -22,7 +22,7 @@ final class PageController extends AbstractController{
         #[Route('/courses', name: 'courses')]
         public function courses(): Response
         {
-            return $this->render('pages/courses.html.twig');
+            return $this->render('front/cours/courA.html.twig');
         }
     
         #[Route('/trainers', name: 'trainers')]
@@ -85,5 +85,10 @@ final class PageController extends AbstractController{
             return $this->render('pages/use.html.twig');
         }
 
+        #[Route('/profCours', name: 'profcours')]
+        public function profC(): Response
+        {
+            return $this->render('cours/coursProf.html.twig');
+        }
 }
 
