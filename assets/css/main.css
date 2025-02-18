@@ -1894,3 +1894,288 @@ section,
 .starter-section {
   /* Add your styles here */
 }
+
+/* Styles spécifiques à la page de compétition */
+.competition-body {
+  font-family: 'Arial', sans-serif;
+  background-color: #e6f7ff;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.competition-body .container {
+  width: 90%;
+  max-width: 800px;
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.competition-body h1 {
+  text-align: center;
+  color: #0056b3;
+  font-size: 2.5em;
+  margin-bottom: 20px;
+}
+
+.competition-body .competition {
+  border: 1px solid #d1e8ff;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  background-color: #f0f8ff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.competition-body .competition:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 92, 175, 0.2);
+}
+
+.competition-body .competition h2 {
+  margin-top: 0;
+  color: #003366;
+  font-size: 1.8em;
+}
+
+.competition-body .competition p {
+  margin: 5px 0;
+  color: #555;
+}
+
+.competition-body .competition .date {
+  font-weight: bold;
+  color: #0073e6;
+}
+
+.competition-body .competition .description {
+  font-style: italic;
+  color: #666;
+}
+
+.competition-body .button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #0073e6;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+
+ /* participant main*//* styles.css */
+ /*.participant {
+ background-image: url('../img/about-2.jpg'); /* Chemin de l'image */
+  /*background-size: cover; /* Couvre toute la zone */
+  /*background-position: center; /* Centre l'image */
+  /*background-repeat: no-repeat; /* Empêche la répétition */
+  /*min-height: 100vh; /* Couvre toute la hauteur de la page */
+  /*padding: 20px 0; /* Espace autour du formulaire */
+/*}*/
+
+.participant {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+#background-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: translate(-50%, -50%);
+  z-index: -1; /* Place la vidéo en arrière-plan */
+}
+
+.participant .publish-competition-container {
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.9); /* Fond blanc légèrement transparent */
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 1000px; /* Augmenter la largeur maximale pour accommoder les deux colonnes */
+  margin: 20px auto; /* Centrer le formulaire */
+}
+
+.participant h1 {
+  text-align: center;
+  color: #0710c6ab;
+  font-size: 1.6em;
+  margin-bottom: 20px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 440;
+  animation: fadeIn 1.5s ease-in-out;
+}
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+      transform: translateY(-20px);
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+.form-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Deux colonnes de largeur égale */
+    gap: 20px; /* Espace entre les colonnes */
+}
+
+.form-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.participant .form-group {
+    margin-bottom: 20px;
+}
+
+.participant .form-group label {
+    display: block;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.participant .form-group input,
+.participant .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #d1e8ff;
+    border-radius: 8px;
+    font-size: 1em;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.participant .form-group input:focus,
+.participant .form-group textarea:focus {
+    border-color: #0073e6;
+    box-shadow: 0 0 8px rgba(0, 115, 230, 0.3);
+    outline: none;
+}
+
+.participant .form-group textarea {
+    resize: vertical;
+}
+
+.participant .submit-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #0f01a6;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 20px; /* Ajouter un espace au-dessus du bouton */
+}
+
+.participant .submit-button:hover {
+    background-color: #656565cc;
+    transform: translateY(-2px);
+}
+
+.participant .submit-button:active {
+    transform: translateY(0);
+}
+.participant .form-group input[type="file"] {
+  padding: 8px;
+  border: 1px solid #d1e8ff;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  font-size: 1em;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.participant .form-group input[type="file"]:focus {
+  border-color: #0073e6;
+  box-shadow: 0 0 8px rgba(0, 115, 230, 0.3);
+  outline: none;
+}
+
+/* Style pour le label (icône de téléchargement) */
+.file-upload-label {
+  display: inline-block;
+  padding: 6px; /* Augmente le padding pour un rectangle plus grand */
+  background-color: rgba(255, 255, 255, 0.5); /* Fond blanc avec opacité réduite */
+  border: 2px solid #9aacbd; /* Bordure bleue */
+  border-radius: 10px; /* Coins arrondis */
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-size: 1em;
+  text-align: center;
+  width: 45px; /* Largeur du rectangle */
+  height: 40px; /* Hauteur du rectangle */
+  display: flex;
+  align-items: center; /* Centre verticalement */
+  justify-content: center; /* Centre horizontalement */
+}
+
+.file-upload-label:hover {
+  background-color: rgba(255, 255, 255, 0.9); /* Fond blanc légèrement plus opaque au survol */
+  transform: translateY(-2px);
+}
+
+.file-upload-label:active {
+  transform: translateY(0);
+}
+
+.file-upload-label i {
+  color: #333; /* Couleur gris foncé pour l'icône */
+  font-size: 1.5em; /* Taille de l'icône */
+  line-height: 1; /* Assure que l'icône est alignée correctement */
+}
+
+/* Masquer l'input de fichier */
+/*.file-upload-input {
+  display: none;
+}*/
+.file-preview-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px;
+  border: 1px solid #ccc;
+  margin-bottom: 5px;
+}
+
+.file-preview-item button {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.competition-body .file-preview-item button:hover {
+  background-color: #045433;
+}
+.competition-body .btn-danger {
+  background-color: #dc3545;
+}
+
+.competition-body .button.btn-danger:hover {
+  background-color: #c82333;
+}
+
+.competition-body .alert-success {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}

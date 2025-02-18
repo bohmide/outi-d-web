@@ -1,0 +1,78 @@
+{% extends "base.html.twig" %}
+
+{% block title %} addCompétition  {% endblock %}
+
+{% block body %}
+<div class="participant">
+    <video autoplay muted loop id="background-video">
+        <source src="{{ asset('img/test2.mp4') }}" type="video/mp4">
+    </video>
+
+    <div class="publish-competition-container">
+        <h1>Publier une Nouvelle Compétition</h1>
+        
+        {{ form_start(form) }}
+        <div class="form-columns">
+            <div class="form-column">
+                <div class="form-group">
+                    {{ form_label(form.nom_entreprise) }}
+                    {{ form_widget(form.nom_entreprise) }}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.nom_comp) }}
+                    {{ form_widget(form.nom_comp) }}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.date_debut) }}
+                    {{ form_widget(form.date_debut) }}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.date_fin) }}
+                    {{ form_widget(form.date_fin) }}
+                </div>
+            </div>
+
+            <div class="form-column">
+                <div class="form-group">
+                    {{ form_label(form.description) }}
+                    {{ form_widget(form.description) }}
+                </div>
+            
+                <div class="form-group">
+                    {{ form_label(form.fichierFile, 'Fichier à Télécharger (Image, PDF, Excel)', {
+                        'label_attr': {'for': 'fileUpload'}
+                    }) }}
+                
+                    <!-- Icône de téléchargement -->
+                    <label for="{{ form.fichierFile.vars.id }}" class="file-upload-label">
+                        <i class="fas fa-download"></i> <!-- Icône FontAwesome -->
+                    </label>
+                
+                    <!-- Champ de fichier -->
+                    {{ form_widget(form.fichierFile, {
+                        'attr': {
+                            'class': 'file-upload-input',
+                            'accept': 'image/*, .pdf, .xlsx, .xls',
+                            'id': 'fileUpload', 
+                            'name': 'fileUpload',
+                            'multiple': 'multiple'
+                        }
+                    }) }}
+                
+                    <!-- Conteneur pour l'aperçu du fichier -->
+                    <div id="file-preview-container" style="margin-top: 10px;"></div> <!-- ID correspondant -->
+                
+                    <!-- Afficher les erreurs de validation -->
+                    {{ form_errors(form.fichierFile) }}
+                </div> 
+            
+                <button type="submit" class="submit-button">Publier la Compétition</button>
+            </div>
+
+            </div>
+        </div>
+        {{ form_end(form) }}
+    </div>
+</div>
+
+{% endblock %}

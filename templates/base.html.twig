@@ -11,10 +11,12 @@
   <link href="assets/img/logo.png" rel="apple-touch-icon">
 
   <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-
+  <!-- FontAwesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   
 
         {% block stylesheets %}
@@ -26,7 +28,8 @@
         <link href="{{asset('vendor/swiper/swiper-bundle.min.css')}}"" rel="stylesheet">
       
         <!-- Main CSS File -->
-        <link href="{{asset('css/main.css')}}"" rel="stylesheet">
+        <link href="{{asset('css/main.css')}}" rel="stylesheet">
+        
         {% endblock %}
 
 {% block header %}
@@ -51,7 +54,7 @@
                   <li><a href="{{path('courses')}}" class="{% if app.request.pathinfo == path('courses') %}active{% endif %}">Courses</a></li>
                   <li><a href="{{path('trainers')}}" class="{% if app.request.pathinfo == path('trainers') %}active{% endif %}">Trainers</a></li>
                   <li><a href="{{path('events')}}" class="{% if app.request.pathinfo == path('events') %}active{% endif %}">Events</a></li>
-                  <li><a href="{{path('pricing')}}" class="{% if app.request.pathinfo == path('pricing') %}active{% endif %}">Pricing</a></li>
+                  <li><a href="{{path('competitionlist')}}" class="{% if app.request.pathinfo == path('competitionlist') %}active{% endif %}">Competition</a></li>
                   <li class="dropdown"><a href="#"><span>Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
                     <ul>
                       <li><a href="#">Dropdown 1</a></li>

@@ -53,4 +53,6 @@ final class PageController extends AbstractController{
         {
             return $this->render('pages/courses.html.twig');
         }
+
 }
+

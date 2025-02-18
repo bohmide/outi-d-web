@@ -134,3 +134,54 @@
   window.addEventListener("load", initSwiper);
 
 })();
+// script.js
+
+
+// public/js/collaborateuraddmain.js
+document.addEventListener('DOMContentLoaded', function() {
+    const fileInput = document.getElementById('fileUpload');
+    const previewContainer = document.getElementById('file-preview-container');
+
+    if (fileInput && previewContainer) {
+        fileInput.addEventListener('change', function(event) {
+            previewContainer.innerHTML = ''; // Vider le conteneur avant d'ajouter de nouveaux fichiers
+
+            const files = event.target.files;
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const filePreview = document.createElement('div');
+                filePreview.className = 'file-preview-item';
+
+                const fileName = document.createElement('span');
+                fileName.textContent = file.name;
+                filePreview.appendChild(fileName);
+
+                const removeButton = document.createElement('button');
+                removeButton.textContent = 'Supprimer';
+                removeButton.type = 'button';
+                removeButton.addEventListener('click', function() {
+                    removeFileFromInput(file, filePreview);
+                });
+
+                filePreview.appendChild(removeButton);
+                previewContainer.appendChild(filePreview);
+            }
+        });
+
+        function removeFileFromInput(fileToRemove, previewElement) {
+            const dataTransfer = new DataTransfer();
+            const files = fileInput.files;
+
+            for (let i = 0; i < files.length; i++) {
+                if (files[i] !== fileToRemove) {
+                    dataTransfer.items.add(files[i]);
+                }
+            }
+
+            fileInput.files = dataTransfer.files;
+            previewElement.remove(); // Supprimer l'élément de l'aperçu
+        }
+    } else {
+        console.error("Élément fileUpload ou file-preview-container introuvable.");
+    }
+});
