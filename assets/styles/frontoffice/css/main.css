@@ -2128,15 +2128,7 @@ section,
 }
 
 
- /* participant main*//* styles.css */
- /*.participant {
- background-image: url('../img/about-2.jpg'); /* Chemin de l'image */
-  /*background-size: cover; /* Couvre toute la zone */
-  /*background-position: center; /* Centre l'image */
-  /*background-repeat: no-repeat; /* Empêche la répétition */
-  /*min-height: 100vh; /* Couvre toute la hauteur de la page */
-  /*padding: 20px 0; /* Espace autour du formulaire */
-/*}*/
+
 
 .participant {
   position: relative;
