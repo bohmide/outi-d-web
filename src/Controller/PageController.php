@@ -7,16 +7,16 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 final class PageController extends AbstractController{
 
-    #[Route('/', name: 'base')]
+    #[Route('/home', name: 'base')]
         public function base(): Response
         {
             return $this->render('pages/index.html.twig');
         }
     
-        #[Route('/about', name: 'about')]
+        #[Route('/forum', name: 'forum')]
         public function about(): Response
         {
-            return $this->render('pages/about.html.twig');
+            return $this->render('forum/showforum.html.twig');
         }
     
         #[Route('/courses', name: 'courses')]
@@ -34,7 +34,7 @@ final class PageController extends AbstractController{
         #[Route('/events', name: 'events')]
         public function events(): Response
         {
-            return $this->render('pages/events.html.twig');
+            return $this->render('../events/showEvents.html.twig');
         }
     
         #[Route('/pricing', name: 'pricing')]
@@ -78,4 +78,9 @@ final class PageController extends AbstractController{
             return $this->render('pages/user/student.html.twig');
         }
 
+        #[Route('/', name: 'use')]
+        public function quiz(): Response
+        {
+            return $this->render('pages/use.html.twig');
+        }
 }
