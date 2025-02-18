@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commentaires du Post - {{ post.nom }}{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <h1>Commentaires pour le Post: {{ post.nom }}</h1>
+    <p><small class="text-muted">Posté le {{ post.dateCreation|date('d/m/Y') }}</small></p>
+    <p>{{ post.contenu }}</p>
+
+    <h3 class="mt-4">Commentaires :</h3>
+    <ul class="list-group">
+        {% for comment in comments %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <p>{{ comment.description }}</p>
+                    <small class="text-muted">Ajouté le {{ comment.dateCreation|date('d/m/Y') }}</small>
+                </div>
+                <!-- Bouton supprimer (croix ❌) -->
+                <a href="{{ path('app_deletecomment', {'id': comment.id}) }}" 
+                   class="text-danger text-decoration-none"
+                   onclick="return confirm('Voulez-vous vraiment supprimer ce commentaire ?')">
+                    ❌
+                </a>
+            </li>
+        {% else %}
+            <p>Aucun commentaire pour ce post.</p>
+        {% endfor %}
+    </ul>
+
+    <!-- Boutons pour ajouter un commentaire et retour -->
+    <div class="mt-4 d-flex gap-2">
+        <a href="{{ path('app_addcomment', {'id': post.id}) }}" class="btn btn-primary">Ajouter un Commentaire</a>
+        <a href="{{ path('app_showposts', {'id': post.forum.id}) }}" class="btn btn-secondary">Retour aux Posts</a>
+    </div>
+</div>
+{% endblock %}
+
