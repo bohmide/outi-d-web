@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mettre à jour le Forum{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <h1 class="text-center mb-4">Mettre à jour le Forum</h1>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success text-center">{{ message }}</div>
+    {% endfor %}
+
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'enctype': 'multipart/form-data', 'class': 'form-horizontal'}}) }}
+
+    <div class="form-group mb-3">
+        {{ form_label(form.nom, 'Titre du forum', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.nom) }}
+    </div>
+
+    <div class="form-group mb-3">
+        {{ form_label(form.theme, 'Thème du forum', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.theme, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.theme) }}
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="forum_image" class="form-label">Image du forum</label>
+        <!-- Ne pas afficher l'image ici, mais pré-remplir le champ -->
+        {% if forum.imageForum %}
+            <p>Image actuelle : {{ forum.imageForum }}</p>
+        {% else %}
+            <p>Aucune image actuelle.</p>
+        {% endif %}
+        
+        <!-- Le champ pour télécharger une nouvelle image -->
+        {{ form_widget(form.image_forum, {'attr': {'class': 'form-control', 'id': 'forum_image'}}) }}
+        {{ form_errors(form.image_forum) }}
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="forum_date_creation" class="form-label">Date de création</label>
+        <input type="text" class="form-control" value="{{ forum.dateCreation|date('d/m/Y') }}" disabled />
+    </div>
+
+    <div class="form-group text-center">
+        <button type="submit" class="btn btn-success">
+            Mise à jour
+        </button>
+    </div>
+
+    {{ form_end(form) }}
+</div>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier un Post{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <h1 class="text-center mb-4">Modifier le Post du Forum: {{ forum.nom }}</h1>
+
+    {{ form_start(form, {'attr': {'class': 'form'}}) }}
+
+    <div class="form-group mb-3">
+        {{ form_label(form.nom, 'Titre du Post', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.nom) }}
+    </div>
+
+    <div class="form-group mb-3">
+        {{ form_label(form.contenu, 'Contenu du Post', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.contenu, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.contenu) }}
+    </div>
+
+    <input type="hidden" name="forum_id" value="{{ forum.id }}">
+
+    <div class="form-group text-center">
+        <button type="submit" class="btn btn-success">Mettre à jour</button>
+    </div>
+
+    {{ form_end(form) }}
+
+    <a href="{{ path('app_showposts', {'id': forum.id}) }}" class="btn btn-secondary mt-3">Retour</a>
+</div>
+{% endblock %}

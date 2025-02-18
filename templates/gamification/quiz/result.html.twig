@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="quiz-result">
+    <h2>Quiz Completed!</h2>
+    
+    <!-- Displaying the user's score -->
+    <p>Your Final Score: <strong>{{ score }} / {{ total }}</strong></p>
+
+    {% if score == total %}
+        <p style="color: green;">🎉 Congratulations! You answered all questions correctly!</p>
+    {% else %}
+        <p style="color: red;">❌ Oops! You missed some questions. Don't worry, keep practicing!</p>
+    {% endif %}
+    
+    <div class="quiz-details">
+        <h3>Here are the results:</h3>
+        <ul>
+            {% for question in quizzes %}
+                <li>
+                    <strong>{{ question.question }}</strong><br>
+
+                    {% if question.correctAnswer == question.userAnswer %}
+                        <span style="color: green;">Correct Answer!</span>
+                    {% else %}
+                        <span style="color: red;">Incorrect Answer.</span>
+                        <br>
+                        <em>Correct Answer: {{ question.correctAnswer }}</em>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <a href="{{ path('quiz_question', {'id': 1}) }}">Restart Quiz</a>
+</div>
+
+{% endblock %}

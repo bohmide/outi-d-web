@@ -2,6 +2,6 @@ vich_uploader:
     db_driver: orm
     mappings:
         quiz_media:
-            uri_prefix: /uploads
-            upload_destination: '%kernel.project_dir%/public/uploads'
+            uri_prefix: /uploads/media
+            upload_destination: '%kernel.project_dir%/public/uploads/media'
             namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
