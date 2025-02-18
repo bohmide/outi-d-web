@@ -54,6 +54,31 @@ final class PageController extends AbstractController{
             return $this->render('pages/courses.html.twig');
         }
 
+
+        #[Route('/login', name: 'login')]
+        public function login(): Response
+        {
+            return $this->render('pages/user/login.html.twig');
+        }
+
+        #[Route('/prof', name: 'prof')]
+        public function prof(): Response
+        {
+            return $this->render('pages/user/prof.html.twig');
+        }
+
+        #[Route('/parent', name: 'parent')]
+        public function parent(): Response
+        {
+            return $this->render('pages/user/signupparent.html.twig');
+        }
+
+        #[Route('/student', name: 'student')]
+        public function student(): Response
+        {
+            return $this->render('pages/user/student.html.twig');
+        }
+
         #[Route('/', name: 'use')]
         public function quiz(): Response
         {

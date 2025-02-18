@@ -29,7 +29,12 @@
         "vich/uploader-bundle": "^2.5"
     },
     "require-dev": {
-        "symfony/maker-bundle": "^1.62"
+        "symfony/mailer": "6.4.*",
+        "symfony/maker-bundle": "^1.62",
+        "symfony/security-bundle": "6.4.*",
+        "symfony/validator": "6.4.*",
+        "symfonycasts/reset-password-bundle": "^1.23",
+        "symfonycasts/verify-email-bundle": "^1.17"
     },
     "config": {
         "allow-plugins": {

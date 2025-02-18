@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+`<!DOCTYPE html>
 <html>
     <head>
         <meta charset="UTF-8">
@@ -55,30 +55,20 @@
                   <li><a href="{{path('trainers')}}" class="{% if app.request.pathinfo == path('trainers') %}active{% endif %}">Trainers</a></li>
                   <li><a href="{{path('events')}}" class="{% if app.request.pathinfo == path('events') %}active{% endif %}">Events</a></li>
                   <li><a href="{{path('pricing')}}" class="{% if app.request.pathinfo == path('pricing') %}active{% endif %}">Pricing</a></li>
-                  <li class="dropdown"><a href="#"><span>Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                  <li><a href="{{path('contact')}}" class="{% if app.request.pathinfo == path('contact') %}active{% endif %}">Contact</a></li>
+                  <li class="dropdown"><a href="#"><span>Sign Up</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
                     <ul>
-                      <li><a href="#">Dropdown 1</a></li>
-                      <li class="dropdown"><a href="#"><span>Deep Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-                        <ul>
-                          <li><a href="#">Deep Dropdown 1</a></li>
-                          <li><a href="#">Deep Dropdown 2</a></li>
-                          <li><a href="#">Deep Dropdown 3</a></li>
-                          <li><a href="#">Deep Dropdown 4</a></li>
-                          <li><a href="#">Deep Dropdown 5</a></li>
-                        </ul>
-                      </li>
-                      <li><a href="#">Dropdown 2</a></li>
-                      <li><a href="#">Dropdown 3</a></li>
-                      <li><a href="#">Dropdown 4</a></li>
+                      <li><a href="{{path('prof')}}">As a professor</a></li>
+                      <li><a href="{{path('parent')}}">As a parent</a></li>
+                      <li><a href="{{path('student')}}">As a student</a></li>
                     </ul>
                   </li>
-                  <li><a href="{{path('contact')}}" class="{% if app.request.pathinfo == path('contact') %}active{% endif %}">Contact</a></li>
                 </ul>
                 <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
               </nav>
         
               
-              <a class="btn-getstarted" href="courses.html">Login</a>
+              <a  class="btn-getstarted" href="{{path('login')}}">Sign In</a>
         
             </div>
          </header>
@@ -193,4 +183,4 @@
             {% block javascripts %}
             
             {% endblock %}
-</html> 
+</html>
