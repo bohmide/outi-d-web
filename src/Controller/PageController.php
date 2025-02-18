@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 final class PageController extends AbstractController{
 
-    #[Route('/', name: 'base')]
+    #[Route('/home', name: 'base')]
         public function base(): Response
         {
             return $this->render('pages/index.html.twig');
@@ -52,5 +52,10 @@ final class PageController extends AbstractController{
         public function getstarted(): Response
         {
             return $this->render('pages/courses.html.twig');
+        }
+        #[Route('/', name: 'use')]
+        public function quiz(): Response
+        {
+            return $this->render('pages/use.html.twig');
         }
 }

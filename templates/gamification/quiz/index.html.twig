@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}quiz - {% endblock %}
+
+
+{% block body %}
+<div class="quiz-container">
+    <img src="{{ asset('img/spongbob.png') }}" alt="Mascot" class="mascot">
+   
+
+    <form action="{{ path('quiz_submit', {'id': quiz.id}) }}" method="POST">
+        <h2>{{ quiz.question }}</h2>
+    
+        {% for option in quiz.options %}
+            <label>
+                <input type="radio" name="answer" value="{{ option }}"> {{ option }}
+            </label><br>
+        {% endfor %}
+    
+        <button type="submit">Next</button>
+    </form>
+    
+</div>
+</div>
+
+
+
+<script>
+    document.getElementById('submitBtn').addEventListener('click', function() {
+        let selectedOption = document.querySelector('input[name="answer"]:checked');
+        if (!selectedOption) {
+            alert("Please select an answer before submitting!");
+            return;
+        }
+
+        let selectedValue = selectedOption.value;
+        let correctAnswer = "{{ quiz.correctAnswer }}"; // Get correct answer from Twig
+
+        // Find all options
+        let options = document.querySelectorAll('input[name="answer"]');
+
+        options.forEach(option => {
+            let label = option.parentElement;
+            if (option.value === correctAnswer) {
+                label.classList.add("correct"); // Highlight correct answer in green
+            } 
+            if (option.value === selectedValue && selectedValue !== correctAnswer) {
+                label.classList.add("incorrect"); // Highlight wrong answer in red
+            }
+        });
+
+        // ✅ Corrected redirection logic in JavaScript
+        let isCorrect = (selectedValue === correctAnswer) ? "1" : "0";
+        setTimeout(() => {
+            window.location.href = "{{ path('quiz_result') }}?isCorrect=" + isCorrect;
+        }, 2000);
+    });
+</script>
+
+
+{% endblock %}
