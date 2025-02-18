@@ -56,6 +56,14 @@ final class EventsController extends AbstractController
                 $this->addFlash('errorDate','date is require');
                 return $this->redirectToRoute('app_add_event');
             }
+
+            $eventNbr= $event->getNbrMembers();
+            if ($eventNbr < 0) {
+                $this->addFlash('errorNbrLimit','number limit must be positive');
+                return $this->render('events/addEvent.html.twig', [
+                    'form' => $form,
+                ]);
+            }
             
             // add image
             /** @var UploadedFile $imageFile */
