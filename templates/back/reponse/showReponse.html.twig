@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Réponses de la question - {{ question.question }}{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <h1 class="text-center mb-4">Réponses de la question : {{ question.question }}</h1>
+
+    {% if reponses is not empty %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Réponse</th>
+                    <th>Correcte</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rep in reponses %}
+                    <tr>
+                        <td>{{ rep.reponse }}</td>
+                        <td>{{ rep.isCorrect ? 'Oui' : 'Non' }}</td>
+                        <td>
+                            <a href="{{ path('app_reponse_edit', {'reponseId': rep.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                            {# <form action="{{ path('app_reponse_delete', {'id': rep.id}) }}" method="post" class="d-inline"> #}
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Voulez-vous vraiment supprimer cette réponse ?');">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-center">Aucune réponse associée à cette question.</p>
+    {% endif %}
+    <!-- Bouton pour ajouter une nouvelle réponse -->
+    <a href="{{ path('app_reponse_add', {'id': question.id}) }}" class="btn btn-primary mt-3">Ajouter une réponse</a>
+    {# <a href="{{ path('app_question_list') }}" class="btn btn-secondary mt-4">Retour aux questions</a> #}
+</div>
+{% endblock %}
