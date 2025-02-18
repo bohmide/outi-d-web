@@ -1,0 +1,27 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Compétition - {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="competition-body">
+        <div class="container">
+            <h1>Compétitions Disponibles</h1>
+            
+            <div class="competition">
+                <h2>Nom de la Compétition 1</h2>
+                <p class="date">Du 01/01/2023 au 31/01/2023</p>
+                <p class="description">Description de la compétition 1. Cette compétition est organisée par l'entreprise X.</p>
+                <a href="#" class="button">Participer</a>
+            </div>
+            
+            <div class="competition">
+                <h2>Nom de la Compétition 2</h2>
+                <p class="date">Du 15/02/2023 au 15/03/2023</p>
+                <p class="description">Description de la compétition 2. Cette compétition est organisée par l'entreprise Y.</p>
+                <a href="#" class="button">Participer</a>
+            </div>
+            
+            <!-- Ajoutez plus de compétitions ici -->
+        </div>
+    </div>
+{% endblock %}

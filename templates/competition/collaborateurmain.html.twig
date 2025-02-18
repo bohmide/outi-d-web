@@ -1,0 +1,46 @@
+{% extends "base.html.twig" %}
+
+{% block title %} Compétition  {% endblock %}
+
+
+
+
+{% block body %}
+<div class="competition-body">
+    <div class="container">
+        <h1>Liste des Compétitions</h1>
+        <a href="{{ path('addcompetition') }}" class="button">Ajouter une Compétition</a>
+        {# Afficher les messages flash #}
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        {% for competition in competitions %}
+            <div class="competition">
+                <h2>{{ competition.nomComp }}</h2>
+                <p class="date">Du {{ competition.dateDebut|date('d/m/Y') }} au {{ competition.dateFin|date('d/m/Y') }}</p>
+                <p class="description">{{ competition.description }}</p>
+                <p>Organisée par : {{ competition.nomEntreprise }}</p>
+                {% if competition.fichier %}
+                    <a href="{{ asset('uploads/' ~ competition.fichier) }}" target="_blank" class="button">Voir le fichier</a>
+                {% else %}
+                    <p>Aucun fichier disponible</p>
+                {% endif %}
+                <div>
+                    <a href="{{ path('app_competition_edit', {'id': competition.id}) }}" class="button">Modifier</a>
+                    <form method="post" action="{{ path('app_competition_delete', {'id': competition.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette compétition ?');" style="display: inline;">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="submit" class="button btn-danger">Supprimer</button>
+                    </form>
+                </div>
+            </div>
+        {% else %}
+            <p>Aucune compétition trouvée.</p>
+        {% endfor %}
+
+        <a href="{{ path('addcompetition') }}" class="button">Ajouter une Compétition</a>
+    </div>
+</div>
+{% endblock %}

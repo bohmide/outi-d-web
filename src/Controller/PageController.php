@@ -54,6 +54,7 @@ final class PageController extends AbstractController{
             return $this->render('pages/courses.html.twig');
         }
 
+
         #[Route('/login', name: 'login')]
         public function login(): Response
         {
@@ -83,4 +84,6 @@ final class PageController extends AbstractController{
         {
             return $this->render('pages/use.html.twig');
         }
+
 }
+
