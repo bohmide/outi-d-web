@@ -3,9 +3,7 @@
 namespace App\Controller;
 
 use App\Form\ForumType;
-use APP\FORM\PostType;
 use App\Entity\Forum;
-use App\Entity\Post;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,6 +11,7 @@ use Symfony\Component\Routing\Attribute\Route;
 Use App\Repository\ForumRepository;
 use App\Repository\PostRepository as RepositoryPostRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 final class ForumController extends AbstractController
 {
@@ -33,11 +32,21 @@ final class ForumController extends AbstractController
     
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $doctrine->getManager();
+            
+            $imageFile = $form->get('image_forum')->getData();
+            if ($imageFile) {
+                $newFilename = uniqid().'.'.$imageFile->guessExtension();
+                $imageFile->move(
+                    $this->getParameter('forum_images_directory'),
+                    $newFilename
+                );
+                $forum->setImageForum($newFilename);
+            }
+    
             $em->persist($forum);
             $em->flush();
     
-            // Rediriger vers la page showforum après l'ajout du forum
-            return $this->redirectToRoute('app_showforum', ['id' => $forum->getId()]);
+            return $this->redirectToRoute('app_showforum');
         }
     
         return $this->render('forum/addforum.html.twig', [
@@ -75,15 +84,43 @@ final class ForumController extends AbstractController
         $form->handleRequest($req);
     
         if ($form->isSubmitted() && $form->isValid()) {
+            // Vérifie si une nouvelle image a été téléchargée
+            /** @var UploadedFile $imageFile */
+            $imageFile = $form->get('image_forum')->getData();
+    
+            if ($imageFile) {
+                // Générer un nom unique pour l'image
+                $newFilename = uniqid('', true) . '.' . $imageFile->guessExtension();
+    
+                try {
+                    // Déplacer le fichier dans le répertoire de stockage
+                    $imageFile->move(
+                        $this->getParameter('forum_images_directory'), // Le répertoire où l'image sera stockée
+                        $newFilename
+                    );
+                    // Mettre à jour le champ imageForum avec le nouveau nom du fichier
+                    $forum->setImageForum($newFilename);
+                } catch (FileException $e) {
+                    // Gestion d'erreur si l'upload échoue
+                    $this->addFlash('error', 'L\'upload de l\'image a échoué.');
+                    return $this->redirectToRoute('app_updateforum', ['id' => $forum->getId()]);
+                }
+            }
+    
+            // Enregistrer les modifications dans la base de données
             $em->flush();
+    
+            // Afficher un message de succès
             $this->addFlash('success', 'Forum mis à jour avec succès !');
             return $this->redirectToRoute('app_showforum', ['id' => $forum->getId()]);
         }
+    
         return $this->render('forum/updateforum.html.twig', [
             'forum' => $forum,
             'form' => $form->createView(),
         ]);
     }
+
     #[Route('/forum/{id}/posts', name: 'app_showposts')]
 public function showPosts($id, ForumRepository $forumRepository,RepositoryPostRepository $postRepository): Response
 {

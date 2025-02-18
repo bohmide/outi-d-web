@@ -65,7 +65,50 @@ final class PostController extends AbstractController
 
         return $this->json(['nbLike' => $post->getNbLike()]);
     }
+    #[Route('/post/{id}/delete', name: 'app_deletepost', methods: ['POST'])]
+    public function deletePost($id, ManagerRegistry $m, Request $request): Response
+    {
+        $em = $m->getManager();
+        $post = $em->getRepository(Post::class)->find($id);
 
+        if (!$post) {
+            $this->addFlash('danger', 'Le post n\'existe pas.');
+            return $this->redirectToRoute('app_showposts', ['id' => $post->getForum()->getId()]);
+        }
 
+        $forumId = $post->getForum()->getId();
+        $em->remove($post);
+        $em->flush();
+
+        $this->addFlash('success', 'Post supprimé avec succès.');
+
+        return $this->redirectToRoute('app_showposts', ['id' => $forumId]);
+    }
+
+    #[Route('/post/{id}/edit', name: 'app_editpost')]
+    public function editPost($id, Request $request, ManagerRegistry $doctrine): Response
+    {
+        $em = $doctrine->getManager();
+        $post = $em->getRepository(Post::class)->find($id);
+    
+        if (!$post) {
+            throw $this->createNotFoundException("Le post avec l'ID $id n'existe pas.");
+        }
+    
+        $forum = $post->getForum();
+        $form = $this->createForm(PostType::class, $post);
+        $form->handleRequest($request);
+    
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+            $this->addFlash('success', 'Post modifié avec succès !');
+            return $this->redirectToRoute('app_showposts', ['id' => $forum->getId()]);
+        }
+    
+        return $this->render('post/editpost.html.twig', [
+            'form' => $form->createView(),
+            'forum' => $forum  
+        ]);
+    }
     
 }

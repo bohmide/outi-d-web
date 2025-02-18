@@ -13,10 +13,10 @@ final class PageController extends AbstractController{
             return $this->render('pages/index.html.twig');
         }
     
-        #[Route('/about', name: 'about')]
+        #[Route('/forum', name: 'forum')]
         public function about(): Response
         {
-            return $this->render('pages/about.html.twig');
+            return $this->render('forum/showforum.html.twig');
         }
     
         #[Route('/courses', name: 'courses')]

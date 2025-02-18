@@ -26,6 +26,14 @@
 
     <div class="form-group mb-3">
         <label for="forum_image" class="form-label">Image du forum</label>
+        <!-- Ne pas afficher l'image ici, mais pré-remplir le champ -->
+        {% if forum.imageForum %}
+            <p>Image actuelle : {{ forum.imageForum }}</p>
+        {% else %}
+            <p>Aucune image actuelle.</p>
+        {% endif %}
+        
+        <!-- Le champ pour télécharger une nouvelle image -->
         {{ form_widget(form.image_forum, {'attr': {'class': 'form-control', 'id': 'forum_image'}}) }}
         {{ form_errors(form.image_forum) }}
     </div>
@@ -44,4 +52,3 @@
     {{ form_end(form) }}
 </div>
 {% endblock %}
-

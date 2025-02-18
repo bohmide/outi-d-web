@@ -2,11 +2,12 @@
 
 namespace App\Form;
 
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use App\Entity\Forum;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Validator\Constraints\File;
 
 class ForumType extends AbstractType
@@ -16,15 +17,28 @@ class ForumType extends AbstractType
         $builder
             ->add('nom')
             ->add('theme')
-            ->add('image_forum')
-            ->add('save', SubmitType::class)
-        ;
+            ->add('image_forum', FileType::class, [
+                'label' => 'Image du forum',
+                'required' => false,
+                'mapped' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '2M',
+                        'mimeTypes' => ['image/jpeg', 'image/png', 'image/gif'],
+                        'mimeTypesMessage' => 'Veuillez télécharger une image valide (JPEG, PNG, GIF)',
+                    ])
+                ],
+            ])
+            ->add('save', SubmitType::class, [
+                'label' => 'Créer Forum',
+                'attr' => ['class' => 'btn btn-primary']
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            // Configure your form options here
+            'data_class' => Forum::class,
         ]);
     }
 }

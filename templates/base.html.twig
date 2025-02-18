@@ -49,7 +49,7 @@
               <nav id="navmenu" class="navmenu">
                 <ul>
                   <li><a href="{{path('base')}}" class="{% if app.request.pathinfo == path('base') %}active{% endif %}">Home<br></a></li>
-                  <li><a href="{{path('about')}}"  class="{% if app.request.pathinfo == path('about') %}active{% endif %}">About</a></li>
+                  <li><a href="{{path('app_showforum')}}"  class="{% if app.request.pathinfo == path('forum') %}active{% endif %}">Forum</a></li>
                   <li><a href="{{path('courses')}}" class="{% if app.request.pathinfo == path('courses') %}active{% endif %}">Courses</a></li>
                   <li><a href="{{path('trainers')}}" class="{% if app.request.pathinfo == path('trainers') %}active{% endif %}">Trainers</a></li>
                   <li><a href="{{path('events')}}" class="{% if app.request.pathinfo == path('events') %}active{% endif %}">Events</a></li>
