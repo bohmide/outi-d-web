@@ -53,9 +53,12 @@ final class PageController extends AbstractController{
         {
             return $this->render('pages/courses.html.twig');
         }
+
         #[Route('/', name: 'use')]
         public function quiz(): Response
         {
             return $this->render('pages/use.html.twig');
         }
+
 }
+

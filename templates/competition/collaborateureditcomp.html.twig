@@ -1,0 +1,23 @@
+{% extends "base.html.twig" %}
+
+{% block title %} Compétition  {% endblock %}
+
+{% block body %}
+<h1>Modifier la Compétition</h1>
+
+    {# Afficher les messages flash #}
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    {# Formulaire de mise à jour #}
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button type="submit" class="btn btn-primary">Mettre à jour</button>
+    {{ form_end(form) }}
+
+    {# Lien pour retourner à la liste #}
+    <a href="{{ path('competitionlist') }}" class="btn btn-secondary mt-3">Retour à la liste</a>
+{% endblock %}

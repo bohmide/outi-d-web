@@ -12,3 +12,8 @@
 ###> symfony/asset-mapper ###
 
 ###< symfony/asset-mapper ###
+
+
+/.env
+/assets
+/composer.jsom
