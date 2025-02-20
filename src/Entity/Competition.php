@@ -37,6 +37,10 @@ class Competition
     #[ORM\Column(length: 255)]
     private ?string $fichier = null;
 
+    #[ORM\ManyToOne(inversedBy: 'competition')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Organisation $organisation = null;
+
     
     
 
@@ -125,6 +129,18 @@ class Competition
     public function setFichierFile(?File $fichierFile): void
     {
         $this->fichierFile = $fichierFile;
+    }
+
+    public function getOrganisation(): ?Organisation
+    {
+        return $this->organisation;
+    }
+
+    public function setOrganisation(?Organisation $organisation): static
+    {
+        $this->organisation = $organisation;
+
+        return $this;
     }
 
     

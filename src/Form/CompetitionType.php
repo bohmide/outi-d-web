@@ -35,7 +35,7 @@ class CompetitionType extends AbstractType
         ])
         ->add('fichierFile', FileType::class, [
             'label' => 'Fichier à Télécharger (Image, PDF, Excel)',
-            'required' => true, // Rendre le champ obligatoire
+            'required' => false, // Rendre le champ obligatoire
             'attr' => [
                 'class' => 'file-upload-input', // Classe CSS personnalisée
                 'accept' => 'image/*, .pdf, .xlsx, .xls', // Types de fichiers acceptés
