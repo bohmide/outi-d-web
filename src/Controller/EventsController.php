@@ -27,8 +27,19 @@ final class EventsController extends AbstractController
     }
 
     // show front
-    #[Route('/events/showEvents', name: 'app_front_show_events')]
+    #[Route('/events/prof/showEvents', name: 'app_front_prof_show_events')]
     public function showEventGenreF(EvenementsRepository $er): Response
+    {
+        $events = $er->findAll();
+
+        return $this->render('events/front/showEvents.html.twig', [
+            'events' => $events,
+        ]);
+    }
+
+    // show front
+    #[Route('/events/etudiant/showEvents', name: 'app_front_etudiant_show_events')]
+    public function showEventF(EvenementsRepository $er): Response
     {
         $events = $er->findAll();
 
@@ -37,25 +48,26 @@ final class EventsController extends AbstractController
         ]);
     }
 
-        // show front
-        #[Route('/events/etudiant/showEvents', name: 'app_front_etudiant_show_events')]
-        public function showEventF(EvenementsRepository $er): Response
-        {
-            $events = $er->findAll();
-    
-            return $this->render('events/front/showEventsV2.html.twig', [
-                'events' => $events,
-            ]);
-        }
-
     // show back
-    #[Route('/admin/events/showEvents', name: 'app_back_show_events')]
+    #[Route('/admin/events/prof/showEvents', name: 'app_back_show_events')]
     public function showEventGenreB(EvenementsRepository $er): Response
     {
         $events = $er->findAll();
 
         return $this->render('events/back/showEvents.html.twig', [
             'events' => $events,
+        ]);
+    }
+
+
+    // show front details
+    #[Route('/events/etudiant/details/{id}', name: 'app_back_show_events')]
+    public function showEventDetails($id, EvenementsRepository $er): Response
+    {
+        $event = $er->find($id);
+
+        return $this->render('events/front/eventDetails.html.twig', [
+            'event' => $event,
         ]);
     }
 
@@ -111,7 +123,7 @@ final class EventsController extends AbstractController
 
             $mr->getManager()->persist($event);
             $mr->getManager()->flush();
-            return $this->redirectToRoute('app_front_show_events');
+            return $this->redirectToRoute('app_front_prof_show_events');
         }
 
         return $this->render('events/front/addEvent.html.twig', [
@@ -140,7 +152,7 @@ final class EventsController extends AbstractController
 
             if ($existEventName) {
                 $this->addFlash('errorNameExist', 'This Event name already exists.');
-                return $this->render('events/front/addEvent.html.twig', [ 'form' => $form,]);
+                return $this->render('events/front/addEvent.html.twig', ['form' => $form,]);
             }
 
 
@@ -175,7 +187,7 @@ final class EventsController extends AbstractController
 
             $mr->getManager()->persist($event);
             $mr->getManager()->flush();
-            return $this->redirectToRoute('app_front_show_events');
+            return $this->redirectToRoute('app_front_prof_show_events');
         }
 
         return $this->render('events/front/addEvent.html.twig', [
@@ -245,6 +257,6 @@ final class EventsController extends AbstractController
         $manager->flush();
 
 
-        return $this->redirectToRoute('app_front_show_events');
+        return $this->redirectToRoute('app_front_prof_show_events');
     }
 }
