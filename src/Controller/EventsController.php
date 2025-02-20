@@ -32,13 +32,24 @@ final class EventsController extends AbstractController
     {
         $events = $er->findAll();
 
-        return $this->render('events/front/showEvents.html.twig', [
+        return $this->render('events/front/showEventsV2.html.twig', [
             'events' => $events,
         ]);
     }
 
+        // show front
+        #[Route('/events/etudiant/showEvents', name: 'app_front_etudiant_show_events')]
+        public function showEventF(EvenementsRepository $er): Response
+        {
+            $events = $er->findAll();
+    
+            return $this->render('events/front/showEventsV2.html.twig', [
+                'events' => $events,
+            ]);
+        }
+
     // show back
-    #[Route('/admin/events/showEvents', name: 'app_front_show_events')]
+    #[Route('/admin/events/showEvents', name: 'app_back_show_events')]
     public function showEventGenreB(EvenementsRepository $er): Response
     {
         $events = $er->findAll();
@@ -117,6 +128,23 @@ final class EventsController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
+
+            // check the name
+            $existEventName = $er->createQueryBuilder('e')
+                ->where('e.nom_event = :nom_event')
+                ->andWhere('e.id != :id')
+                ->setParameter('nom_event', $event->getNomEvent())
+                ->setParameter('id', $event->getId())
+                ->getQuery()
+                ->getOneOrNullResult();
+
+            if ($existEventName) {
+                $this->addFlash('errorNameExist', 'This Event name already exists.');
+                return $this->render('events/front/addEvent.html.twig', [ 'form' => $form,]);
+            }
+
+
+            // check the nbr limite
             $eventNbr = $event->getNbrMembers();
             if ($eventNbr < 0) {
                 $this->addFlash('errorNbrLimit', 'number limit must be positive');
@@ -196,14 +224,14 @@ final class EventsController extends AbstractController
 
             $mr->getManager()->persist($event);
             $mr->getManager()->flush();
-            return $this->redirectToRoute('app_front_show_events');
+            return $this->redirectToRoute('app_back_show_events');
         }
 
         return $this->render('events/back/addEvent.html.twig', [
             'form' => $form,
             'events' => $events,
         ]);
-    } 
+    }
 
     // delete
     #[Route('/events/deleteEvent/{id}', name: 'app_delete_event')]
