@@ -26,20 +26,31 @@ final class EventsController extends AbstractController
         ]);
     }
 
-    // show
-    #[Route('/events/showEvents', name: 'app_show_events')]
-    public function showEventGenre(EvenementsRepository $er): Response
+    // show front
+    #[Route('/events/showEvents', name: 'app_front_show_events')]
+    public function showEventGenreF(EvenementsRepository $er): Response
     {
         $events = $er->findAll();
 
-        return $this->render('events/showEvents.html.twig', [
+        return $this->render('events/front/showEvents.html.twig', [
+            'events' => $events,
+        ]);
+    }
+
+    // show back
+    #[Route('/admin/events/showEvents', name: 'app_front_show_events')]
+    public function showEventGenreB(EvenementsRepository $er): Response
+    {
+        $events = $er->findAll();
+
+        return $this->render('events/back/showEvents.html.twig', [
             'events' => $events,
         ]);
     }
 
 
     // create
-    #[Route('/events/addEvent', name: 'app_add_event')]
+    #[Route('/events/addEvent', name: 'app_front_add_event')]
     public function addSponsor(Request $request, ManagerRegistry $mr, EvenementsRepository $er, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         $event = new Evenements();
@@ -50,21 +61,21 @@ final class EventsController extends AbstractController
             $existEventName = $er->findOneBy(['nom_event' => $event->getNomEvent()]);
             if ($existEventName) {
                 $this->addFlash('errorNameExist', 'This Event name already exists.');
-                return $this->redirectToRoute('app_add_event');
+                return $this->redirectToRoute('app_front_add_event');
             }
-            if($event->getDateEvent()==null){
-                $this->addFlash('errorDate','date is require');
-                return $this->redirectToRoute('app_add_event');
+            if ($event->getDateEvent() == null) {
+                $this->addFlash('errorDate', 'date is require');
+                return $this->redirectToRoute('app_front_add_event');
             }
 
-            $eventNbr= $event->getNbrMembers();
+            $eventNbr = $event->getNbrMembers();
             if ($eventNbr < 0) {
-                $this->addFlash('errorNbrLimit','number limit must be positive');
-                return $this->render('events/addEvent.html.twig', [
+                $this->addFlash('errorNbrLimit', 'number limit must be positive');
+                return $this->render('events/front/addEvent.html.twig', [
                     'form' => $form,
                 ]);
             }
-            
+
             // add image
             /** @var UploadedFile $imageFile */
 
@@ -85,31 +96,31 @@ final class EventsController extends AbstractController
             }
 
             $eventGenre = $event->getGenre();
-            $eventGenre->setNbr($eventGenre->getNbr()+1);
+            $eventGenre->setNbr($eventGenre->getNbr() + 1);
 
             $mr->getManager()->persist($event);
             $mr->getManager()->flush();
-            return $this->redirectToRoute('app_show_events');
+            return $this->redirectToRoute('app_front_show_events');
         }
 
-        return $this->render('events/addEvent.html.twig', [
+        return $this->render('events/front/addEvent.html.twig', [
             'form' => $form,
         ]);
     }
 
-    // update
-    #[Route('/events/updateEvent/{id}', name: 'app_update_event')]
-    public function updateSponsor($id, Request $request, ManagerRegistry $mr, EvenementsRepository $er, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+    // update front
+    #[Route('/events/updateEvent/{id}', name: 'app_front_update_event')]
+    public function updateEventF($id, Request $request, ManagerRegistry $mr, EvenementsRepository $er, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         $event = $er->find($id);
         $form = $this->createForm(EvenementsType::class, $event);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $eventNbr= $event->getNbrMembers();
+            $eventNbr = $event->getNbrMembers();
             if ($eventNbr < 0) {
-                $this->addFlash('errorNbrLimit','number limit must be positive');
-                return $this->render('events/addEvent.html.twig', [
+                $this->addFlash('errorNbrLimit', 'number limit must be positive');
+                return $this->render('events/front/addEvent.html.twig', [
                     'form' => $form,
                 ]);
             }
@@ -136,13 +147,63 @@ final class EventsController extends AbstractController
 
             $mr->getManager()->persist($event);
             $mr->getManager()->flush();
-            return $this->redirectToRoute('app_show_events');
+            return $this->redirectToRoute('app_front_show_events');
         }
 
-        return $this->render('events/addEvent.html.twig', [
+        return $this->render('events/front/addEvent.html.twig', [
             'form' => $form,
         ]);
     }
+
+    // update back
+    #[Route('admin/events/updateEvent/{id}', name: 'app_back_update_event')]
+    public function updateEventB($id, Request $request, ManagerRegistry $mr, EvenementsRepository $er, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+    {
+
+        $events = $er->findAll();
+        $event = $er->find($id);
+        $form = $this->createForm(EvenementsType::class, $event);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $eventNbr = $event->getNbrMembers();
+            if ($eventNbr < 0) {
+                $this->addFlash('errorNbrLimit', 'number limit must be positive');
+                return $this->render('events/back/addEvent.html.twig', [
+                    'form' => $form,
+                ]);
+            }
+
+
+            // add image
+            /** @var UploadedFile $imageFile */
+
+            $imageFile = $form->get('image_file')->getData();
+            if ($imageFile) {
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename); // Slugify filename
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
+                try {
+                    $imageFile->move(
+                        $this->getParameter('events_images_directory'),
+                        $newFilename
+                    );
+                    $event->setImagePath($newFilename);
+                } catch (FileException $fe) {
+                    $this->addFlash('error', $fe->getMessage());
+                }
+            }
+
+            $mr->getManager()->persist($event);
+            $mr->getManager()->flush();
+            return $this->redirectToRoute('app_front_show_events');
+        }
+
+        return $this->render('events/back/addEvent.html.twig', [
+            'form' => $form,
+            'events' => $events,
+        ]);
+    } 
 
     // delete
     #[Route('/events/deleteEvent/{id}', name: 'app_delete_event')]
@@ -152,10 +213,10 @@ final class EventsController extends AbstractController
         $manager = $managerRegistry->getManager();
         $manager->remove($event);
         $eventGenre = $event->getGenre();
-        $eventGenre->setNbr($eventGenre->getNbr()-1);
+        $eventGenre->setNbr($eventGenre->getNbr() - 1);
         $manager->flush();
 
 
-        return $this->redirectToRoute('app_show_events');
+        return $this->redirectToRoute('app_front_show_events');
     }
 }

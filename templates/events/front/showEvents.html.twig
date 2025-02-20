@@ -7,7 +7,7 @@
 	<div class="container my-5">
 		<h1 class="text-center mb-4">Gestion des Événements</h1>
 
-		<a href="{{ path('app_add_event') }}" class="btn btn-primary mb-4">Ajouter un Nouvel Événement</a>
+		<a href="{{ path('app_front_add_event') }}" class="btn btn-primary mb-4">Ajouter un Nouvel Événement</a>
 
 		{% if events is empty %}
 			<p colspan="8" class="text-center">Aucun événement trouvé.</p>
@@ -48,7 +48,7 @@
 								{% endif %}
 							</td>
 							<td>
-								<a href="{{ path('app_update_event', {'id': event.getId()}) }}" class="btn btn-warning mb-2">Modifier</a>
+								<a href="{{ path('app_front_update_event', {'id': event.getId()}) }}" class="btn btn-warning mb-2">Modifier</a>
 								<form action="{{ path('app_delete_event', {'id': event.getId()}) }}" method="post" class="d-inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet événement ?');">
 									<button type="submit" class="btn btn-danger">Supprimer</button>
 								</form>
