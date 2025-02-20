@@ -37,7 +37,10 @@ final class EventGenreController extends AbstractController
             $existGenreName = $egr->findOneBy(['nom_genre' => $eventGenre->getNomGenre()]);
             if ($existGenreName) {
                 $this->addFlash('errorNameExist', 'This genre name already exists.');
-                return $this->redirectToRoute('app_front_add_event_genre');
+                return $this->render('event_genre/addGenre.html.twig', [
+                    'form' => $form,
+                    'eventGenres' => $eventGenres,
+                ]);
             }
             //initialize the nbr of the new genre
             $eventGenre->setNbr(0);
