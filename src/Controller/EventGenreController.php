@@ -28,6 +28,7 @@ final class EventGenreController extends AbstractController
     #[Route('/events/addGenre', name: 'app_add_event_genre')]
     public function addGenre(Request $request, ManagerRegistry $mr, EventGenreRepository $egr, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
+        $eventGenres = $egr->findAll();
         $eventGenre = new EventGenre();
         $form = $this->createForm(EventGenreType::class, $eventGenre);
         $form->handleRequest($request);
@@ -66,6 +67,7 @@ final class EventGenreController extends AbstractController
 
         return $this->render('event_genre/addGenre.html.twig', [
             'form' => $form,
+            'eventGenres' => $eventGenres,
         ]);
     }
 
@@ -84,6 +86,8 @@ final class EventGenreController extends AbstractController
     #[Route('/events/updateGenre/{id}', name: 'app_update_event_genre')]
     public function updateGenre($id, Request $request, ManagerRegistry $mr, EventGenreRepository $egr, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
+        $eventGenres = $egr->findAll();
+
         $eventGenre = $egr->find($id);
         $form = $this->createForm(EventGenreType::class, $eventGenre);
         $form->handleRequest($request);
@@ -115,6 +119,8 @@ final class EventGenreController extends AbstractController
 
         return $this->render('event_genre/addGenre.html.twig', [
             'form' => $form,
+            'eventGenres' => $eventGenres,
+
         ]);
     }
 
