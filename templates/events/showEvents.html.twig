@@ -1,59 +1,62 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Event
+{% block title %}Gestion des Événements -
 {% endblock %}
 
 {% block body %}
-	<h1>Event</h1>
+	<div class="container my-5">
+		<h1 class="text-center mb-4">Gestion des Événements</h1>
 
-	<a href="{{ path('app_add_event') }}">Add New event</a>
-    <br>
-    <a href="{{ path('app_show_event_genre') }}">Show Event genres</a>
-	<br>
-    <a href="{{ path('app_show_sponsors') }}">Show Sponsor</a>
+		<a href="{{ path('app_add_event') }}" class="btn btn-primary mb-4">Ajouter un Nouvel Événement</a>
 
-
-	<table border="0">
-    <thead>
-        <tr>
-            <th style="padding: 10px;">Name</th>
-            <th style="padding: 10px;">Description</th>
-            <th style="padding: 10px;">Date</th>
-            <th style="padding: 10px;">Members</th>
-            <th style="padding: 10px;">Genre</th>
-            <th style="padding: 10px;">Sponsors</th>
-            <th style="padding: 10px;">Image</th>
-            <th style="padding: 10px;">Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for event in events %}
-            <tr>
-                <td style="padding: 10px;"><strong>{{ event.getNomEvent() }}</strong></td>
-                <td style="padding: 10px;">{{ event.getDescription() }}</td>
-                <td style="padding: 10px;">{{ event.getDateEvent()|date }}</td>
-                <td style="padding: 10px;">{{ event.getNbrMembers() ?? 'Illimité' }}</td>
-                <td style="padding: 10px;">{{ event.genre.getNomGenre() }}</td>
-                    {% for sponsor in event.getSponsors() %}
-                    <td>{{ sponsor.getNomSponsor() }}<br></td>
+		{% if events is empty %}
+			<p colspan="8" class="text-center">Aucun événement trouvé.</p>
+		{% else %}
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Nom</th>
+						<th>Description</th>
+						<th>Date</th>
+						<th>Membres</th>
+						<th>Genre</th>
+						<th>Sponsors</th>
+						<th>Image</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for event in events %}
+						<tr>
+							<td>
+								<strong>{{ event.getNomEvent() }}</strong>
+							</td>
+							<td>{{ event.getDescription() }}</td>
+							<td>{{ event.getDateEvent()|date('d/m/Y') }}</td>
+							<td>{{ event.getNbrMembers() ?? 'Illimité' }}</td>
+							<td>{{ event.genre.getNomGenre() }}</td>
+							<td>
+								{% for sponsor in event.getSponsors() %}
+									{{ sponsor.getNomSponsor() }}<br>
+								{% endfor %}
+							</td>
+							<td>
+								{% if event.getImagePath() %}
+									<img src="{{ asset('uploads/events_images/' ~ event.imagePath) }}" alt="Event Image" height="50">
+								{% else %}
+									Aucune image
+								{% endif %}
+							</td>
+							<td>
+								<a href="{{ path('app_update_event', {'id': event.getId()}) }}" class="btn btn-warning mb-2">Modifier</a>
+								<form action="{{ path('app_delete_event', {'id': event.getId()}) }}" method="post" class="d-inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet événement ?');">
+									<button type="submit" class="btn btn-danger">Supprimer</button>
+								</form>
+							</td>
+						</tr>
                     {% endfor %}
-                </td>
-                <td style="padding: 10px;">
-                    {% if event.getImagePath() %}
-                        <img src="{{ asset('uploads/events_images/' ~ event.imagePath) }}" alt="Event Image" height="50">
-                    {% endif %}
-                </td>
-                <td style="padding: 10px;">
-                    <a href="{{ path('app_update_event', {'id': event.getId()}) }}">Modify</a> |
-                    <a href="{{ path('app_delete_event', {'id': event.getId()}) }}">Delete</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="8">No event found.</td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
+				</tbody>
+			</table>
+		{% endif %}
+	</div>
 {% endblock %}
