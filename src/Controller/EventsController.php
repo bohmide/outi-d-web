@@ -61,7 +61,7 @@ final class EventsController extends AbstractController
 
 
     // show front details
-    #[Route('/events/etudiant/details/{id}', name: 'app_back_show_events')]
+    #[Route('/events/etudiant/details/{id}', name: 'app_show_details_events')]
     public function showEventDetails($id, EvenementsRepository $er): Response
     {
         $event = $er->find($id);
@@ -96,6 +96,8 @@ final class EventsController extends AbstractController
                 $this->addFlash('errorNbrLimit', 'number limit must be positive');
                 return $this->render('events/front/addEvent.html.twig', [
                     'form' => $form,
+                    'label' => 'Mise a jour'
+
                 ]);
             }
 
@@ -128,6 +130,7 @@ final class EventsController extends AbstractController
 
         return $this->render('events/front/addEvent.html.twig', [
             'form' => $form,
+            'label' => 'Ajouter Evenement'
         ]);
     }
 
@@ -162,6 +165,8 @@ final class EventsController extends AbstractController
                 $this->addFlash('errorNbrLimit', 'number limit must be positive');
                 return $this->render('events/front/addEvent.html.twig', [
                     'form' => $form,
+            'label' => 'Mise a jour'
+
                 ]);
             }
 
@@ -192,6 +197,7 @@ final class EventsController extends AbstractController
 
         return $this->render('events/front/addEvent.html.twig', [
             'form' => $form,
+            'label' => 'Mise a jour'
         ]);
     }
 
@@ -245,7 +251,7 @@ final class EventsController extends AbstractController
         ]);
     }
 
-    // delete
+    // delete front
     #[Route('/events/deleteEvent/{id}', name: 'app_delete_event')]
     public function deleteSponosr($id, EvenementsRepository $er, ManagerRegistry $managerRegistry): Response
     {
@@ -258,5 +264,20 @@ final class EventsController extends AbstractController
 
 
         return $this->redirectToRoute('app_front_prof_show_events');
+    }
+
+    // delete back
+    #[Route('/events/deleteEvent/{id}', name: 'app_delete_event')]
+    public function deleteSponosrB($id, EvenementsRepository $er, ManagerRegistry $managerRegistry): Response
+    {
+        $event = $er->find($id);
+        $manager = $managerRegistry->getManager();
+        $manager->remove($event);
+        $eventGenre = $event->getGenre();
+        $eventGenre->setNbr($eventGenre->getNbr() - 1);
+        $manager->flush();
+
+
+        return $this->redirectToRoute('app_back_show_events');
     }
 }

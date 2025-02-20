@@ -22,7 +22,7 @@
 						<div class="card-content">
 							<h2>{{ event.getNomEvent() }}</h2>
 							<p>{{ event.getDescription() }}</p>
-							<a href="{{path('app_back_show_events', {'id': event.getId()})}}" class="button">
+							<a href="{{path('app_show_details_events', {'id': event.getId()})}}" class="button">
 								Find out more
 								<span class="material-symbols-outlined">arrow_right_alt</span>
 							</a>
