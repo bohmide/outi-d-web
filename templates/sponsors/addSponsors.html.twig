@@ -1,48 +1,91 @@
-{% extends "base.html.twig" %}
+{% extends 'base_admin.html.twig' %}
 
 {% block title %}
-Home -
-{% endblock%}
+	Add Sponsor
+{% endblock %}
 
-{% block body%}
+{% block body %}
+	<!-- Content Start -->
+	<div class="content container-fluid pt-4 px-4">
+		<div class="row g-4 mb-4">
+			<div class="col-sm-12 col-xl-6 mb-3">
+				<div class="bg-secondary rounded h-100 p-4">
+					<h4 class="mb-4">Ajouter un nouveau Sponsor</h4>
 
-	<h1>Add Sponsor</h1>
+					{{ form_start(form, {'attr': {'enctype': 'multipart/form-data', 'novalidate': 'novalidate'}}) }}
 
-	<table>
-		{{ form_start(form, {'attr': {'enctype': 'multipart/form-data', 'novalidate': 'novalidate'}}) }}
-		<tr>
-			<th>
-				<label>{{ form_label(form.nom_sponsor, 'Sponsor Name') }}</label>
-			</th>
-			<td>{{ form_widget(form.nom_sponsor) }}</td>
-			<td>
-				{{ form_errors(form.nom_sponsor) }}
-				{% for message in app.flashes('errorNameExist') %}
-					{{message}}
-				{% endfor %}	
-			</td>
-		</tr>
-		<tr>
-			<th>
-				<label>{{ form_label(form.description, 'Description') }}</label>
-			</th>
-			<td>{{ form_widget(form.description) }}</td>
-			<td>{{ form_errors(form.description) }}</td>
-		</tr>
-		<tr>
-			<th>
-				<label>{{ form_label(form.image_file, 'Image') }}</label>
-			</th>
-			<td>{{ form_widget(form.image_file) }}</td>
-			<td>{{ form_errors(form.image_file) }}</td>
-		</tr>
-		<tr>
-			<td colspan="2" style="text-align: center;">
-				<button type="submit">Save</button>
-			</td>
-		</tr>
-		{{ form_end(form) }}
-	</table>
+					<div class="form-floating mb-4">
+						{{ form_widget(form.nom_sponsor, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le nom du sponsor'}}) }}
+						{{ form_label(form.nom_sponsor, 'Nom du Sponsor') }}
+						<div class="form-text text-danger">
+							{{ form_errors(form.nom_sponsor) }}
+							{% for message in app.flashes('errorNameExist') %}
+								<span class="text-danger">{{ message }}</span>
+							{% endfor %}
+						</div>
+					</div>
 
+					<div class="form-floating mb-4">
+						{{ form_widget(form.description, {'attr': {'class': 'form-control', 'placeholder': 'Entrez une description', 'style': 'height: 150px;'}}) }}
+						{{ form_label(form.description, 'Description') }}
+						<div class="form-text text-danger">
+							{{ form_errors(form.description) }}
+						</div>
+					</div>
 
+					<div class="mb-3">
+						{{ form_widget(form.image_file, {'attr': {'class': 'form-control mb-4 bg-dark', 'type': 'file'}}) }}
+						{{ form_label(form.image_file, 'Image') }}
+						<div class="form-text text-danger">
+							{{ form_errors(form.image_file) }}
+						</div>
+					</div>
+
+					<button type="submit" class="btn btn-primary">Enregistrer</button>
+
+					{{ form_end(form) }}
+				</div>
+			</div>
+
+			<div class="col-sm-12 col-xl-6">
+				<div class="bg-secondary rounded h-100 p-4">
+					<h6 class="mb-4">Liste des Sponsors</h6>
+					<div class="table-responsive">
+						<table class="table">
+							<thead>
+								<tr>
+									<th scope="col">#</th>
+									<th scope="col">Nom</th>
+									<th scope="col">Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for sponsor in sponsors %}
+									<tr>
+										<th scope="row">{{ loop.index }}</th>
+										<td>{{ sponsor.nomSponsor }}</td>
+										<td>{{ sponsor.description }}</td>
+
+									</tr>
+								{% else %}
+									<tr>
+										<td colspan="5" class="text-center">Aucun sponsor ajouté pour le moment.</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6 col-xl-3">
+				<div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+					<i class="fa fa-chart-line fa-3x text-primary"></i>
+					<div class="ms-3">
+						<p class="mb-2">Total Sponsors</p>
+						<h6 class="mb-0">{{ sponsors|length }}</h6>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}

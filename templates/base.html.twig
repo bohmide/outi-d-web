@@ -27,6 +27,7 @@
         <link href="{{asset('js/frontoffice/vendor/swiper/swiper-bundle.min.css')}}" rel="stylesheet">
       
         <!-- Main CSS File -->
+        <link rel="stylesheet" href="{{ asset('styles/frontoffice/Event_utils/Card_style.css') }}">
         <link href="{{asset('styles/frontoffice/css/main.css')}}" rel="stylesheet">
         {% endblock %}
 
@@ -52,10 +53,9 @@
                   <li><a href="{{path('base')}}" class="{% if app.request.pathinfo == path('base') %}active{% endif %}">Home<br></a></li>
                   <li><a href="{{path('app_showforum')}}"  class="{% if app.request.pathinfo == path('forum') %}active{% endif %}">Forum</a></li>
                   <li><a href="{{path('courses')}}" class="{% if app.request.pathinfo == path('courses') %}active{% endif %}">Courses</a></li>
-                  <li><a href="{{path('about')}}"  class="{% if app.request.pathinfo == path('about') %}active{% endif %}">About</a></li>
                   <li><a href="{{path('app_showcours')}}" class="{% if app.request.pathinfo == path('app_showcours') %}active{% endif %}">Cours</a></li>
                   <li><a href="{{path('trainers')}}" class="{% if app.request.pathinfo == path('trainers') %}active{% endif %}">Trainers</a></li>
-                  <li><a href="{{path('app_show_events')}}" class="{% if app.request.pathinfo == path('app_show_events') %}active{% endif %}">Events</a></li>
+                  <li><a href="{{path('app_front_etudiant_show_events')}}" class="{% if app.request.pathinfo == path('app_front_etudiant_show_events') %}active{% endif %}">Events</a></li>
                   <li><a href="{{path('competitionlist')}}" class="{% if app.request.pathinfo == path('competitionlist') %}active{% endif %}">Competition List</a></li>
                   <li><a href="{{path('contact')}}" class="{% if app.request.pathinfo == path('contact') %}active{% endif %}">Contact</a></li>
                   <li class="dropdown"><a href="#"><span>Sign Up</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>

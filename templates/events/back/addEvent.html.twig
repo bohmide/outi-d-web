@@ -1,0 +1,131 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}
+	Ajouter un Événement
+{% endblock %}
+
+{% block body %}
+	<!-- Content Start -->
+	<div class="content container-fluid pt-4 px-4">
+		<div class="row g-4 mb-4">
+			<div class="col-sm-12 col-xl-6 mb-3">
+				<div class="bg-secondary rounded h-100 p-4">
+					<h4 class="mb-4">Ajouter un Nouvel Événement</h4>
+
+					{{ form_start(form, {'attr': {'enctype': 'multipart/form-data', 'novalidate': 'novalidate'}}) }}
+
+					<div class="form-floating mb-4">
+						{{ form_widget(form.nom_event, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le nom de l\'événement'}}) }}
+						{{ form_label(form.nom_event, 'Nom Événement') }}
+						<div class="form-text text-danger">
+							{{ form_errors(form.nom_event) }}
+							{% for message in app.flashes('errorNameExist') %}
+								<span class="text-danger">{{ message }}</span>
+							{% endfor %}
+						</div>
+					</div>
+
+					<div class="form-floating mb-4">
+						{{ form_widget(form.date_event, {'attr': {'class': 'form-control', 'placeholder': 'Sélectionnez la date de début'}}) }}
+						{{ form_label(form.date_event, 'Date Début') }}
+						<div class="form-text text-danger">
+							{{ form_errors(form.date_event) }}
+							{% for message in app.flashes('errorDate') %}
+								<span class="text-danger">{{ message }}</span>
+							{% endfor %}
+						</div>
+					</div>
+
+					<div class="form-floating mb-4">
+						{{ form_widget(form.nbr_members, {'attr': {'class': 'form-control', 'placeholder': 'Nombre limité de participants'}}) }}
+						{{ form_label(form.nbr_members, 'Nombre Limité de Participants') }}
+						<div class="form-text text-danger">
+							{{ form_errors(form.nbr_members) }}
+							{% for message in app.flashes('errorNbrLimit') %}
+								<span class="text-danger">{{ message }}</span>
+							{% endfor %}
+						</div>
+					</div>
+
+					<div class="form-floating mb-4">
+						{{ form_widget(form.genre, {'attr': {'class': 'form-control'}}) }}
+						{{ form_label(form.genre, 'Genre') }}
+						<div class="form-text text-danger">
+							{{ form_errors(form.genre) }}
+						</div>
+					</div>
+
+					<div class="form-floating mb-4">
+						{{ form_widget(form.description, {'attr': {'class': 'form-control', 'placeholder': 'Plus de détails'}}) }}
+						{{ form_label(form.description, 'Plus de Détails') }}
+						<div class="form-text text-danger">
+							{{ form_errors(form.description) }}
+						</div>
+					</div>
+
+					<div class="form-floating mb-4">
+						{{ form_widget(form.sponsors, {'attr': {'class': 'form-control'}}) }}
+						{{ form_label(form.sponsors, 'Sponsors') }}
+						<div class="form-text text-danger">
+							{{ form_errors(form.sponsors) }}
+						</div>
+					</div>
+
+					<div class="mb-3">
+						{{ form_widget(form.image_file, {'attr': {'class': 'form-control mb-4 bg-dark', 'type': 'file'}}) }}
+						{{ form_label(form.image_file, 'Image') }}
+						<div class="form-text text-danger">
+							{{ form_errors(form.image_file) }}
+						</div>
+					</div>
+
+					<button type="submit" class="btn btn-primary">Enregistrer</button>
+
+					{{ form_end(form) }}
+				</div>
+			</div>
+
+			<div class="col-sm-12 col-xl-6">
+				<div class="bg-secondary rounded h-100 p-4">
+					<h6 class="mb-4">Liste des Événements</h6>
+					<div class="table-responsive">
+						<table class="table">
+							<thead>
+								<tr>
+									<th scope="col">#</th>
+									<th scope="col">Nom Événement</th>
+									<th scope="col">Date</th>
+									<th scope="col">Genre</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for event in events %}
+									<tr>
+										<th scope="row">{{ loop.index }}</th>
+										<td>{{ event.nomEvent }}</td>
+										<td>{{ event.dateEvent|date('d/m/Y') }}</td>
+										<td>{{ event.genre.nomGenre }}</td>
+									</tr>
+								{% else %}
+									<tr>
+										<td colspan="4" class="text-center">Aucun événement ajouté pour le moment.</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-6 col-xl-3">
+				<div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+					<i class="fa fa-chart-line fa-3x text-primary"></i>
+					<div class="ms-3">
+						<p class="mb-2">Total Événements</p>
+						<h6 class="mb-0">{{ events|length }}</h6>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
