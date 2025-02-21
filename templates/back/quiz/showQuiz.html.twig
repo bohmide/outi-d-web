@@ -5,6 +5,13 @@
 {% block body %}
 <div class="container my-5">
     <h1 class="text-center mb-4">Quiz du Chapitre : {{ chapitre.getNomChapitre() }}</h1>
+    {% for message in app.flashes('success') %}
+    <div class="alert alert-success">{{ message }}</div>
+        {% endfor %}
+
+      {% for message in app.flashes('error') %}
+    <div class="alert alert-danger">{{ message }}</div>
+          {% endfor %}
 
     {% if quiz %}
         <div class="card">

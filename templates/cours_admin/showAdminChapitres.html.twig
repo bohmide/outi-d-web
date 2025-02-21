@@ -1,0 +1,57 @@
+{% extends "base_admin.html.twig" %}
+
+{% block title %} Chapitres - {{ cours.nom }} {% endblock %}
+
+{% block body %}
+<div class="content container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="bg-secondary rounded p-4">
+                <header class="text-center mb-4">
+                    <h1 class="text-white">{{ cours.nom }}</h1>
+                </header>
+
+                {% for message in app.flashes('success') %}
+                    <div class="alert alert-success">{{ message }}</div>
+                {% endfor %}
+
+                {% for message in app.flashes('error') %}
+                    <div class="alert alert-danger">{{ message }}</div>
+                {% endfor %}
+
+                <section>
+                    <h2 class="text-center text-white mb-4">Contenu du cours</h2>
+                    <div class="list-group">
+                        {% for chapitre in chapitres %}
+                            <div class="list-group-item list-group-item-action bg-dark text-white border-light d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="bi bi-file-earmark-text"></i>
+                                    <strong>{{ chapitre.getNomChapitre() }}</strong>
+                                    <p>Contenu du chapitre :</p>
+                                    <div class="border p-3 bg-secondary text-white"> {{ chapitre.contenuText|nl2br }} </div>
+
+                                    {% if chapitre.contenu %}
+                                        <p class="mt-2">
+                                            📄 <a href="{{ asset('uploads/chapitres/' ~ chapitre.contenu) }}" target="_blank" class="text-info">
+                                                Télécharger le fichier
+                                            </a>
+                                        </p>
+                                        <a href="{{ path('back_admin_deleteChapitre', {id: chapitre.id}) }}" class="btn btn-danger btn-sm"
+                                           onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce chapitre ?');">Supprimer</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% else %}
+                            <p class="text-center text-light">Aucun chapitre disponible pour ce cours.</p>
+                        {% endfor %}
+
+                        <div class="text-center mt-4">
+                            <a href="{{ path('admin_cours_back') }}" class="btn btn-outline-light mt-3">Retour au Cours</a>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

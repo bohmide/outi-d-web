@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\CertificationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CertificationRepository::class)]
 class Certification
@@ -14,6 +15,9 @@ class Certification
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le nom de la certification ne peut pas être vide.")]
+    #[Assert\Length(min: 3, max: 255, minMessage: "Le nom de la certification doit comporter au moins {{ limit }} caractères.",
+     maxMessage: "Le nom de la certification ne peut pas dépasser {{ limit }} caractères.")]
     private ?string $nom_certification = null;
 
     #[ORM\OneToOne(mappedBy: 'certification')]

@@ -1,49 +1,38 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Modifier la Question - {{ quiz.titre }}{% endblock %}
+{% block title %}Modifier une Question{% endblock %}
 
 {% block body %}
-    <div class="container my-5">
-        <h2 class="mb-4">Modifier la Question pour "{{ quiz.titre }}"</h2>
-        
-        {# Affichage des erreurs globales du formulaire #}
-        {% if form.vars.errors|length > 0 %}
-            <div class="alert alert-danger">
-                <ul>
-                    {% for error in form.vars.errors %}
-                        <li>{{ error.message }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-        {% endif %}
-        
-        {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
-        
-        <div class="form-group mb-3">
-            {{ form_label(form.question, 'Question', {'label_attr': {'class': 'form-label'}}) }}
-            {{ form_widget(form.question, {
-                'attr': {
-                    'class': 'form-control' ~ (form.question.vars.errors|length > 0 ? ' is-invalid' : '')
-                }
-            }) }}
-            <div class="invalid-feedback">
-                {{ form_errors(form.question) }}
-            </div>
-        </div>
-        
-        <div class="form-group mb-3">
-            {{ form_label(form.type, 'Type', {'label_attr': {'class': 'form-label'}}) }}
-            {{ form_widget(form.type, {
-                'attr': {
-                    'class': 'form-control' ~ (form.type.vars.errors|length > 0 ? ' is-invalid' : '')
-                }
-            }) }}
-            <div class="invalid-feedback">
-                {{ form_errors(form.type) }}
-            </div>
-        </div>
-              {#  <a href="{{ path('admin_quiz_question', {'id': quiz.id}) }}" class="btn btn-secondary">Annuler</a> #}
-        
-        {{ form_end(form) }}
+<div class="container my-5">
+    <h1 class="text-center mb-4">Modifier la Question</h1>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'form-horizontal'}}) }}
+
+    <!-- Champ Question -->
+    <div class="form-group mb-3">
+        {{ form_label(form.question, 'Question', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.question, {'attr': {'class': 'form-control' ~ (form.question.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+        {{ form_errors(form.question) }}
     </div>
+
+    <!-- Champ Type -->
+    <div class="form-group mb-3">
+        {{ form_label(form.type, 'Type de Question', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.type, {'attr': {'class': 'form-control' ~ (form.type.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+        {{ form_errors(form.type) }}
+    </div>
+
+    <!-- Sélection du Quiz -->
+    <div class="form-group mb-3">
+        {{ form_label(form.quiz, 'Quiz Associé', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.quiz, {'attr': {'class': 'form-control' ~ (form.quiz.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+        {{ form_errors(form.quiz) }}
+    </div>
+
+    {{ form_end(form) }}
+</div>
 {% endblock %}

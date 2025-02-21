@@ -1,23 +1,32 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Modifier la réponse pour la question: {{ question.question }}{% endblock %}
+{% block title %}Modifier une Réponse - {% endblock %}
 
 {% block body %}
 <div class="container my-5">
-    <h1 class="text-center mb-4">Modifier la réponse pour la question: {{ question.question }}</h1>
+    <h1 class="text-center mb-4">Modifier la Réponse</h1>
 
-    {{ form_start(form) }}
-        <div class="form-group">
-            {{ form_row(form.reponse) }}
-        </div>
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
 
-        <div class="form-group">
-            {{ form_row(form.isCorrect) }}
-        </div>
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'form-horizontal'}}) }}
 
-        <button type="submit" class="btn btn-success">Mettre à jour la réponse</button>
+    <!-- Champ Réponse -->
+    <div class="form-group mb-3">
+        {{ form_label(form.reponse, 'Réponse', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.reponse, {'attr': {'class': 'form-control' ~ (form.reponse.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+        {{ form_errors(form.reponse) }}
+    </div>
+
+    <!-- Champ Est Correct -->
+    <div class="form-group mb-3">
+        {{ form_label(form.isCorrect, 'Est-ce la bonne réponse ?', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.isCorrect, {'attr': {'class': 'form-check-input' ~ (form.isCorrect.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+        {{ form_errors(form.isCorrect) }}
+    </div>
+
+
     {{ form_end(form) }}
-
-    <a href="{{ path('admin_question_reponse', {'id': question.id}) }}" class="btn btn-secondary mt-4">Retour aux réponses</a>
 </div>
 {% endblock %}

@@ -10,7 +10,14 @@
                 <h1 class="text-primary">{{ cours.nom }}</h1>
             </header>
 
-
+            {% for message in app.flashes('success') %}
+            <div class="alert alert-success">{{ message }}</div>
+                {% endfor %}
+        
+              {% for message in app.flashes('error') %}
+            <div class="alert alert-danger">{{ message }}</div>
+                  {% endfor %}
+                  
             <section>
                 <h2 class="text-center text-dark mb-4">Contenu du cours</h2>
                 <div class="list-group">
@@ -44,11 +51,9 @@
                         <p class="text-center text-muted">Aucun chapitre disponible pour ce cours.</p>
                     {% endfor %}
                     <div class="text-center mt-4">
-                        <a href="{{ path('chapitre_admin_new', {id: cours.id}) }}" class="btn btn-success btn-lg">
-                            Ajouter un Chapitre
-                        </a>
+                        <a href="{{ path('chapitre_admin_new', {id: cours.id}) }}" class="btn btn-success btn-lg">Ajouter un Chapitre</a>
+                        <a href="{{ path('app_cours_back') }}" class="btn btn-secondary mt-3">Retour au Cours </a>
                     </div>
-    
                 </div>
             </section>
         </div>

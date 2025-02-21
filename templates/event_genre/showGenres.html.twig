@@ -1,43 +1,69 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_admin.html.twig' %}
 
-{% block title %}Event Genres{% endblock %}
+{% block title %}
+	Event Genres
+{% endblock %}
 
 {% block body %}
-    <h1>Event Genres</h1>
-    <a href="{{ path('app_add_event_genre') }}">Add New Genre</a>
-    <table border="0">
-    <thead>
-        <tr>
-            <th style="padding: 10px;">Genre Name</th>
-            <th style="padding: 10px;">Number of Events</th>
-            <th style="padding: 10px;">Image</th>
-            <th style="padding: 10px;">Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for genre in eventGenres %}
-            <tr>
-                <td style="padding: 10px;"><strong>{{ genre.getNomGenre() }}</strong></td>
-                <td style="padding: 10px;">{{ genre.nbr }} events</td>
-                <td style="padding: 10px;">
-                    {% if genre.getImagePath() %}
-                        <img src="{{ asset('uploads/event_genre_images/' ~ genre.imagePath) }}" alt="Event Genre Image" height="50">
-                    {% else %}
-                        No Image
-                    {% endif %}
-                </td>
-                <td style="padding: 10px;">
-                    <a href="{{ path('app_update_event_genre', {'id': genre.getId()}) }}">Modify</a> |
-                    <a href="{{ path('app_delete_event_genre', {'id': genre.getId()}) }}">Delete</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="4" style="text-align: center;">No event genres found.</td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-
+	<!-- Content Start -->
+	<div class="content container-fluid pt-4 px-4">
+		<div class="row g-4 mb-4">
+			<div class="col-sm-6 col-xl-3">
+				<div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+					<i class="fa fa-chart-line fa-3x text-primary"></i>
+					<div class="ms-3">
+						<p class="mb-2">Total Genres</p>
+						<h6 class="mb-0">{{ eventGenres|length }}</h6>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-12">
+			<div class="bg-secondary rounded h-100 p-4">
+				<h6 class="mb-4">Liste des Genres d'Événements</h6>
+				<a href="{{ path('app_front_add_event_genre') }}" class="btn btn-primary mb-4">Ajouter un Nouveau Genre</a>
+				<div class="table-responsive">
+					<table class="table">
+						<thead>
+							<tr>
+								<th scope="col">#</th>
+								<th scope="col">Nom du Genre</th>
+								<th scope="col">Nombre d'Événements</th>
+								<th scope="col">Image</th>
+								<th scope="col">Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for genre in eventGenres %}
+								<tr>
+									<th scope="row">{{ loop.index }}</th>
+									<td>{{ genre.getNomGenre() }}</td>
+									<td>{{ genre.nbr }} événements</td>
+									<td>
+										{% if genre.getImagePath() %}
+											<img src="{{ asset('uploads/event_genre_images/' ~ genre.imagePath) }}" alt="Event Genre Image" height="50">
+										{% else %}
+											Aucune image
+										{% endif %}
+									</td>
+									<td>
+										<a href="{{ path('app_front_update_event_genre', {'id': genre.getId()}) }}" class="btn btn-sm btn-primary mb-2">
+											<i class="fas fa-edit"></i>
+										</a>
+										<a href="{{ path('app_delete_event_genre', {'id': genre.getId()}) }}" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce genre ?');">
+											<i class="fas fa-trash-alt"></i>
+										</a>
+									</td>
+								</tr>
+							{% else %}
+								<tr>
+									<td colspan="5" class="text-center">Aucun genre ajouté pour le moment.</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}

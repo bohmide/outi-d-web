@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Événements -
+{% endblock %}
+
+{% block body %}
+	<div class="container my-5">
+		<h1 class="text-center mb-4">Gestion des Événements</h1>
+
+		<a href="{{ path('app_front_add_event') }}" class="btn btn-primary mb-4">Ajouter un Nouvel Événement</a>
+
+		{% if events is empty %}
+			<p colspan="8" class="text-center">Aucun événement trouvé.</p>
+		{% else %}
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Nom</th>
+						<th>Description</th>
+						<th>Date</th>
+						<th>Membres</th>
+						<th>Genre</th>
+						<th>Sponsors</th>
+						<th>Image</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for event in events %}
+						<tr>
+							<td>
+								<strong>{{ event.getNomEvent() }}</strong>
+							</td>
+							<td>{{ event.getDescription() }}</td>
+							<td>{{ event.getDateEvent()|date('d/m/Y') }}</td>
+							<td>{{ event.getNbrMembers() ?? 'Illimité' }}</td>
+							<td>{{ event.genre.getNomGenre() }}</td>
+							<td>
+								{% for sponsor in event.getSponsors() %}
+									{{ sponsor.getNomSponsor() }}<br>
+								{% endfor %}
+							</td>
+							<td>
+								{% if event.getImagePath() %}
+									<img src="{{ asset('uploads/events_images/' ~ event.imagePath) }}" alt="Event Image" height="50">
+								{% else %}
+									Aucune image
+								{% endif %}
+							</td>
+							<td>
+								<a href="{{ path('app_front_update_event', {'id': event.getId()}) }}" class="btn btn-warning mb-2">Modifier</a>
+								<form action="{{ path('app_delete_event', {'id': event.getId()}) }}" method="post" class="d-inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet événement ?');">
+									<button type="submit" class="btn btn-danger">Supprimer</button>
+								</form>
+							</td>
+						</tr>
+                    {% endfor %}
+				</tbody>
+			</table>
+		{% endif %}
+	</div>
+{% endblock %}

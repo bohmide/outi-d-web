@@ -4,7 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0d1acecf644d7ce1147d19fcbe6a27fd",
+
+    "content-hash": "a7ddb815d6fe22efe73898239116bf4a",
     "packages": [
         {
             "name": "composer/semver",
@@ -5366,7 +5367,9 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-01-29T07:06:14+00:00"
+
+
+            "time": "2025-02-13T08:34:43+00:00"
         },
         {
             "name": "vich/uploader-bundle",
