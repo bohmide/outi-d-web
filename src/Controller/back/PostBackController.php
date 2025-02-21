@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\back;
 
 use App\Entity\Post;
 use App\Entity\Forum;
@@ -13,9 +13,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-final class PostController extends AbstractController
+final class PostBackController extends AbstractController
 {
-    #[Route('/addpost/{forumId}', name: 'app_addpost')]
+    #[Route('/addbackpost/{forumId}', name: 'app_addbackpost')]
     public function addPost($forumId, Request $request, ForumRepository $forumRepository,ManagerRegistry $m): Response
     {
         $em=$m->getManager();
@@ -34,19 +34,19 @@ final class PostController extends AbstractController
             $em->persist($post);
             $em->flush();
     
-            return $this->redirectToRoute('app_showposts', ['id' => $forum->getId()]);
+            return $this->redirectToRoute('app_showbackposts', ['id' => $forum->getId()]);
         }
     
-        return $this->render('post/addpost.html.twig', [
+        return $this->render('back/post_back/addpost.html.twig', [
             'form' => $form->createView(),
             'forum' => $forum, 
         ]);
     }
 
-    #[Route('/forum/{id}/posts', name: 'app_showposts')]
+    #[Route('/forum/posts/{id}', name: 'app_showbackposts')]
     public function showPosts(Forum $forum): Response
     {
-        return $this->render('post/showposts.html.twig', [
+        return $this->render('back/post_back/showposts.html.twig', [
             'forum' => $forum,
             'posts' => $forum->getPosts(),
         ]);
@@ -65,7 +65,7 @@ final class PostController extends AbstractController
 
         return $this->json(['nbLike' => $post->getNbLike()]);
     }
-    #[Route('/post/{id}/delete', name: 'app_deletepost', methods: ['POST'])]
+    #[Route('/post/delete/{id}', name: 'app_deletebackpost', methods: ['POST'])]
     public function deletePost($id, ManagerRegistry $m, Request $request): Response
     {
         $em = $m->getManager();
@@ -73,7 +73,7 @@ final class PostController extends AbstractController
 
         if (!$post) {
             $this->addFlash('danger', 'Le post n\'existe pas.');
-            return $this->redirectToRoute('app_showposts', ['id' => $post->getForum()->getId()]);
+            return $this->redirectToRoute('app_showbackposts', ['id' => $post->getForum()->getId()]);
         }
 
         $forumId = $post->getForum()->getId();
@@ -82,10 +82,10 @@ final class PostController extends AbstractController
 
         $this->addFlash('success', 'Post supprimé avec succès.');
 
-        return $this->redirectToRoute('app_showposts', ['id' => $forumId]);
+        return $this->redirectToRoute('app_showbackposts', ['id' => $forumId]);
     }
 
-    #[Route('/post/{id}/edit', name: 'app_editpost')]
+    #[Route('/post/edit/{id}', name: 'app_editbackpost')]
     public function editPost($id, Request $request, ManagerRegistry $doctrine): Response
     {
         $em = $doctrine->getManager();
@@ -102,13 +102,14 @@ final class PostController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $em->flush();
             $this->addFlash('success', 'Post modifié avec succès !');
-            return $this->redirectToRoute('app_showposts', ['id' => $forum->getId()]);
+            return $this->redirectToRoute('app_showbackposts', ['id' => $forum->getId()]);
         }
     
-        return $this->render('post/editpost.html.twig', [
+        return $this->render('back/post_back/editpost.html.twig', [
             'form' => $form->createView(),
             'forum' => $forum  
         ]);
     }
     
 }
+

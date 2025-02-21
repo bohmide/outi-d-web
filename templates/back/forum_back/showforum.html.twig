@@ -1,0 +1,62 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Liste des Forums{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <h1 class="text-center mb-4">Liste des Forums</h1>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success text-center">{{ message }}</div>
+    {% endfor %}
+
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Image</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Thème</th>
+                <th scope="col">Date de Création</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for forum in tabforum %}
+                <tr>
+                    <td>{{ forum.id }}</td>  <!-- Affichage de l'ID du forum -->
+                    <td>
+                        {% if forum.imageForum %}
+                            <img src="{{ asset('uploads/forums/' ~ forum.imageForum) }}" alt="Image du forum" style="width: 100px; height: 100px; object-fit: cover;">
+                        {% else %}
+                            <img src="{{ asset('uploads/forums/default.png') }}" alt="Image par défaut" style="width: 100px; height: 100px; object-fit: cover;">
+                        {% endif %}
+                    </td>
+                    <td>{{ forum.nom }}</td>
+                    <td>{{ forum.theme }}</td>
+                    <td>{{ forum.dateCreation|date('d/m/Y') }}</td>
+                    <td>
+                        <a href="{{ path('app_showbackposts', {'id': forum.id}) }}" class="btn btn-primary btn-sm">Voir</a>
+                        <a href="{{ path('app_updatebackforum', {'id': forum.id}) }}" class="btn btn-warning btn-sm">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <form action="{{ path('app_deletebackforum', {'id': forum.id}) }}" method="post" class="d-inline" onsubmit="return confirm('Voulez-vous vraiment supprimer ce forum ?');">
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6" class="text-center">Aucun forum trouvé.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <div class="text-center mt-4">
+        <a href="{{ path('app_addbackforum') }}" class="btn btn-primary">Ajouter un forum</a>
+    </div>
+</div>
+{% endblock %}

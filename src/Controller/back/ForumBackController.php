@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\back;
 
 use App\Form\ForumType;
 use App\Entity\Forum;
@@ -13,17 +13,17 @@ use App\Repository\PostRepository as RepositoryPostRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
-final class ForumController extends AbstractController
+final class ForumBackController extends AbstractController
 {
     #[Route('/forum', name: 'app_forum')]
     public function index(): Response
     {
-        return $this->render('forum/index.html.twig', [
+        return $this->render('back/forum_back/index.html.twig', [
             'controller_name' => 'ForumController',
         ]);
     }
 
-    #[Route('/addforum', name: 'app_addforum')]
+    #[Route('/back/addbackforum', name: 'app_addbackforum')]
     public function addForum(Request $req, ForumRepository $rep, ManagerRegistry $doctrine): Response
     {
         $forum = new Forum();
@@ -46,35 +46,35 @@ final class ForumController extends AbstractController
             $em->persist($forum);
             $em->flush();
     
-            return $this->redirectToRoute('app_showforum');
+            return $this->redirectToRoute('app_showbackforum');
         }
     
-        return $this->render('forum/addforum.html.twig', [
+        return $this->render('back/forum_back/addforum.html.twig', [
             'form' => $form->createView(),
         ]);
     }
 
 
-    #[Route('/showforum', name: 'app_showforum')]
+    #[Route('/showbackforum', name: 'app_showbackforum')]
     public function showforum(ForumRepository $rep):Response
     {
         $forum=$rep->findAll();
-        return $this->render('forum/showforum.html.twig', [
+        return $this->render('back/forum_back/showforum.html.twig', [
             'tabforum' => $forum,
         ]);
     }
 
-    #[Route('/deleteforum/{id}', name: 'app_deleteforum',methods: ['POST'])]
+    #[Route('/deletebackforum/{id}', name: 'app_deletebackforum',methods: ['POST'])]
     public function deleteforum(ManagerRegistry $m,$id,ForumRepository $rep): Response
     {
         $em=$m->getManager();
         $forum=$rep->find($id);
         $em->remove($forum);
         $em->flush();
-        return $this->redirectToRoute('app_showforum');
+        return $this->redirectToRoute('app_showbackforum');
     }
 
-    #[Route('/updateforum/{id}', name: 'app_updateforum')]
+    #[Route('/updatebackforum/{id}', name: 'app_updatebackforum')]
     public function updateforum(ManagerRegistry $m, $id, Request $req, ForumRepository $rep): Response
     {
         $em = $m->getManager();
@@ -103,7 +103,7 @@ final class ForumController extends AbstractController
                 } catch (FileException $e) {
                     // Gestion d'erreur si l'upload échoue
                     $this->addFlash('error', 'L\'upload de l\'image a échoué.');
-                    return $this->redirectToRoute('app_updateforum', ['id' => $forum->getId()]);
+                    return $this->redirectToRoute('app_updatebackforum', ['id' => $forum->getId()]);
                 }
             }
     
@@ -112,27 +112,13 @@ final class ForumController extends AbstractController
     
             // Afficher un message de succès
             $this->addFlash('success', 'Forum mis à jour avec succès !');
-            return $this->redirectToRoute('app_showforum', ['id' => $forum->getId()]);
+            return $this->redirectToRoute('app_showbackforum', ['id' => $forum->getId()]);
         }
     
-        return $this->render('forum/updateforum.html.twig', [
+        return $this->render('back/forum_back/updateforum.html.twig', [
             'forum' => $forum,
             'form' => $form->createView(),
         ]);
     }
 
-    #[Route('/forum/{id}/posts', name: 'app_showposts')]
-public function showPosts($id, ForumRepository $forumRepository,RepositoryPostRepository $postRepository): Response
-{
-    $forum = $forumRepository->find($id);
-    if (!$forum) {
-        throw $this->createNotFoundException('Le forum demandé n\'existe pas.');
-    }
-    $posts = $postRepository->findBy(['forum' => $forum]);
-
-    return $this->render('forum/showposts.html.twig', [
-        'forum' => $forum,
-        'posts' => $posts,
-    ]);
-}
 }
