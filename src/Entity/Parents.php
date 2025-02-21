@@ -6,10 +6,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\ParentsRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;;
 
 #[ORM\Entity(repositoryClass: ParentsRepository::class)]
-class Parents implements UserInterface
+class Parents 
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

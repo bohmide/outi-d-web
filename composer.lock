@@ -4,6 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
+
     "content-hash": "a7ddb815d6fe22efe73898239116bf4a",
     "packages": [
         {
@@ -5367,6 +5368,7 @@
                 }
             ],
 
+
             "time": "2025-02-13T08:34:43+00:00"
         },
         {
@@ -6482,7 +6484,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
@@ -6490,6 +6492,6 @@
         "ext-ctype": "*",
         "ext-iconv": "*"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "plugin-api-version": "2.6.0"
 }
