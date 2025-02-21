@@ -5,7 +5,13 @@
 {% block body %}
 <div class="container my-5">
     <h1 class="text-center mb-4">Réponses de la question : {{ question.question }}</h1>
+    {% for message in app.flashes('success') %}
+    <div class="alert alert-success">{{ message }}</div>
+        {% endfor %}
 
+      {% for message in app.flashes('error') %}
+    <div class="alert alert-danger">{{ message }}</div>
+          {% endfor %}
     {% if reponses is not empty %}
         <table class="table table-striped">
             <thead>
@@ -19,10 +25,10 @@
                 {% for rep in reponses %}
                     <tr>
                         <td>{{ rep.reponse }}</td>
-                        <td>{{ rep.isCorrect ? 'Oui' : 'Non' }}</td>
+                        <td>{{ rep.isCorrect ? 'Bonne Reponse' : 'Mauvaise Reponse' }}</td>
                         <td>
-                            <a href="{{ path('app_reponse_edit', {'reponseId': rep.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
-                            {# <form action="{{ path('app_reponse_delete', {'id': rep.id}) }}" method="post" class="d-inline"> #}
+                            <a href="{{ path('app_reponse_edit', {'id': question.id, 'reponseId': rep.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                             <form action="{{ path('app_reponse_delete', {'id': question.id, 'reponseId': rep.id}) }}" method="post" class="d-inline"> 
                                 <input type="hidden" name="_method" value="DELETE">
                                 <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Voulez-vous vraiment supprimer cette réponse ?');">Supprimer</button>
                             </form>
@@ -36,6 +42,7 @@
     {% endif %}
     <!-- Bouton pour ajouter une nouvelle réponse -->
     <a href="{{ path('app_reponse_add', {'id': question.id}) }}" class="btn btn-primary mt-3">Ajouter une réponse</a>
-    {# <a href="{{ path('app_question_list') }}" class="btn btn-secondary mt-4">Retour aux questions</a> #}
+    <!--bouton de retour vers la question -->
+    <a href="{{ path('admin_quiz_question', {'id': question.quiz.id}) }}" class="btn btn-secondary mt-3">Retour a la question </a>
 </div>
 {% endblock %}
