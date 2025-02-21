@@ -34,7 +34,7 @@ final class PageController extends AbstractController{
         #[Route('/events', name: 'events')]
         public function events(): Response
         {
-            return $this->render('../events/showEvents.html.twig');
+            return $this->render('../events/prof/showEvents.html.twig');
         }
     
         #[Route('/pricing', name: 'pricing')]

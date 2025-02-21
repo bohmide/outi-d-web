@@ -1,41 +1,70 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_admin.html.twig' %}
 
-{% block title %}Sponsors
+{% block title %}
+	Add Sponsor
 {% endblock %}
 
 {% block body %}
-	<h1>Sponsors</h1>
-	<a href="{{ path('app_add_sponsor') }}">Add New Sponsor</a>
-	<table border="0">
-    <thead>
-        <tr>
-            <th style="padding: 10px;">Name</th>
-            <th style="padding: 10px;">Description</th>
-            <th style="padding: 10px;">Image</th>
-            <th style="padding: 10px;">Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for sponsor in sponsors %}
-            <tr>
-                <td style="padding: 10px;"><strong>{{ sponsor.getNomSponsor() }}</strong></td>
-                <td style="padding: 10px;">{{ sponsor.getDescription() }}</td>
-                <td style="padding: 10px;">
-                    {% if sponsor.getImagePath() %}
-                        <img src="{{ asset('uploads/sponsors_images/' ~ sponsor.imagePath) }}" alt="Sponsor Image" height="50">
-                    {% endif %}
-                </td>
-                <td style="padding: 10px;">
-                    <a href="{{ path('app_update_sponsor', {'id': sponsor.getId()}) }}">Modify</a> |
-                    <a href="{{ path('app_delete_sponsor', {'id': sponsor.getId()}) }}">Delete</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="4">No sponsors found.</td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
+	<!-- Content Start -->
+	<div class="content container-fluid pt-4 px-4">
+		<div class="row g-4 mb-4">
 
+			<div class="col-sm-6 col-xl-3">
+            <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+                <i class="fa fa-chart-line fa-3x text-primary"></i>
+                <div class="ms-3">
+                    <p class="mb-2">Total Sponsors</p>
+                    <h6 class="mb-0">{{ sponsors|length }}</h6>
+                </div>
+            </div>
+        </div>   
+		</div>
+		<div class="col-12">
+        <div class="bg-secondary rounded h-100 p-4">
+            <h6 class="mb-4">Liste des Sponsors</h6>
+				<a href="{{ path('app_add_sponsor') }}" class="btn btn-primary mb-4">Ajouter un Nouveau Sponsor</a>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Nom</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Image</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sponsor in sponsors %}
+                            <tr>
+                                <th scope="row">{{ loop.index }}</th>
+                                <td>{{ sponsor.nomSponsor }}</td>
+                                <td>{{ sponsor.description }}</td>
+                                <td>
+                                    {% if sponsor.getImagePath %}
+                                        <img src="{{ asset('uploads/sponsors_images/' ~ sponsor.imagePath) }}" alt="Sponsor Image" height="50">
+                                    {% else %}
+                                        Aucun fichier
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{{ path('app_update_sponsor', { 'id': sponsor.getId() }) }}" class="btn btn-sm btn-primary mb-2">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{{ path('app_delete_sponsor', { 'id': sponsor.getId() }) }}" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce sponsor ?');">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center">Aucun sponsor ajouté pour le moment.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+	</div>
 {% endblock %}
