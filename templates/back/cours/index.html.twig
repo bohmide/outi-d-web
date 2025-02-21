@@ -1,46 +1,49 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Gestion des Cours - {% endblock %}
+{% block title %}Gestion des Cours -
+{% endblock %}
 
 {% block body %}
-<div class="container my-5">
-    <h1 class="text-center mb-4">Gestion des Cours</h1>
+	<div class="content container-fluid pt-4 px-4">
+		<div class="container my-5">
+			<h1 class="text-center mb-4">Gestion des Cours</h1>
 
-    <a href="{{ path('admin_cours_new') }}" class="btn btn-primary mb-4">Créer un nouveau cours</a>
+			<a href="{{ path('admin_cours_new') }}" class="btn btn-primary mb-4">Créer un nouveau cours</a>
 
-    {% for message in app.flashes('success') %}
-    <div class="alert alert-success">{{ message }}</div>
-      {% endfor %}
+			{% for message in app.flashes('success') %}
+				<div class="alert alert-success">{{ message }}</div>
+			{% endfor %}
 
-    {% for message in app.flashes('error') %}
-    <div class="alert alert-danger">{{ message }}</div>
-      {% endfor %}
+			{% for message in app.flashes('error') %}
+				<div class="alert alert-danger">{{ message }}</div>
+			{% endfor %}
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Nom</th>
-                <th>État</th>
-                <th>Date de création</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for cours in cours %}
-                <tr>
-                    <td>{{ cours.nom }}</td>
-                    <td>{{ cours.etat }}</td>
-                    <td>{{ cours.dateCreation|date('d/m/Y') }}</td>
-                    <td>
-                        <a href="{{ path('admin_cours_update', {'id': cours.id}) }}" class="btn btn-warning">Modifier</a>
-                        <form action="{{ path('admin_cours_delete', {'id': cours.id}) }}" method="post" class="d-inline">
-                            <button type="submit" class="btn btn-danger">Supprimer</button>
-                        </form>
-                        <a href="{{ path('admin_cours_chapitres', {'id': cours.id}) }}" class="btn btn-info">Voir les chapitres</a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Nom</th>
+						<th>État</th>
+						<th>Date de création</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for cours in cours %}
+						<tr>
+							<td>{{ cours.nom }}</td>
+							<td>{{ cours.etat }}</td>
+							<td>{{ cours.dateCreation|date('d/m/Y') }}</td>
+							<td>
+								<a href="{{ path('admin_cours_update', {'id': cours.id}) }}" class="btn btn-warning">Modifier</a>
+								<form action="{{ path('admin_cours_delete', {'id': cours.id}) }}" method="post" class="d-inline">
+									<button type="submit" class="btn btn-danger">Supprimer</button>
+								</form>
+								<a href="{{ path('admin_cours_chapitres', {'id': cours.id}) }}" class="btn btn-info">Voir les chapitres</a>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
 {% endblock %}
