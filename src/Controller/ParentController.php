@@ -2,14 +2,14 @@
 
 namespace App\Controller;
 
+use App\Repository\ParentsRepository; // Pour accéder aux données de l'entité Parents
+use Symfony\Component\HttpFoundation\Response; // Pour retourner une réponse HTTP
 use App\Entity\Parents;
 use App\Form\AddparentType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 final class ParentController extends AbstractController
 {
@@ -35,52 +35,68 @@ final class ParentController extends AbstractController
         ]);
     }
 
-    /* #[Route('/addparent', name: 'addparent')]
-     public function addparent (ManagerRegistry $doctrine, Request $request): Response
-     {
-         // Création d'une nouvelle instance de l'entité Parents
-         $parents = new Parents();
-
-         // Création du formulaire en associant l'entité Parents au formulaire AddparentType
-         $formp = $this->createForm(AddparentType::class, $parents);
-
-         // Traitement de la requête HTTP (remplit l'objet avec les données soumises)
-         $formp->handleRequest($request);
-
-         // Vérification si le formulaire a été soumis et est valide
-         if ($formp->isSubmitted() && $formp->isValid()) {
-             $em = $doctrine->getManager(); // Récupération de l'EntityManager
-             $em->persist($parents); // Préparation de l'enregistrement
-             $em->flush(); // Enregistrement des données en base
-
-             // Redirection vers la page d'affichage des parents après l'ajout
-             return $this->redirectToRoute('app_AfficherParent');
-         }
-
-         // Affichage du formulaire dans le template
-         return $this->render('parent/ajouterParent.html.twig', [
-             'formp' => $formp->createView(), // Passage du formulaire à la vue
-         ]);
-     }*/
-
-    #[Route(path: '/login', name: 'app_login')]
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    #[Route('/showparent', name: 'showparent')]
+    public function showParents(ParentsRepository $parentsRepository): Response
     {
-        // if ($this->getUser()) {
-        //     return $this->redirectToRoute('target_path');
-        // }
+        // Récupérer tous les enregistrements de la table Parents
+        $parents = $parentsRepository->findAll();
 
-        // get the login error if there is one
-        $error = $authenticationUtils->getLastAuthenticationError();
-        // last username entered by the user
-        $lastUsername = $authenticationUtils->getLastUsername();
+        // Vérifier les données récupérées
+        if (!$parents) {
+            $this->addFlash('warning', 'No parents found in the database.');
+        }
 
-        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+        return $this->render('Pages/user/parentback.html.twig', [
+            'parents' => $parents,
+        ]);
     }
 
-    #[Route(path: '/logout', name: 'app_logout')]
-    public function logout(): void
+    #[Route('/deleteparent/{id}', name: 'deleteparent')]
+    public function deleteparent(ManagerRegistry $doctrine, int $id, ParentsRepository $rep): Response
     {
-        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+        // Récupérer le parent à supprimer
+        $parent = $rep->find($id);
+        
+        // Vérifier si le parent existe
+        if (!$parent) {
+            throw $this->createNotFoundException('No parent found for id ' . $id);
+        }
+
+        // Action suppression
+        $em = $doctrine->getManager();
+        
+        // Préparation de la suppression
+        $em->remove($parent);
+
+        // Exécution de la commande de suppression
+        $em->flush();
+
+        return $this->redirectToRoute('showparent'); // Vous devrez créer la route de redirection appropriée
     }
+
+    #[Route('/updateparent/{id}', name: 'updateparent')]
+    public function updateparent(ManagerRegistry $m , Request $req , int $id , ParentsRepository $rep): Response
+    {
+        $em = $m->getManager();
+        $parent = $rep->find($id);
+        
+        if (!$parent) {
+            throw $this->createNotFoundException('No parent found for id ' . $id);
+        }
+
+        $form2 = $this->createForm(AddparentType::class, $parent);
+        $form2->handleRequest($req);
+        
+        if ($form2->isSubmitted() && $form2->isValid()) {
+            $em->persist($parent);
+            $em->flush();
+            return $this->redirectToRoute('showparent');
+        }
+        
+        return $this->render('Pages/user/updateparent.html.twig', [
+            'form2' => $form2,
+        ]);
+    }
+
+
 }

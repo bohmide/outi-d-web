@@ -35,7 +35,7 @@ class Cours
         choices: ["Facile", "Moyen", "Avancé"],
         message: "L'état du cours doit être 'Facile', 'Moyen' ou 'Avancé'"
     )]
-    private ?string $etat = null;
+    private ?string $etat = "Facile";  // Valeur par défaut
 
     /**
      * @var Collection<int, Chapitre>

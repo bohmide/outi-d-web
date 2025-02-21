@@ -1,32 +1,46 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Modifier un Cours - {% endblock %}
+{% block title %}Modifier le Cours - {% endblock %}
 
 {% block body %}
 <div class="container my-5">
-    <h1 class="text-center mb-4">Modifier un Cours</h1>
+    <h1 class="text-center mb-4">Modifier le Cours</h1>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
 
     {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'form-horizontal'}}) }}
 
     <div class="form-group mb-3">
         {{ form_label(form.nom, 'Titre du cours', {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+        {{ form_widget(form.nom, {
+            'attr': {'class': 'form-control' ~ (form.nom.vars.errors|length > 0 ? ' is-invalid' : '')}
+        }) }}
+        {% for error in form.nom.vars.errors %}
+            <div class="invalid-feedback">{{ error.message }}</div>
+        {% endfor %}
     </div>
 
     <div class="form-group mb-3">
         {{ form_label(form.etat, 'État du cours', {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(form.etat, {'attr': {'class': 'form-control'}}) }}
+        {{ form_widget(form.etat, {
+            'attr': {'class': 'form-control' ~ (form.etat.vars.errors|length > 0 ? ' is-invalid' : '')}
+        }) }}
+        {% for error in form.etat.vars.errors %}
+            <div class="invalid-feedback">{{ error.message }}</div>
+        {% endfor %}
     </div>
 
     <div class="form-group mb-3">
         {{ form_label(form.dateCreation, 'Date de création', {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(form.dateCreation, {'attr': {'class': 'form-control'}}) }}
+        {{ form_widget(form.dateCreation, {
+            'attr': {'class': 'form-control' ~ (form.dateCreation.vars.errors|length > 0 ? ' is-invalid' : '')}
+        }) }}
+        {% for error in form.dateCreation.vars.errors %}
+            <div class="invalid-feedback">{{ error.message }}</div>
+        {% endfor %}
     </div>
-
-    <div class="form-group text-center">
-        <button type="submit" class="btn btn-primary">Enregistrer</button>
-    </div>
-
     {{ form_end(form) }}
 </div>
 {% endblock %}

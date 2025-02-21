@@ -47,7 +47,7 @@ class Prof
 
     #[Assert\NotBlank(message: "Password confirmation is required")]
     #[Assert\EqualTo(
-        propertyPath: "pwp",
+        propertyPath: "pwpr",
         message: "The password confirmation does not match the password."
     )]
     #[ORM\Column(length: 255)]

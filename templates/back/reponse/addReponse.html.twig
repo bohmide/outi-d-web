@@ -1,28 +1,31 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Ajouter une réponse{% endblock %}
+{% block title %}Ajouter une Réponse - {% endblock %}
 
 {% block body %}
 <div class="container my-5">
-    <h1 class="text-center mb-4">Ajouter une réponse</h1>
+    <h1 class="text-center mb-4">Ajouter une Réponse</h1>
 
     {% for message in app.flashes('success') %}
         <div class="alert alert-success">{{ message }}</div>
     {% endfor %}
 
-    <div class="card p-4">
-        {{ form_start(form) }}
-            <div class="mb-3">
-                {{ form_label(form.reponse, 'Texte de la réponse') }}
-                {{ form_widget(form.reponse, {'attr': {'class': 'form-control'}}) }}
-            </div>
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'form-horizontal'}}) }}
 
-            <div class="form-check mb-3">
-                {{ form_widget(form.isCorrect, {'attr': {'class': 'form-check-input'}}) }}
-                {{ form_label(form.isCorrect, 'Réponse correcte', {'attr': {'class': 'form-check-label'}}) }}
-            </div>
-
-        {{ form_end(form) }}
+    <!-- Champ Réponse -->
+    <div class="form-group mb-3">
+        {{ form_label(form.reponse, 'Réponse', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.reponse, {'attr': {'class': 'form-control' ~ (form.reponse.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+        {{ form_errors(form.reponse) }}
     </div>
+
+    <!-- Champ Est Correct -->
+    <div class="form-group mb-3">
+        {{ form_label(form.isCorrect, 'Est-ce la bonne réponse ?', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.isCorrect, {'attr': {'class': 'form-check-input' ~ (form.isCorrect.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+        {{ form_errors(form.isCorrect) }}
+    </div>
+
+    {{ form_end(form) }}
 </div>
 {% endblock %}
