@@ -6,16 +6,16 @@
 <div class="container my-5">
     <h1 class="text-center mb-4">Ajouter un Post au Forum: {{ forum.nom }}</h1>
 
-    {{ form_start(form, {'attr': {'class': 'form'}}) }}
+    {{ form_start(form, { enctype: 'multipart/form-data', attr: { class: 'needs-validation', novalidate: 'novalidate' } }) }}
 
     <div class="form-group mb-3">
         {{ form_label(form.nom, 'Titre du Post', {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+        {{ form_widget(form.nom, {'attr': {'class': 'form-control','placeholder':'Entrez le nom du post'}}) }}
         {{ form_errors(form.nom) }}
     </div>
     <div class="form-group mb-3">
         {{ form_label(form.contenu, 'contenu du Post', {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(form.contenu, {'attr': {'class': 'form-control'}}) }}
+        {{ form_widget(form.contenu, {'attr': {'class': 'form-control','placeholder':'Entrez le contenu du post'}}) }}
         {{ form_errors(form.contenu) }}
     </div>
 

@@ -39,7 +39,7 @@ class Post
     #[Assert\NotBlank(message: "Le contenue du post est obligatoire.")]
     #[Assert\Length(
         min: 3,
-        max: 80,
+        max: 30,
         minMessage: "Le contenu doit contenir au moins {{ limit }} caractères.",
         maxMessage: "Le contenu ne peut pas dépasser {{ limit }} caractères."
     )]
