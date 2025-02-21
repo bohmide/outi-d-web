@@ -32,6 +32,7 @@ final class CoursBackController extends AbstractController
         $cours->setDateCreation(new \DateTimeImmutable('today')); //date actuelle
         $form = $this->createForm(CoursType::class, $cours);
         $form->handleRequest($request);
+        
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($cours);
@@ -64,7 +65,7 @@ final class CoursBackController extends AbstractController
         
         }
         #[Route('/{id}/delete', name: 'admin_cours_delete')]
-        public function deleteformbook(ManagerRegistry $m,$id,CoursRepository $rep): Response
+        public function deleteCours(ManagerRegistry $m,$id,CoursRepository $rep): Response
         {
             $em = $m->getManager();
             $cours = $rep->find($id);
@@ -75,7 +76,7 @@ final class CoursBackController extends AbstractController
         #[Route('/{id}/chapitres', name: 'admin_cours_chapitres')]
         public function showChapitreCours(ChapitreRepository $chapRepo,Cours $cours): Response
         {
-             // Fetch only chapters that belong to the selected course
+             //  only chapters that belong to the selected cours
             $chapitres = $chapRepo->findBy(['cours' => $cours]);
                        return $this->render('back/chapitre/listChapitre.html.twig', [
                        'cours' => $cours,
