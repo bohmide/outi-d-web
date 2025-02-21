@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\front;
 
 use App\Entity\Comment;
 use App\Entity\Post;
@@ -17,7 +17,7 @@ final class CommentController extends AbstractController
     #[Route('/comment', name: 'app_comment')]
     public function index(): Response
     {
-        return $this->render('comment/index.html.twig', [
+        return $this->render('front/comment/index.html.twig', [
             'controller_name' => 'CommentController',
         ]);
     }
@@ -34,7 +34,7 @@ final class CommentController extends AbstractController
     
         $comments = $post->getComments(); // Assure-toi que cette relation est bien définie dans l'entité Post
     
-        return $this->render('comment/showcomments.html.twig', [
+        return $this->render('front/comment/showcomments.html.twig', [
             'post' => $post,
             'comments' => $comments,
         ]);
@@ -68,7 +68,7 @@ final class CommentController extends AbstractController
             return $this->redirectToRoute('app_showcomments', ['id' => $post->getId()]);
         }
 
-        return $this->render('comment/addcomment.html.twig', [
+        return $this->render('front/comment/addcomment.html.twig', [
             'form' => $form->createView(),
             'post' => $post
         ]);
@@ -92,4 +92,30 @@ final class CommentController extends AbstractController
         // Redirection vers la liste des commentaires du post
         return $this->redirectToRoute('app_showcomments', ['id' => $post->getId()]);
     }
+
+    #[Route('/comment/{id}/edit', name: 'app_editfrontcomment')]
+    public function editComment($id, Request $request, ManagerRegistry $doctrine): Response
+    {
+        $em = $doctrine->getManager();
+        $comment = $em->getRepository(Comment::class)->find($id);
+
+        if (!$comment) {
+            throw $this->createNotFoundException('Commentaire introuvable');
+        }
+
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+            $this->addFlash('success', 'Commentaire mis à jour avec succès!');
+            return $this->redirectToRoute('app_showcomments', ['id' => $comment->getPost()->getId()]);
+        }
+
+        return $this->render('front/comment/editcomment.html.twig', [
+            'form' => $form->createView(),
+            'comment' => $comment,
+        ]);
+    }
+
 }

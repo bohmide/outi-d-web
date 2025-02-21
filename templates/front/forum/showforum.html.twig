@@ -25,30 +25,13 @@
                         <h5 class="card-title">{{ forum.nom }}</h5>
                         <p class="card-text"><strong>Thème :</strong> {{ forum.theme }}</p>
                         <p class="card-text"><small class="text-muted">Créé le {{ forum.dateCreation|date('d/m/Y') }}</small></p>
-                        <a href="{{path('app_showposts', {'id': forum.id}) }}" class="btn btn-primary">Voir le Forum</a>
-                        <div class="d-flex justify-content-start">
-                            <a href="{{ path('app_updateforum', {'id': forum.id}) }}" class="btn btn-warning btn-sm me-2">
-                                <i class="fas fa-edit"></i> 
-                            </a>
-                            <form action="{{ path('app_deleteforum', {'id': forum.id}) }}" method="post" onsubmit="return confirm('Voulez-vous vraiment supprimer ce forum ?');">
-                                <button type="submit" class="btn btn-danger btn-sm">
-                                    <i class="fas fa-trash"></i> 
-                                </button>
-                            </form>
-                        </div>
-                        
+                        <a href="{{path('app_showfrontposts', {'id': forum.id}) }}" class="btn btn-primary">Voir le Forum</a>
                     </div>
                 </div>
             </div>
         {% else %}
             <p class="text-center">Aucun forum trouvé.</p>
         {% endfor %}
-    </div>
-    <div class="text-center mt-4">
-        <!-- Le bouton qui redirige vers la page d'ajout de forum -->
-        <a href="{{ path('app_addforum') }}" class="btn btn-primary">
-            Ajouter un forum
-        </a>
     </div>
 </div>
 {% endblock %}

@@ -4,7 +4,6 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-
     "content-hash": "a7ddb815d6fe22efe73898239116bf4a",
     "packages": [
         {
@@ -5367,8 +5366,6 @@
                     "type": "tidelift"
                 }
             ],
-
-
             "time": "2025-02-13T08:34:43+00:00"
         },
         {

@@ -1,0 +1,53 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Commentaires du Post - {{ post.nom }}{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <h3 class="mt-4">Commentaires :</h3>
+    <!-- Tableau des commentaires -->
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>ID du Post</th>
+                <th>Description</th>
+                <th>Date d'ajout</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for comment in comments %}
+                <tr>
+                    <td>{{ comment.id }}</td>
+                    <td>{{ comment.post.id }}</td>
+                    <td>{{ comment.description }}</td>
+                    <td><small class="text-muted">{{ comment.dateCreation|date('d/m/Y') }}</small></td>
+                    <td>
+                        <!-- Boutons de suppression et d'édition -->
+                        <a href="{{ path('app_deletebackcomment', {'id': comment.id}) }}" 
+                           class="text-danger text-decoration-none"
+                           onclick="return confirm('Voulez-vous vraiment supprimer ce commentaire ?')">
+                            ❌
+                        </a>
+                        <a href="{{ path('app_editcomment', {'id': comment.id}) }}" 
+                           class="text-warning text-decoration-none ms-2">
+                            ✏️
+                        </a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5" class="text-center">Aucun commentaire pour ce post.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Boutons pour ajouter un commentaire et retour -->
+    <div class="mt-4 d-flex gap-2">
+        <a href="{{ path('app_addbackcomment', {'id': post.id}) }}" class="btn btn-primary">Ajouter un Commentaire</a>
+        <a href="{{ path('app_showbackposts', {'id': post.forum.id}) }}" class="btn btn-secondary">Retour aux Posts</a>
+    </div>
+</div>
+{% endblock %}
