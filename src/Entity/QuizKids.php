@@ -7,6 +7,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: QuizKidsRepository::class)]
 class QuizKids
@@ -17,31 +18,44 @@ class QuizKids
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le nom de la question est obligatoire.")]
     private ?string $question = null;
 
+    
     #[ORM\Column(type: Types::JSON)]
+    #[Assert\Count(min: 2, minMessage: "Il faut ajouter au moins deux options.")]
     private array $options = [];
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "La réponse exacte est obligatoire.")]
     private ?string $correctAnswer = null;
 
     #[Vich\UploadableField(mapping: "quiz_media", fileNameProperty: "media")]
+    ##[Assert\NotBlank(message: "Le media File est obligatoire.")]
     private ?File $mediaFile = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    
     private ?string $media = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le level est obligatoire.")]
     private ?string $level = null;
 
     #[ORM\Column(length: 255)]
+    
     private ?string $score = null;
 
     #[ORM\Column(type: "datetime", nullable: true)]
     private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le genre est obligatoire.")]
     private ?string $genre = null;
+
+    #[ORM\ManyToOne(inversedBy: 'quizzes')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'CASCADE')]
+    private ?Challenge $id_challenge = null;
 
     public function setMediaFile(?File $file = null): void
     {
@@ -140,6 +154,18 @@ class QuizKids
     public function setGenre(string $genre): static
     {
         $this->genre = $genre;
+
+        return $this;
+    }
+
+    public function getIdChallenge(): ?Challenge
+    {
+        return $this->id_challenge;
+    }
+
+    public function setIdChallenge(?Challenge $id_challenge): static
+    {
+        $this->id_challenge = $id_challenge;
 
         return $this;
     }
