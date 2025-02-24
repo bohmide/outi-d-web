@@ -52,8 +52,6 @@
                 <ul>
                   <li><a href="{{path('base')}}" class="{% if app.request.pathinfo == path('base') %}active{% endif %}">Home<br></a></li>
                   <li><a href="{{path('app_showforum')}}"  class="{% if app.request.pathinfo == path('forum') %}active{% endif %}">Forum</a></li>
-                  <li><a href="{{path('app_cours_back')}}" class="{% if app.request.pathinfo == path('app_cours_back') %}active{% endif %}">Cours</a></li>
-                  <li><a href="{{path('courses')}}" class="{% if app.request.pathinfo == path('courses') %}active{% endif %}">Courses</a></li>
                   <li><a href="{{path('app_showcours')}}" class="{% if app.request.pathinfo == path('app_showcours') %}active{% endif %}">Cours</a></li>
                   <li><a href="{{path('trainers')}}" class="{% if app.request.pathinfo == path('trainers') %}active{% endif %}">Trainers</a></li>
                   <li><a href="{{path('app_front_etudiant_show_events')}}" class="{% if app.request.pathinfo == path('app_front_etudiant_show_events') %}active{% endif %}">Events</a></li>
