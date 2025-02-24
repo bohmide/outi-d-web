@@ -1,0 +1,116 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %} QuizKids {% endblock %}
+
+{% block body %}
+<div class="content container-fluid pt-4 px-4">
+    <div class="row g-4 mb-4">
+        <div class="col-12 ">
+            <div class="bg-secondary rounded h-100 p-4">
+                <h6 class="mb-4">QuizKids/Question Table</h6>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Question</th>
+                                <th scope="col">Options</th>
+                                <th scope="col">Réponse exacte</th>
+                                <th scope="col">Genre</th>
+                                <th scope="col">Niveau</th>
+                                <th scope="col">Média</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for question in questions %}
+                                <tr>
+                                    
+                                    <td>{{ question.id }}</td>
+                                    <td>{{ question.question }}</td>
+                                    <td><ul>
+                                        {% for op in question.options %}
+                                            <li>{{ op }}</li>
+                                        {% else %}
+                                            <li>Aucun quiz associé</li>
+                                        {% endfor %}
+                                    </ul></td>
+                                    <td>{{ question.correctAnswer }}</td>
+                                    <td>{{ question.genre }}</td>
+                                    <td>{{ question.level }}</td>
+                                    <td>
+                                        {% if question.media %}
+                                            <a href="javascript:void(0);" onclick="openMediaPopup('/uploads/media/{{ question.media }}')" style="color: #1932d2;">Voir le fichier</a>
+                                        {% else %}
+                                            Aucun fichier
+                                        {% endif %}
+                                    </td>
+                                    
+                                    <!-- Pop-up Modal -->
+                                        <div id="mediaPopup" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; z-index: 1000;">
+                                            <div style="background: white; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); max-width: 90%; max-height: 90%; overflow: auto; position: relative;">
+                                                <button onclick="closeMediaPopup()" style="position: absolute; top: 10px; right: 10px; background: #e74c3c; color: white; border: none; padding: 10px; font-size: 16px; cursor: pointer;">X</button>
+                                                <img id="mediaContent" src="" alt="Fichier Médias" style="max-width: 100%; max-height: 500px; margin-bottom: 15px;">
+                                                <div id="mediaText" style="display: none; color: #333;"></div>
+                                            </div>
+                                        </div>
+
+                                        <script>
+                                            function openMediaPopup(mediaUrl) {
+                                                var popup = document.getElementById('mediaPopup');
+                                                var mediaContent = document.getElementById('mediaContent');
+                                                var mediaText = document.getElementById('mediaText');
+                                                
+                                                // Réinitialiser l'affichage
+                                                mediaContent.style.display = 'none';
+                                                mediaText.style.display = 'none';
+                                                
+                                                // Vérifier le type de fichier
+                                                if (mediaUrl.endsWith('.jpg') || mediaUrl.endsWith('.jpeg') || mediaUrl.endsWith('.png') || mediaUrl.endsWith('.gif')) {
+                                                    mediaContent.src = mediaUrl;
+                                                    mediaContent.style.display = 'block';  // Afficher l'image
+                                                } else {
+                                                    mediaText.textContent = "Le fichier n'est pas une image, vous pouvez le télécharger en cliquant ici.";
+                                                    mediaText.style.display = 'block';  // Afficher un texte ou un lien pour d'autres fichiers
+                                                    mediaText.innerHTML = `<a href="${mediaUrl}" target="_blank" style="color: #1932d2;">Télécharger le fichier</a>`;
+                                                }
+
+                                                // Afficher la pop-up avec un effet
+                                                popup.style.display = 'flex';
+                                                setTimeout(function() {
+                                                    popup.style.opacity = 1;
+                                                }, 10);
+                                            }
+
+                                            function closeMediaPopup() {
+                                                var popup = document.getElementById('mediaPopup');
+                                                popup.style.opacity = 0;
+                                                setTimeout(function() {
+                                                    popup.style.display = 'none';
+                                                }, 300);  // Délai pour l'animation de fermeture
+                                            }
+                                        </script>
+                                    <td>
+                                        <a href="{{ path('edit_QuizKids', { id: question.id }) }}" class="btn btn-sm btn-primary mb-2">
+                                            <i class="fas fa-edit"></i> <!-- Icône de modification -->
+                                        </a>
+                                        <a href="{{ path('delete_QuizKids', { id: question.id }) }}" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette question ?');">
+                                            <i class="fas fa-trash-alt"></i> <!-- Icône de suppression -->
+                                        </a>
+                                        
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="7" class="text-center">Aucune question ajoutée pour le moment.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <a href="{{ path('QuizKids_create_admin') }}" class="btn btn-success mt-3">Ajouter un QuizKids</a>
+            </div>
+        </div>
+    </div>
+</div>        
+{% endblock %}

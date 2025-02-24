@@ -1,0 +1,47 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %} Modifier un Challenge {% endblock %}
+
+{% block body %}
+<div class="content container-fluid pt-4 px-4">
+    <div class="row g-4 mb-4">
+        <div class="col-sm-12 col-xl-6">
+            <div class="bg-secondary rounded h-100 p-4">
+                <h4 class="mb-4">Modifier le Challenge</h4>
+
+                {{ form_start(form) }}
+                
+                <div class="form-floating mb-3">
+                    {{ form_widget(form.name, { 'attr': {'class': 'form-control', 'placeholder': 'Nom du challenge'} }) }}
+                    {{ form_label(form.name, 'Nom du Challenge') }}
+                </div>
+
+                
+
+                <div class="form-floating mb-4">
+                   
+                
+                    <div class="form-check">
+                        {{ form_label(form.quizzes, 'Sélectionner les QuizKids', {'label_attr': {'class': 'form-label'}}) }}
+                        {% for quiz in form.quizzes %}
+                            <div class="form-check mb-2">
+                                
+                                {{ form_widget(quiz, {'attr': {'class': 'form-check-input'}}) }}
+                                {{ form_label(quiz, quiz.vars.label, {'label_attr': {'class': 'form-check-label'}}) }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                
+                    
+                </div>
+
+                <button type="submit" class="btn btn-primary me-2">Modifier</button><button class="btn btn-danger" href="{{ path('challenge_list') }}" class="btn btn-secondary mt-3">Retour</button>
+                
+                {{ form_end(form) }}
+
+                
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
