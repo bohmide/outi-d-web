@@ -1,0 +1,44 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Créer un Challenge{% endblock %}
+
+{% block body %}
+<!-- Content Start -->
+<div class="content container-fluid pt-4 px-4">
+    <div class="row g-4 mb-4">
+        <div class="col-sm-12 col-xl-6" mb-3>
+            <div class="bg-secondary rounded h-100 p-4">
+                <h4 class="mb-4">Créer un nouveau Challenge</h4>
+
+                {{ form_start(form) }}
+                <div class="form-floating">
+                    {{ form_widget(form.name, {'attr': {'class': 'form-control mb-4', 'placeholder': 'Nom du Challenge'}}) }}
+                    {{ form_label(form.name, 'Nom du Challenge') }}
+                </div>
+
+                <div class="form-floating mb-4">
+                   
+                
+                    <div class="form-check">
+                        {{ form_label(form.quizzes, 'Sélectionner les QuizKids', {'label_attr': {'class': 'form-label'}}) }}
+                        {% for quiz in form.quizzes %}
+                            <div class="form-check mb-2">
+                                
+                                {{ form_widget(quiz, {'attr': {'class': 'form-check-input'}}) }}
+                                {{ form_label(quiz, quiz.vars.label, {'label_attr': {'class': 'form-check-label'}}) }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                
+                    
+                </div>
+                
+
+                <button type="submit" class="btn btn-primary">Créer le Challenge</button>
+
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
