@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Evenements;
 use App\Form\EvenementsType;
 use App\Repository\EvenementsRepository;
+use App\Repository\EventGenreRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -39,12 +40,27 @@ final class EventsController extends AbstractController
 
     // show front
     #[Route('/events/etudiant/showEvents', name: 'app_front_etudiant_show_events')]
-    public function showEventF(EvenementsRepository $er): Response
+    public function showEventF(EvenementsRepository $er, EventGenreRepository $egr, Request $request): Response
     {
-        $events = $er->findAll();
+        // Get the selected genre from the query parameters
+        $genreId = $request->query->get('genre');
 
+        // Fetch all genres
+        $genres = $egr->findAll();
+
+        // Fetch events, filtered by genre if selected
+        if ($genreId) {
+            // Filter events by the selected genre
+            $events = $er->findBy(['genre' => $genreId]);
+        } else {
+            // No genre selected, fetch all events
+            $events = $er->findAll();
+        }
+
+        // Render the template with the events and genres
         return $this->render('events/front/showEventsV2.html.twig', [
             'events' => $events,
+            'genres' => $genres,
         ]);
     }
 
@@ -165,7 +181,7 @@ final class EventsController extends AbstractController
                 $this->addFlash('errorNbrLimit', 'number limit must be positive');
                 return $this->render('events/front/addEvent.html.twig', [
                     'form' => $form,
-            'label' => 'Mise a jour'
+                    'label' => 'Mise a jour'
 
                 ]);
             }
