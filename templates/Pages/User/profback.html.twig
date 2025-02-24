@@ -1,0 +1,46 @@
+{% extends "base_admin.html.twig" %}
+
+{% set about_active = 'active' %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h2 class="mb-3">Professors List</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Password</th>
+                    <th>Password verification</th>
+                    <th>Email</th>
+                    <th>Interview Date</th>
+                    <th>Interview Mode</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for prof in profs %}
+                    <tr>
+                        <td>{{ prof.id }}</td>
+                        <td>{{ prof.fnpr }}</td>
+                        <td>{{ prof.lnpr }}</td>
+                        <td>{{ prof.pwpr }}</td>
+                        <td>{{ prof.pvpr }}</td>
+                        <td>{{ prof.emailpr }}</td>
+                        <td>{{ prof.interdate ? prof.interdate|date('Y-m-d') : 'N/A' }}</td>
+                        <td>{{ prof.intermode }}</td>
+                        <td>
+                            <a href="{{ path('updateprof', { 'id': prof.id }) }}" class="btn btn-primary btn-sm"> Update </a>
+                            <a href="{{ path('deleteprof', { 'id': prof.id }) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');"> Delete </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center">No professors found.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

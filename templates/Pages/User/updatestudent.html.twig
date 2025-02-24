@@ -1,0 +1,196 @@
+{% extends "base_admin.html.twig" %}
+
+
+{% block body %}
+
+	<style>
+		/* Style général de la section */
+		#hero {
+			position: relative;
+			padding: 30px 0;
+			background-color: #333; /* Couleur de fond sombre */
+			color: #fff; /* Texte en blanc */
+		}
+
+		#hero img {
+			width: 100%;
+			height: auto;
+			opacity: 0.7; /* Opacité pour l'image de fond */
+		}
+
+		.container {
+			position: relative;
+			z-index: 2;
+			max-width: 900px; /* Réduction de la largeur du conteneur */
+			margin: 0 auto;
+			padding: 15px;
+		}
+
+		/* Conteneur des formulaires */
+		.form-container {
+			display: flex;
+			gap: 15px; /* Espace réduit entre les formulaires */
+			justify-content: center;
+			background-color: rgba(255, 255, 255, 0.1); /* Fond semi-transparent */
+			padding: 15px;
+			border-radius: 6px;
+			width: 80%; /* Réduction de la largeur globale */
+			margin: auto;
+		}
+
+		/* Style des formulaires */
+		form {
+			flex: 1;
+			max-width: 350px; /* Réduction de la largeur des formulaires */
+			background-color: rgba(255, 255, 255, 0.1); /* Fond semi-transparent */
+			padding: 15px;
+			border-radius: 6px;
+		}
+
+		/* Style des groupes de formulaire */
+		.form-group {
+			margin-bottom: 1rem;
+		}
+
+		/* Style des labels */
+		.form-group label {
+			display: block;
+			font-weight: bold;
+			margin-bottom: 0.3rem;
+			color: #fff; /* Texte en blanc */
+			font-size: 0.9rem; /* Réduction de la taille du texte */
+		}
+
+		/* Style des champs de formulaire */
+		.form-control {
+			width: 100%;
+			padding: 8px; /* Réduction du padding */
+			border: 1px solid #555;
+			border-radius: 4px;
+			background-color: rgba(255, 255, 255, 0.1); /* Fond semi-transparent */
+			color: #fff; /* Texte en blanc */
+			font-size: 0.9rem; /* Réduction de la taille du texte */
+			transition: border-color 0.3s ease, box-shadow 0.3s ease;
+		}
+
+		.form-control:focus {
+			border-color: #007bff;
+			outline: none;
+			box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+		}
+
+		/* Style des groupes de cases à cocher */
+		.form-check-group {
+			display: flex;
+			gap: 1rem; /* Réduction de l’espace entre les éléments */
+			flex-wrap: wrap;
+		}
+
+		/* Style pour chaque case à cocher et son label */
+		.form-check {
+			display: flex;
+			align-items: center;
+			margin-bottom: 0.8rem; /* Réduction de l’espace entre les éléments */
+		}
+
+		/* Style pour la case à cocher */
+		.form-check-input {
+			margin-right: 0.8rem; /* Réduction de l’espace */
+		}
+
+		/* Style pour le label */
+		.form-check-label {
+			color: #fff; /* Texte en blanc */
+			font-size: 0.85rem; /* Réduction de la taille du texte */
+		}
+
+		/* Style des boutons */
+		button[type="submit"] {
+			width: 50%;
+			padding: 8px; /* Réduction du padding */
+			background-color: #007bff;
+			color: #fff;
+			border: none;
+			border-radius: 4px;
+			font-size: 0.9rem; /* Réduction de la taille */
+			cursor: pointer;
+			transition: background-color 0.3s ease;
+		}
+
+		button[type="submit"]:hover {
+			background-color: #0056b3;
+		}
+
+		/* Adaptation pour les petits écrans */
+		@media(max-width: 768px) {
+			.form-container {
+				flex-direction: column; /* Empiler les formulaires sur petits écrans */
+				width: 90%; /* Ajustement de la largeur */
+			}
+
+			form {
+				width: 100%;
+				max-width: 300px; /* Réduction supplémentaire */
+				margin: auto;
+			}
+		}
+	</style>
+
+	<section id="hero" class="hero section dark-background">
+		<div class="container">
+			{% block content %}
+				<div data-aos="fade-up" data-aos-delay="400">
+					<div
+						class="form-container">
+                        {{ form_start(forms2, {'attr': {'novalidate':'novalidate'}}) }}
+						<form>
+							<div class="form-group">
+								{{ form_label(forms2.fn,"Student's First Name :" ) }}
+								{{ form_widget(forms2.fn, {'attr': {'class': 'form-control'}}) }}
+								{{form_errors(forms2.fn)}}
+							</div>
+							<div class="form-group">
+								{{ form_label(forms2.ln,"Student's Last Name :") }}
+								{{ form_widget(forms2.ln, {'attr': {'class': 'form-control'}}) }}
+								{{form_errors(forms2.ln)}}
+							</div>
+							<div class="form-group">
+								{{ form_label(forms2.pw,"Password :") }}
+								{{ form_widget(forms2.pw, {'attr': {'class': 'form-control'}}) }}
+								{{form_errors(forms2.pw)}}
+							</div>
+							<div class="form-group">
+								{{ form_label(forms2.pv,"Password verfication:") }}
+								{{ form_widget(forms2.pv, {'attr': {'class': 'form-control'}}) }}
+								{{form_errors(forms2.pv)}}
+							</div>
+							<div class="form-group">
+								{{ form_label(forms2.email,"Email adress :") }}
+								{{ form_widget(forms2.email, {'attr': {'class': 'form-control'}}) }}
+								{{form_errors(forms2.email)}}
+							</div>
+							<div class="form-group">
+								{{ form_label(forms2.datebirth,"Date of birth :") }}
+								{{ form_widget(forms2.datebirth, {'attr': {'class': 'form-control'}}) }}
+								{{form_errors(forms2.datebirth)}}
+							</div>
+							<div class="form-group">
+								{{ form_label(forms2.sexe,"Gender :") }}
+								{{ form_widget(forms2.sexe, {'attr': {'class': 'form-check'}}) }}
+								{{form_errors(forms2.sexe)}}
+							</div>
+							<div class="form-group">
+								{{ form_label(forms2.ld,"Do you have any learning difficulties ?") }}
+								{{ form_widget(forms2.ld, {'attr': {'class': 'form-check'}}) }}
+								{{form_errors(forms2.ld)}}
+							</div>
+							<button type="submit">Sign Up</button>
+						</form>
+						{{ form_end(forms2) }}
+					</div>
+				</div>
+			{% endblock %}
+		</div>
+	</section>
+
+{% endblock %}

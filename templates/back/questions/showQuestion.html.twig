@@ -6,6 +6,14 @@
 <div class="container my-5">
     <h1 class="text-center mb-4">Questions du quiz : {{ quiz.titre }}</h1>
 
+    {% for message in app.flashes('success') %}
+    <div class="alert alert-success">{{ message }}</div>
+        {% endfor %}
+
+      {% for message in app.flashes('error') %}
+    <div class="alert alert-danger">{{ message }}</div>
+          {% endfor %}
+
     {% if questions is not empty %}
         <table class="table table-striped">
             <thead>
@@ -37,6 +45,6 @@
     {% endif %}
 
     <a href="{{ path('admin_questions_new', {'id': quiz.id}) }}" class="btn btn-primary">Ajouter une nouvelle question</a>
-    {# <a href="{{ path('admin_chapitre_quiz', {'id': questions.getQuiz().getId()}) }}" class="btn btn-secondary mt-4">Retour au quiz</a> #}
+    <a href="{{ path('admin_chapitre_quiz', {'id': quiz.chapitre.id}) }}" class="btn btn-secondary mt-3">Retour au quiz</a>
 </div>
 {% endblock %}

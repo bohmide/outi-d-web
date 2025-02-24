@@ -6,6 +6,8 @@ use App\Repository\QuestionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: QuestionRepository::class)]
 class Question
@@ -16,8 +18,11 @@ class Question
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "La question ne peut pas être vide.")]
+    #[Assert\Length(min: 5, minMessage: "La question doit comporter au moins {{ limit }} caractères.")]
     private ?string $question = null;
-
+ 
+    #[Assert\NotBlank(message: "Le type ne peut pas être vide.")]
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $type = null;
 
@@ -28,7 +33,7 @@ class Question
     /**
      * @var Collection<int, Reponse>
      */
-    #[ORM\OneToMany(targetEntity: Reponse::class, mappedBy: 'question')]
+    #[ORM\OneToMany(targetEntity: Reponse::class, mappedBy: 'question', cascade :['remove'])]
     private Collection $reponse;
 
     public function __construct()
