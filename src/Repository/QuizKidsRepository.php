@@ -24,6 +24,24 @@ class QuizKidsRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+    public function findByGenreAndLevel(?string $level, ?string $genre)
+    {
+        $qb = $this->createQueryBuilder('q');
+    
+        // Apply level filter only if it's provided
+        if (!empty($level)) {
+            $qb->andWhere('q.level = :level')
+               ->setParameter('level', $level);
+        }
+    
+        // Apply genre filter only if it's provided
+        if (!empty($genre)) {
+            $qb->andWhere('q.genre = :genre')
+               ->setParameter('genre', $genre);
+        }
+    
+        return $qb->getQuery()->getResult();
+    }
 
 
 //    /**

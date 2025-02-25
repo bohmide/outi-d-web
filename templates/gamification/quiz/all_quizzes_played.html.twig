@@ -1,0 +1,15 @@
+{% extends 'base_kids.html.twig' %}
+
+{% block title %} All Quizzes Played {% endblock %}
+
+{% block body %}
+    <div class="container text-center py-5">
+        <div class="result-card">
+            <h1 class="result-title text-primary display-3">🎉 All Quizzes Played! 🎉</h1>
+            <p class="result-message">
+                You've played all the quizzes! Great job! 🎉
+            </p>
+            <a href="{{ path('quiz_kids_reset') }}" class="btn btn-lg btn-play">🎮 Play Again!</a>
+        </div>
+    </div>
+{% endblock %}
