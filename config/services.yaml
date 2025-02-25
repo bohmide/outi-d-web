@@ -10,6 +10,8 @@ parameters:
     sponsors_images_directory: '%kernel.project_dir%/public/uploads/sponsors_images'
     events_images_directory: '%kernel.project_dir%/public/uploads/events_images'
     chapitres_directory: '%kernel.project_dir%/public/uploads/chapitres'
+    upload_directory: '%kernel.project_dir%/public/uploads'
+
 
 services:
     # default configuration for services in *this* file

@@ -1,0 +1,53 @@
+{% extends "base_admin.html.twig" %}
+
+{% block title %}Créer un Forum - {% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <h1 class="text-center mb-4">Créer un Forum</h1>
+
+    <!-- Affichage des messages de succès -->
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success text-center">{{ message }}</div>
+    {% endfor %}
+
+    <!-- Gestion des erreurs générales du formulaire -->
+    {% if form.vars.errors|length > 0 %}
+        <div class="alert alert-danger">
+            {{ form_errors(form) }}
+        </div>
+    {% endif %}
+
+    <!-- Début du formulaire -->
+    {{ form_start(form, { enctype: 'multipart/form-data', attr: { class: 'needs-validation', novalidate: 'novalidate' } }) }}
+
+    <div class="mb-3">
+        {{ form_label(form.nom, 'Nom du Forum', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.nom, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le nom du forum'}}) }}
+        {{ form_errors(form.nom) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.theme, 'Thème du Forum', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.theme, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le thème du forum'}}) }}
+        {{ form_errors(form.theme) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.image_forum, 'Image du Forum', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.image_forum, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.image_forum) }}
+    </div>
+
+    <div class="text-center">
+        {# Vérifiez si `form.save` existe dans ForumType, sinon utilisez un bouton classique #}
+        {% if form.save is defined %}
+            {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}}) }}
+        {% else %}
+            <button type="submit" class="btn btn-primary">Créer le Forum</button>
+        {% endif %}
+    </div>
+
+    {{ form_end(form) }}
+</div>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Mettre à jour le Forum{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <h1 class="text-center mb-4">Mettre à jour le Forum</h1>
+
+    <!-- Messages de succès -->
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success text-center">{{ message }}</div>
+    {% endfor %}
+
+    <!-- Début du formulaire -->
+    {{ form_start(form, { enctype: 'multipart/form-data', attr: { class: 'form-horizontal needs-validation', novalidate: 'novalidate' } }) }}
+
+    <div class="form-group mb-3">
+        {{ form_label(form.nom, 'Titre du forum', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.nom) }}
+    </div>
+
+    <div class="form-group mb-3">
+        {{ form_label(form.theme, 'Thème du forum', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.theme, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.theme) }}
+    </div>
+
+    <div class="form-group mb-3">
+        <label class="form-label">Image du forum</label>
+
+        <!-- Affichage de l'image actuelle -->
+        {% if forum.imageForum %}
+            <div class="mb-2">
+                <img src="{{ asset('uploads/forum_images/' ~ forum.imageForum) }}" alt="Image actuelle" class="img-thumbnail" style="max-width: 200px;">
+            </div>
+        {% else %}
+            <p>Aucune image actuelle.</p>
+        {% endif %}
+
+        <!-- Champ de téléchargement pour une nouvelle image -->
+        {{ form_widget(form.image_forum, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.image_forum) }}
+    </div>
+
+    <div class="form-group mb-3">
+        <label class="form-label">Date de création</label>
+        <input type="text" class="form-control" value="{{ forum.dateCreation|date('d/m/Y') }}" disabled />
+    </div>
+
+    <div class="form-group text-center">
+        <button type="submit" class="btn btn-success">
+            Mettre à jour
+        </button>
+    </div>
+
+    {{ form_end(form) }}
+</div>
+{% endblock %}

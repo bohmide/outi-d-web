@@ -74,6 +74,8 @@ final class QuizBackController extends AbstractController
     public function deleteQuiz(Quiz $quiz, ManagerRegistry $m): Response
     {
         $em = $m->getManager();
+    
+
         $chapitreId = $quiz->getChapitre()->getId();
         $em->remove($quiz);
         $em->flush();

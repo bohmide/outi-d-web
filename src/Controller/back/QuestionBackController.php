@@ -13,6 +13,7 @@ use App\Form\QuestionType;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 
 
+
 final class QuestionBackController extends AbstractController
 {
     #[Route('/quiz/{id}/questions', name: 'admin_quiz_question')]
@@ -31,7 +32,7 @@ final class QuestionBackController extends AbstractController
         $em = $m->getManager();
         $quiz = $m->getRepository(Quiz::class)->find($id);
         if (!$quiz) {
-            throw $this->createNotFoundException('Quiz not found');
+            throw $this->createNotFoundException('Quiz non trouvé');
         }
 
         // Fetch all the questions associated with the quiz
@@ -52,45 +53,62 @@ final class QuestionBackController extends AbstractController
 
         return $this->render('back/questions/newQuestion.html.twig', [
             'quiz' => $quiz,
-            'questions' => $questions,
             'form' => $form,
         ]);
     }
 
     #[Route('/quiz/{quiz_id}/question/{id}/edit', name: 'admin_quiz_question_edit')]
-    public function editQuestion(#[MapEntity(mapping: ['quiz_id' => 'id'])] Quiz $quiz, 
-    #[MapEntity(mapping: ['id' => 'id'])] Question $question , Request $request, ManagerRegistry $ma): Response
+    public function editQuestion(int $quiz_id, int $id, Request $request, ManagerRegistry $ma): Response
     {
-            // Récupérer le quiz et la question en fonction de quiz_id et id
-
         $em = $ma->getManager();
+
+        // Récupérer le quiz et la question en fonction des IDs
+        $quiz = $em->getRepository(Quiz::class)->find($quiz_id);
+        if (!$quiz) {
+            throw $this->createNotFoundException('Quiz not found');
+        }
+
+        $question = $em->getRepository(Question::class)->find($id);
+        if (!$question) {
+            throw $this->createNotFoundException('Question not found');
+        }
+
+        // Création du formulaire
         $form = $this->createForm(QuestionType::class, $question);
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $question->setQuiz($quiz); // Réaffecter le quiz à la question
+            $question->setQuiz($quiz);
             $em->flush();
-        
-            $this->addFlash('success', 'Question modifiée avec succès');
+
+            $this->addFlash('success', 'Question updated successfully');
             return $this->redirectToRoute('admin_quiz_question', ['id' => $quiz->getId()]);
         }
-        
+
         return $this->render('back/questions/editQuestion.html.twig', [
             'quiz' => $quiz,
             'form' => $form,
             'question' => $question,
         ]);
-}
-     #[Route('/quiz/{quiz_id}/question/{id}/delete', name: 'admin_quiz_question_delete')]
+    }
 
-    public function deleteQuestion(Question $question, $quiz_id, ManagerRegistry $ma): Response
-  {
-    $em = $ma->getManager();
-    $em->remove($question);
-    $em->flush();
+    #[Route('/quiz/{quiz_id}/question/{id}/delete', name: 'admin_quiz_question_delete')]
+    public function deleteQuestion(int $quiz_id, int $id, ManagerRegistry $ma): Response
+    {
+        $em = $ma->getManager();
 
-    $this->addFlash('success', 'Question supprimée avec succès.');  
-    return $this->redirectToRoute('admin_quiz_question', ['id' => $quiz_id]);
-  }
+        // Récupérer la question en fonction de l'ID
+        $question = $em->getRepository(Question::class)->find($id);
+        if (!$question) {
+            throw $this->createNotFoundException('Question not found');
+        }
+
+        // Supprimer la question
+        $em->remove($question);
+        $em->flush();
+
+        $this->addFlash('success', 'Question deleted successfully');
+        return $this->redirectToRoute('admin_quiz_question', ['id' => $quiz_id]);
+    }
 
 }
