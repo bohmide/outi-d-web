@@ -13,7 +13,8 @@
 					{% if event.getImagePath() %}
 						<img src="{{ asset('uploads/events_images/' ~ event.imagePath) }}" alt="Event Image" style="max-width: 100%; height: auto; border-radius: 10px;">
 					{% else %}
-						Aucune image
+						<img src="{{ asset('img/event/eventDefaultPic.jpg') }}" alt="Event Image" style="max-width: 100%; height: auto; border-radius: 10px;">
+
 					{% endif %}
 					<h4>What you’ll learn</h4>
 					<p>

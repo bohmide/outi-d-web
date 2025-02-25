@@ -1,44 +1,50 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Gestion des Événements -{% endblock %}
+{% block title %}Gestion des Événements -
+{% endblock %}
 
 {% block body %}
-<body>
+	<body>
 
-    <!-- Genre Filter Form -->
-    <div class="filter-container">
-        <form method="get" action="{{ path('app_front_etudiant_show_events') }}">
-            <select name="genre" id="genre">
-                <option value="">Select Genre</option>
-                {% for genre in genres %}
-                    <option value="{{ genre.id }}" {% if genre.id == app.request.query.get('genre') %} selected {% endif %}>{{ genre.getNomGenre() }}</option>
-                {% endfor %}
-            </select>
-            <button type="submit">Filter</button>
-        </form>
-    </div>
+		<!-- Genre Filter Form -->
+		<div class="filter-container">
+			<form method="get" action="{{ path('app_front_etudiant_show_events') }}">
+				<select name="genre" id="genre">
+					<option value="">Select Genre</option>
+					{% for genre in genres %}
+						<option value="{{ genre.id }}" {% if genre.id == app.request.query.get('genre') %} selected {% endif %}>{{ genre.getNomGenre() }}</option>
+					{% endfor %}
+				</select>
+				<button type="submit">Filter</button>
+			</form>
+		</div>
 
-    <main>
-        <div class="cardEvent-container"> <!-- Updated to match CSS -->
-            {% for event in events %}
-                <div class="cardEvent"> <!-- Updated to match CSS -->
-                    {% if event.getImagePath() %}
-                        <img src="{{ asset('uploads/events_images/' ~ event.imagePath) }}" alt="Event Image">
-                    {% else %}
-                        <div class="no-image">Aucune image</div>
-                    {% endif %}
-                    <div class="card-content">
-                        <h2>{{ event.getNomEvent() }}</h2>
-                        <p>{{ event.getDescription() }}</p>
-                        <a href="{{ path('app_show_details_events', {'id': event.getId()}) }}" class="button">
-                            Find out more
-                            <span class="material-symbols-outlined">arrow_right_alt</span>
-                        </a>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    </main>
+		<main>
+			<div
+				class="cardEvent-container">
+				<!-- Updated to match CSS -->
+				{% for event in events %}
+					<div
+						class="cardEvent">
+						<!-- Updated to match CSS -->
+						{% if event.getImagePath() %}
+							<img src="{{ asset('uploads/events_images/' ~ event.imagePath) }}" alt="Event Image">
+						{% else %}
+							<img src="{{ asset('img/event/eventDefaultPic.jpg') }}" alt="Event Image">
 
-</body>
+						{% endif %}
+						<div class="card-content">
+							<h2>{{ event.getNomEvent() }}</h2>
+							<p>{{ event.getDescription() }}</p>
+							<a href="{{ path('app_show_details_events', {'id': event.getId()}) }}" class="button">
+								Find out more
+								<span class="material-symbols-outlined">arrow_right_alt</span>
+							</a>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</main>
+
+	</body>
 {% endblock %}
