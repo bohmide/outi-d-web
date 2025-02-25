@@ -60,10 +60,11 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <div class="navbar-nav mx-auto">
-                        <a href="index.html" class="nav-item nav-link active">Home</a>
-                        <a href="about.html" class="nav-item nav-link">Quiz</a>
-                        <a href="service.html" class="nav-item nav-link">Games</a>
-                        <a href="service.html" class="nav-item nav-link">Challenge</a>
+                        <a href="{{path('main_kids')}}" class="nav-item nav-link {% if app.request.pathinfo == path('main_kids') %}active{% endif %}">Home</a>
+                        <a href="{{path('select_quizKids')}}" class="nav-item nav-link {% if app.request.pathinfo == path('select_quizKids') %}active{% endif %}">QuizKids</a>
+                        <a href="{{path('main_kids')}}" class="nav-item nav-link">Games</a>
+                        <a href="{{path('main_kids')}}" class="nav-item nav-link">Challenge</a>
+                        
                         <!-- <a href="program.html" class="nav-item nav-link">Programs</a>
                         <a href="event.html" class="nav-item nav-link">Events</a>
                         <div class="nav-item dropdown">

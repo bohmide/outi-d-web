@@ -1,0 +1,15 @@
+{% extends 'base_kids.html.twig' %}
+
+{% block title %} No Quiz Available {% endblock %}
+
+{% block body %}
+<div class="container text-center py-5">
+    <div class="result-card">
+        <h1 class="result-title text-primary display-3" style="font-size: 24px;">❌ Oops! No quizzes available for this category ❌</h1>
+        <p class="result-message">
+            Try selecting a different level or genre.
+        </p>
+        <a href="{{ path('select_quizKids') }}" class="btn btn-primary">Back to Selection</a>
+    </div>
+</div>
+{% endblock %}
