@@ -3,6 +3,7 @@
 {% set about_active = 'active' %}
 
 {% block body %}
+<div class="content container-fluid pt-4 px-4">
     <div class="container mt-4">
         <h2 class="mb-3">Parents List</h2>
         <table class="table table-striped">
@@ -11,8 +12,7 @@
                     <th>ID</th>
                     <th>First Name</th>
                     <th>Last Name</th>
-                    <th>Password</th>
-                    <th>Password verification</th>
+                   
                     <th>Email</th>
                     <th>Child First Name</th>
                     <th>Child Last Name</th>
@@ -26,16 +26,15 @@
                 {% for parent in parents %}
                     <tr>
                         <td>{{ parent.id }}</td>
-                        <td>{{ parent.fnp }}</td>
-                        <td>{{ parent.lnp }}</td>
-                        <td>{{ parent.pwp }}</td>
-                        <td>{{ parent.pvp }}</td>
-                        <td>{{ parent.emailp }}</td>
-                        <td>{{ parent.fnch }}</td>
-                        <td>{{ parent.lnch }}</td>
-                        <td>{{ parent.dbch ? parent.dbch|date('Y-m-d') : 'N/A' }}</td>
-                        <td>{{ parent.sch }}</td>
-                        <td>{{ parent.ldch }}</td>
+                        <td>{{ parent.firstName }}</td>
+                        <td>{{ parent.lastName }}</td>
+                     
+                        <td>{{ parent.email }}</td>
+                        <td>{{ parent.firstName_child}}</td>
+                        <td>{{ parent.lastName_child }}</td>
+                        <td>{{ parent.birthday_child ? parent.dbch|date('Y-m-d') : 'N/A' }}</td>
+                        <td>{{ parent.sexe_child }}</td>
+                        <td>{{ parent.learningDifficulties_Child }}</td>
                         <td>
                             <a href="{{ path('updateparent', { 'id': parent.id }) }}" class="btn btn-primary btn-sm"> Update </a>
                             <a href="{{ path('deleteparent', { 'id': parent.id }) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');"> Delete </a>
@@ -50,4 +49,5 @@
             </tbody>
         </table>
     </div>
+</div>    
 {% endblock %}

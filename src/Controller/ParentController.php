@@ -2,51 +2,59 @@
 
 namespace App\Controller;
 
+use App\Form\ParentsType;
 use App\Repository\ParentsRepository; // Pour accéder aux données de l'entité Parents
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response; // Pour retourner une réponse HTTP
 use App\Entity\Parents;
-use App\Form\AddparentType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 final class ParentController extends AbstractController
 {
-    #[Route('/parent', name: 'parent')]
-    public function index(ManagerRegistry $doctrine, Request $request)
+    #[Route('/newparent', name: 'Signparent')]
+    public function new(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
-        $em = $doctrine->getManager();
-        $parents = new Parents();
-        $form = $this->createForm(AddparentType::class, $parents);
+        $prof = new Parents();
+        $formp = $this->createForm(Parentstype::class, $prof);
+        $formp->handleRequest($request);
 
-        $form->handleRequest($request);
+        if ($formp->isSubmitted() && $formp->isValid()) {
+            
+            $password = $formp->get('password')->getData();
+            $hashedPassword = $passwordHasher->hashPassword($prof, $prof->getPassword());  // <-- Hash the password
+            $prof->setPassword($hashedPassword);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em->persist($parents);
-            $em->flush();
+            $prof->setRoles(['ROLE_PARENT']);
 
-            // traitement des donnees
+            
+            $entityManager->persist($prof);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Prof created successfully!');
             return $this->redirectToRoute('base');
         }
 
-        return $this->render('Pages/user/signupparent.html.twig', [
-            'form' => $form->createView(),
-        ]);
+
+        return $this->render('Pages/User/signupparent', 
+        ['form' => $formp->createView()]);
     }
 
-    #[Route('/showparent', name: 'showparent')]
-    public function showParents(ParentsRepository $parentsRepository): Response
+    #[Route('/showparents', name: 'showparents')]
+    public function showParents(EntityManagerInterface $entityManager): Response
     {
         // Récupérer tous les enregistrements de la table Parents
-        $parents = $parentsRepository->findAll();
+        $parents = $entityManager->getRepository(Parents::class)->findAll();
 
         // Vérifier les données récupérées
         if (!$parents) {
             $this->addFlash('warning', 'No parents found in the database.');
         }
 
-        return $this->render('Pages/user/parentback.html.twig', [
+        return $this->render('Pages/User/parentback.html.twig', [
             'parents' => $parents,
         ]);
     }
@@ -84,7 +92,7 @@ final class ParentController extends AbstractController
             throw $this->createNotFoundException('No parent found for id ' . $id);
         }
 
-        $form2 = $this->createForm(AddparentType::class, $parent);
+        $form2 = $this->createForm(ParentsType::class, $parent);
         $form2->handleRequest($req);
         
         if ($form2->isSubmitted() && $form2->isValid()) {

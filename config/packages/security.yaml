@@ -1,0 +1,36 @@
+security:
+    # Password hashers for encoding passwords
+    password_hashers:
+        App\Entity\User:
+            algorithm: bcrypt
+            cost: 12
+
+    # Providers section to define how users are loaded from the database
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Entity\User  # You can replace this with Prof, Admin, etc., depending on your needs
+                property: email
+
+    # Firewalls configuration
+    firewalls:
+        # Main firewall for form login
+        main:
+            pattern: ^/
+            form_login:
+                login_path: login
+                check_path: login
+            logout:
+                path: logout
+            # Allow anonymous users to access certain routes
+              # This is the correct way in Symfony 6 to allow anonymous access
+            provider: app_user_provider  # Reference to the provider defined above
+
+    # Access control to protect specific routes
+    access_control:
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/prof, roles: ROLE_PROF }
+        - { path: ^/parent, roles: ROLE_PARENT }
+        - { path: ^/student, roles: ROLE_STUDENT }
+        
+       

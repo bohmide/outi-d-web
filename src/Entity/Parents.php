@@ -8,63 +8,13 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ParentsRepository::class)]
-class Parents 
+class Parents extends User
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+   
 
     #[Assert\NotBlank(message:"First name is required")]
-    #[Assert\Length(
-        min: 2,
-        max: 15,
-        minMessage: "Your first name must be at least {{ limit }} characters long.",
-        maxMessage: "Your first name cannot be longer than {{ limit }} characters."
-    )]
     #[ORM\Column(length: 255)]
-    private ?string $fnp = null;
-
-
-    #[Assert\NotBlank(message:"Last name is required")]
-    #[Assert\Length(
-        min: 2,
-        max: 15,
-        minMessage: "Your last name must be at least {{ limit }} characters long.",
-        maxMessage: "Your last name cannot be longer than {{ limit }} characters."
-    )]
-    #[ORM\Column(length: 255)]
-    private ?string $lnp = null;
-
-
-    #[Assert\NotBlank(message:"Password is required")]
-    #[Assert\Length(
-        min: 10,
-        max: 20,
-        minMessage: "Your password must be at least {{ limit }} characters long.",
-        maxMessage: "Your password cannot be longer than {{ limit }} characters."
-    )]
-    #[ORM\Column(length: 255)]
-    private ?string $pwp = null;
-
-
-    #[Assert\NotBlank(message: "Password confirmation is required")]
-    #[Assert\EqualTo(
-        propertyPath: "pwp",
-        message: "The password confirmation does not match the password."
-    )]
-    #[ORM\Column(length: 255)]
-    private ?string $pvp = null;
-
-    #[Assert\NotBlank(message:"First name is required")]
-    #[Assert\Length(
-        min: 2,
-        max: 15,
-        minMessage: "Your child's first name must be at least {{ limit }} characters long.",
-        maxMessage: "Your child's first name cannot be longer than {{ limit }} characters."
-    )]
-    #[ORM\Column(length: 255)]
-    private ?string $fnch = null;
+    private ?string $firstName_child = null;
 
     #[Assert\NotBlank(message:"Last name is required")]
     #[Assert\Length(
@@ -74,159 +24,88 @@ class Parents
         maxMessage: "Your child's last name cannot be longer than {{ limit }} characters."
     )]
     #[ORM\Column(length: 255)]
-    private ?string $lnch = null;
+    private ?string $lastName_child = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $dbch = null;
+    private ?\DateTimeInterface $birthday_child = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $sch = null;
+    private ?string $sexe_child = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $ldch = null;
-
-    #[Assert\NotBlank(message:"Email adress is required")]
-    #[Assert\Email(message:"Please provide a valid email address.")]
-    #[ORM\Column(length: 255)]
-    private ?string $emailp = null;
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getFnp(): ?string
-    {
-        return $this->fnp;
-    }
-
-    public function setFnp(string $fnp): static
-    {
-        $this->fnp = $fnp;
-
-        return $this;
-    }
-
-    public function getLnp(): ?string
-    {
-        return $this->lnp;
-    }
-
-    public function setLnp(string $lnp): static
-    {
-        $this->lnp = $lnp;
-
-        return $this;
-    }
-
-    public function getPwp(): ?string
-    {
-        return $this->pwp;
-    }
-
-    public function setPwp(string $pwp): static
-    {
-        $this->pwp = $pwp;
-
-        return $this;
-    }
+    private ?string $learningDifficulties_Child = null;
 
     public function getRoles(): array
     {
-        return ['ROLE_USER'];
+        return ['ROLE_PARENT'];
     }
 
-    public function getPvp(): ?string
+    
+
+    public function getF_child(): ?string
     {
-        return $this->pvp;
+        return $this->firstName_child;
     }
 
-    public function setPvp(string $pvp): static
+    public function setF_child(string $firstName_child): static
     {
-        $this->pvp = $pvp;
+        $this->firstName_child = $firstName_child;
 
         return $this;
     }
 
-    public function getFnch(): ?string
+    public function getL_child(): ?string
     {
-        return $this->fnch;
+        return $this->lastName_child;
     }
 
-    public function setFnch(string $fnch): static
+    public function setL_child(string $lnch): static
     {
-        $this->fnch = $fnch;
+        $this->lastName_child = $lnch;
 
         return $this;
     }
 
-    public function getLnch(): ?string
+    public function getBirthday_child(): ?\DateTimeInterface
     {
-        return $this->lnch;
+        return $this->birthday_child;
     }
 
-    public function setLnch(string $lnch): static
+    public function setBirthday_child(\DateTimeInterface $dbch): static
     {
-        $this->lnch = $lnch;
+        $this->birthday_child = $dbch;
 
         return $this;
     }
 
-    public function getDbch(): ?\DateTimeInterface
+    public function getSexe_child(): ?string
     {
-        return $this->dbch;
+        return $this->sexe_child;
     }
 
-    public function setDbch(\DateTimeInterface $dbch): static
+    public function setSexe_child(string $sch): static
     {
-        $this->dbch = $dbch;
+        $this->sexe_child = $sch;
 
         return $this;
     }
 
-    public function getSch(): ?string
+    public function getLearningDifficulties_Child(): ?string
     {
-        return $this->sch;
+        return $this->learningDifficulties_Child;
     }
 
-    public function setSch(string $sch): static
+    public function setLearningDifficulties_Child(string $ldch): static
     {
-        $this->sch = $sch;
+        $this->learningDifficulties_Child = $ldch;
 
         return $this;
     }
+    
 
-    public function getLdch(): ?string
-    {
-        return $this->ldch;
-    }
+ 
 
-    public function setLdch(string $ldch): static
-    {
-        $this->ldch = $ldch;
+    
 
-        return $this;
-    }
 
-    public function getEmailp(): ?string
-    {
-        return $this->emailp;
-    }
-
-    public function setEmailp(string $emailp): static
-    {
-        $this->emailp = $emailp;
-
-        return $this;
-    }
-
-    public function eraseCredentials(): void
-    {
-        // Si tu stockes des données sensibles temporairement, nettoie-les ici
-    }
-
-    public function getUserIdentifier(): string
-    {
-        return $this->emailp;
-    }
 }

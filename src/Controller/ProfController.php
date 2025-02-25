@@ -4,36 +4,50 @@ namespace App\Controller;
 
 use App\Entity\Prof;
 use App\Form\AddprofType;
+use App\Form\ProfType;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Repository\ProfRepository;
 use Symfony\Component\HttpFoundation\Response;
 
+
 final class ProfController extends AbstractController
 {
-    #[Route('/prof', name: 'prof')]
-    public function index(ManagerRegistry $doctrine , Request $request)
+    #[Route('/newprof', name: 'Signprof')]
+    public function new(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
-        $em = $doctrine->getManager();
         $prof = new Prof();
-        $formp = $this->createForm(AddprofType::class , $prof);
-
+        $formp = $this->createForm(ProfType::class, $prof);
         $formp->handleRequest($request);
-        if($formp->isSubmitted() && $formp->isValid()){
-            $em->persist($prof);
-            $em->flush();
-            //traitement des donnees
+
+        if ($formp->isSubmitted() && $formp->isValid()) {
+            
+            $password = $formp->get('password')->getData();
+            $hashedPassword = $passwordHasher->hashPassword($prof, $prof->getPassword());  // <-- Hash the password
+            $prof->setPassword($hashedPassword);
+
+            $prof->setRoles(['ROLE_PROF']);
+
+            
+            $entityManager->persist($prof);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Prof created successfully!');
             return $this->redirectToRoute('base');
         }
 
         return $this->render('Pages/user/signupprof.html.twig', [
             'formp' => $formp->createView(),
+            
         ]);
     }
 
-    #[Route('/showprof', name: 'showprof')]
+    #[Route('/showprofs', name: 'showprofs')]
     public function showProfs(ProfRepository $profRepository): Response
     {
         // Récupérer tous les enregistrements de la table Prof
@@ -77,7 +91,7 @@ final class ProfController extends AbstractController
             throw $this->createNotFoundException('No professor found for id ' . $id);
         }
 
-        $formp2 = $this->createForm(AddprofType::class, $prof);
+        $formp2 = $this->createForm(ProfType::class, $prof);
         $formp2->handleRequest($req);
         
         if ($formp2->isSubmitted() && $formp2->isValid()) {

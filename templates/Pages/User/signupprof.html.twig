@@ -78,6 +78,10 @@
 			outline: none;
 			box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 		}
+		.is-invalid {
+			border-color: red;
+		}
+		
 
 		/* Style des groupes de cases à cocher */
 		.form-check-group {
@@ -97,6 +101,8 @@
 		.form-check-input {
 			margin-right: 0.8rem; /* Réduction de l’espace */
 		}
+		
+		
 
 		/* Style pour le label */
 		.form-check-label {
@@ -148,29 +154,29 @@
 						) }}
 						<form>
 							<div class="form-group">
-								{{ form_label(formp.fnpr,"Prof's First Name :") }}
-								{{ form_widget(formp.fnpr, {'attr': {'class': 'form-control', 'placeholder': 'Enter you first name'}}) }}
-								{{form_errors(formp.fnpr)}}
+								{{ form_label(formp.firstName,"Prof's First Name :") }}
+								{{ form_widget(formp.firstName, {'attr': {'class': 'form-control', 'placeholder': 'Enter you first name'}}) }}
+								{{form_errors(formp.firstName)}}
 							</div>
 							<div class="form-group">
-								{{ form_label(formp.lnpr,"Prof's Last Name :") }}
-								{{ form_widget(formp.lnpr, {'attr': {'class': 'form-control', 'placeholder': 'Enter your last name'}}) }}
-								{{form_errors(formp.lnpr)}}
+								{{ form_label(formp.lastName,"Prof's Last Name :") }}
+								{{ form_widget(formp.lastName, {'attr': {'class': 'form-control', 'placeholder': 'Enter your last name'}}) }}
+								{{form_errors(formp.lastName)}}
 							</div>
 							<div class="form-group">
-								{{ form_label(formp.pwpr,"Password :") }}
-								{{ form_widget(formp.pwpr, {'attr': {'class': 'form-control', 'placeholder': 'Enter your password'}}) }}
-								{{form_errors(formp.pwpr)}}
+								{{ form_label(formp.password,"Password :") }}
+								{{ form_widget(formp.password, {'attr': {'id': 'password','class': 'form-control', 'placeholder': 'Enter your password'}}) }}
+								{{form_errors(formp.password)}}
 							</div>
 							<div class="form-group">
-								{{ form_label(formp.pvpr,"Password verfication :") }}
-								{{ form_widget(formp.pvpr, {'attr': {'class': 'form-control', 'placeholder': 'Confirm your password'}}) }}
-								{{form_errors(formp.pvpr)}}
+								{{ form_label(formp.password_verif,"Confirm Password") }}
+								{{ form_widget(formp.password_verif, {'attr': {'id': 'password_verif','class': 'form-control', 'placeholder': 'Confirm your password'}}) }}
+								
 							</div>
 							<div class="form-group">
-								{{ form_label(formp.emailpr,"Email adress :") }}
-								{{ form_widget(formp.emailpr, {'attr': {'class': 'form-control', 'placeholder': 'Enter your email'}}) }}
-								{{form_errors(formp.emailpr)}}
+								{{ form_label(formp.email,"Email adress :") }}
+								{{ form_widget(formp.email, {'attr': {'class': 'form-control', 'placeholder': 'Enter your email'}}) }}
+								{{form_errors(formp.email)}}
 							</div>
 							<div class="form-group">
 								{{ form_label(formp.interdate,"date of interview :") }}
@@ -195,5 +201,38 @@
 			{% endblock %}
 		</div>
 	</section>
+	<script>
+		document.addEventListener("DOMContentLoaded", function() {
+			const passwordField = document.getElementById('password');
+			const passwordVerifField = document.getElementById('password_verif');
+			const form = document.querySelector('form');
+		
+			// Create a function to validate the passwords
+			function validatePasswords() {
+				if (passwordField.value !== passwordVerifField.value) {
+					// Add an error message to the confirm password field
+					passwordVerifField.setCustomValidity('Passwords must match');
+					passwordVerifField.classList.add('is-invalid');  // Optionally add error styling
+				} else {
+					passwordVerifField.setCustomValidity('');  // Clear error message
+					passwordVerifField.classList.remove('is-invalid'); // Remove error styling
+				}
+			}
+		
+			// Validate passwords on input change
+			passwordField.addEventListener('input', validatePasswords);
+			passwordVerifField.addEventListener('input', validatePasswords);
+		
+			// Prevent form submission if passwords don't match
+			form.addEventListener('submit', function(e) {
+				if (passwordField.value !== passwordVerifField.value) {
+					e.preventDefault();  // Prevent form submission if passwords don't match
+					alert('Passwords must match');
+				}
+			});
+		});
+		</script>
+		
+		
 
 {% endblock %}
