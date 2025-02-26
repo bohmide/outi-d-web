@@ -39,7 +39,7 @@ final class ParentController extends AbstractController
         }
 
 
-        return $this->render('Pages/User/signupparent', 
+        return $this->render('Pages/User/signupparent.html.twig', 
         ['form' => $formp->createView()]);
     }
 
@@ -79,7 +79,7 @@ final class ParentController extends AbstractController
         // Exécution de la commande de suppression
         $em->flush();
 
-        return $this->redirectToRoute('showparent'); // Vous devrez créer la route de redirection appropriée
+        return $this->redirectToRoute('showparents'); // Vous devrez créer la route de redirection appropriée
     }
 
     #[Route('/updateparent/{id}', name: 'updateparent')]
@@ -98,7 +98,7 @@ final class ParentController extends AbstractController
         if ($form2->isSubmitted() && $form2->isValid()) {
             $em->persist($parent);
             $em->flush();
-            return $this->redirectToRoute('showparent');
+            return $this->redirectToRoute('showparents');
         }
         
         return $this->render('Pages/user/updateparent.html.twig', [

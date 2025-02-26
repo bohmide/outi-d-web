@@ -78,7 +78,7 @@ final class ProfController extends AbstractController
         $em->flush();
 
         // Redirection après suppression
-        return $this->redirectToRoute('showprof');
+        return $this->redirectToRoute('showprofs');
     }
 
     #[Route('/updateprof/{id}', name: 'updateprof')]
@@ -97,7 +97,7 @@ final class ProfController extends AbstractController
         if ($formp2->isSubmitted() && $formp2->isValid()) {
             $em->persist($prof);
             $em->flush();
-            return $this->redirectToRoute('showprof');
+            return $this->redirectToRoute('showprofs');
         }
         
         return $this->render('Pages/user/updateprof.html.twig', [

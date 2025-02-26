@@ -95,7 +95,7 @@ class GamificationController extends AbstractController
                 'quizzes' => $quizzes,  // Send the list of quizzes with question text
             ]);
         }
-#[Route('/adminQuizKids/create', name: 'QuizKids_create_admin')]
+#[Route('/backQuizKids/create', name: 'QuizKids_create_admin')]
             public function addQuestion(Request $request, EntityManagerInterface $entityManager ,SluggerInterface $slugger, QuizKidsRepository $quizKidsRepository): Response
             {
                 $question = new QuizKids();
@@ -153,7 +153,7 @@ class GamificationController extends AbstractController
                 ]);
             }
 
-#[Route('/adminQuizKids/list', name: 'QuizKids_list_admin')]
+#[Route('/backQuizKids/list', name: 'QuizKids_list_admin')]
                 public function ListQuestion( QuizKidsRepository $quizKidsRepository): Response
                 {   
                     $questions = $quizKidsRepository->findAll();
@@ -165,7 +165,7 @@ class GamificationController extends AbstractController
                     ]);
                 }
 // Supprimer une question
-#[Route('/adminQuizKids/delete/{id}', name: 'delete_QuizKids')]
+#[Route('/backQuizKids/delete/{id}', name: 'delete_QuizKids')]
                 public function delete(QuizKids $question, EntityManagerInterface $entityManager): Response
                 {
                     $entityManager->remove($question);
@@ -174,7 +174,7 @@ class GamificationController extends AbstractController
                     return $this->redirectToRoute('QuizKids_admin');
                 }
 // Modifier une question
-#[Route('/adminQuizKids/edit/{id}', name: 'edit_QuizKids')]
+#[Route('/backQuizKids/edit/{id}', name: 'edit_QuizKids')]
                 public function edit(QuizKids $question, Request $request, EntityManagerInterface $entityManager): Response
                 {
                     $form = $this->createForm(QuizKidsType::class, $question);

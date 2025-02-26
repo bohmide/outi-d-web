@@ -22,6 +22,7 @@ security:
                 check_path: login
             logout:
                 path: logout
+                
             # Allow anonymous users to access certain routes
               # This is the correct way in Symfony 6 to allow anonymous access
             provider: app_user_provider  # Reference to the provider defined above
