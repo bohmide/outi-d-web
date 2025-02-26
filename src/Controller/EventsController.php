@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 final class EventsController extends AbstractController
 {
@@ -38,31 +39,36 @@ final class EventsController extends AbstractController
         ]);
     }
 
-    // show front
+
     #[Route('/events/etudiant/showEvents', name: 'app_front_etudiant_show_events')]
-    public function showEventF(EvenementsRepository $er, EventGenreRepository $egr, Request $request): Response
+    public function showEventF(EvenementsRepository $er, EventGenreRepository $egr, Request $request, PaginatorInterface $paginator): Response
     {
-        // Get the selected genre from the query parameters
         $genreId = $request->query->get('genre');
-
-        // Fetch all genres
+    
         $genres = $egr->findAll();
-
-        // Fetch events, filtered by genre if selected
+    
+        $queryBuilder = $er->createQueryBuilder('e')
+                           ->orderBy('e.id', 'ASC');
+        
         if ($genreId) {
-            // Filter events by the selected genre
-            $events = $er->findBy(['genre' => $genreId]);
-        } else {
-            // No genre selected, fetch all events
-            $events = $er->findAll();
+            $queryBuilder->andWhere('e.genre = :genreId')
+                         ->setParameter('genreId', $genreId);
         }
-
-        // Render the template with the events and genres
+    
+        $query = $queryBuilder->getQuery();
+    
+        $events = $paginator->paginate(
+            $query, 
+            $request->query->getInt('page', 1),
+            4 
+        );
+    
         return $this->render('events/front/showEventsV2.html.twig', [
             'events' => $events,
             'genres' => $genres,
-        ]);
+        ]); 
     }
+    
 
     // show back
     #[Route('/admin/events/prof/showEvents', name: 'app_back_show_events')]

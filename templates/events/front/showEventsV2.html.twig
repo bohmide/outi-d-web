@@ -19,32 +19,45 @@
 			</form>
 		</div>
 
-		<main>
-			<div
-				class="cardEvent-container">
-				<!-- Updated to match CSS -->
-				{% for event in events %}
-					<div
-						class="cardEvent">
-						<!-- Updated to match CSS -->
-						{% if event.getImagePath() %}
-							<img src="{{ asset('uploads/events_images/' ~ event.imagePath) }}" alt="Event Image">
-						{% else %}
-							<img src="{{ asset('img/event/eventDefaultPic.jpg') }}" alt="Event Image">
+		{% if events is empty %}
+			<main>
 
-						{% endif %}
-						<div class="card-content">
-							<h2>{{ event.getNomEvent() }}</h2>
-							<p>{{ event.getDescription() }}</p>
-							<a href="{{ path('app_show_details_events', {'id': event.getId()}) }}" class="button">
-								Find out more
-								<span class="material-symbols-outlined">arrow_right_alt</span>
-							</a>
+				<p>vide</p>
+			</main>
+
+		{% else %}
+			<main>
+				<div
+					class="cardEvent-container">
+					<!-- Updated to match CSS -->
+					{% for event in events %}
+						<div
+							class="cardEvent">
+							<!-- Updated to match CSS -->
+							{% if event.getImagePath() %}
+								<img src="{{ asset('uploads/events_images/' ~ event.imagePath) }}" alt="Event Image">
+							{% else %}
+								<img src="{{ asset('img/event/eventDefaultPic.jpg') }}" alt="Event Image">
+
+							{% endif %}
+							<div class="card-content">
+								<h2>{{ event.getNomEvent() }}</h2>
+								<p>{{ event.getDescription() }}</p>
+								<a href="{{ path('app_show_details_events', {'id': event.getId()}) }}" class="button">
+									Find out more
+									<span class="material-symbols-outlined">arrow_right_alt</span>
+								</a>
+							</div>
 						</div>
-					</div>
-				{% endfor %}
-			</div>
-		</main>
+					{% endfor %}
+				</div>
+				<br>
+				<div class="pagination">
+					{{ knp_pagination_render(events) }}
+				</div>
+			</main>
+		{% endif %}
 
 	</body>
+
 {% endblock %}
