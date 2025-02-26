@@ -201,37 +201,7 @@
 			{% endblock %}
 		</div>
 	</section>
-	<script>
-		document.addEventListener("DOMContentLoaded", function() {
-			const passwordField = document.getElementById('password');
-			const passwordVerifField = document.getElementById('password_verif');
-			const form = document.querySelector('form');
-		
-			// Create a function to validate the passwords
-			function validatePasswords() {
-				if (passwordField.value !== passwordVerifField.value) {
-					// Add an error message to the confirm password field
-					passwordVerifField.setCustomValidity('Passwords must match');
-					passwordVerifField.classList.add('is-invalid');  // Optionally add error styling
-				} else {
-					passwordVerifField.setCustomValidity('');  // Clear error message
-					passwordVerifField.classList.remove('is-invalid'); // Remove error styling
-				}
-			}
-		
-			// Validate passwords on input change
-			passwordField.addEventListener('input', validatePasswords);
-			passwordVerifField.addEventListener('input', validatePasswords);
-		
-			// Prevent form submission if passwords don't match
-			form.addEventListener('submit', function(e) {
-				if (passwordField.value !== passwordVerifField.value) {
-					e.preventDefault();  // Prevent form submission if passwords don't match
-					alert('Passwords must match');
-				}
-			});
-		});
-		</script>
+
 		
 		
 

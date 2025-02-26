@@ -41,7 +41,7 @@ final class ProfController extends AbstractController
             return $this->redirectToRoute('base');
         }
 
-        return $this->render('Pages/user/signupprof.html.twig', [
+        return $this->render('Pages/User/signupprof.html.twig', [
             'formp' => $formp->createView(),
             
         ]);
