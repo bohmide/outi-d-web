@@ -55,12 +55,6 @@ final class PageController extends AbstractController{
         }
 
 
-        #[Route('/login', name: 'login')]
-        public function login(): Response
-        {
-            return $this->render('pages/user/login.html.twig');
-        }
-
         #[Route('/prof', name: 'prof')]
         public function prof(): Response
         {

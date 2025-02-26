@@ -25,6 +25,16 @@ security:
             # Allow anonymous users to access certain routes
               # This is the correct way in Symfony 6 to allow anonymous access
             provider: app_user_provider  # Reference to the provider defined above
+            custom_authenticator: App\Security\LoginFormAuthenticator
+            entry_point: App\Security\LoginFormAuthenticator 
+
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800
+                path: /
+                # by default, the feature is enabled by checking a checkbox in the
+                # login form, uncomment the following line to always enable it.
+                #always_remember_me: true
 
     # Access control to protect specific routes
     access_control:
