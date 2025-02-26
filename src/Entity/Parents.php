@@ -10,13 +10,11 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ParentsRepository::class)]
 class Parents extends User
 {
-   
-
-    #[Assert\NotBlank(message:"First name is required")]
+    #[Assert\NotBlank(message: "First name is required")]
     #[ORM\Column(length: 255)]
-    private ?string $firstName_child = null;
+    private ?string $firstNameChild = null;
 
-    #[Assert\NotBlank(message:"Last name is required")]
+    #[Assert\NotBlank(message: "Last name is required")]
     #[Assert\Length(
         min: 2,
         max: 15,
@@ -24,88 +22,76 @@ class Parents extends User
         maxMessage: "Your child's last name cannot be longer than {{ limit }} characters."
     )]
     #[ORM\Column(length: 255)]
-    private ?string $lastName_child = null;
+    private ?string $lastNameChild = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $birthday_child = null;
+    private ?\DateTimeInterface $birthdayChild = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $sexe_child = null;
+    private ?string $sexeChild = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $learningDifficulties_Child = null;
+    private ?string $learningDifficultiesChild = null;
 
     public function getRoles(): array
     {
         return ['ROLE_PARENT'];
+    }   
+
+    // Corrected Getter and Setter for firstNameChild
+    public function getFirstNameChild(): ?string
+    {
+        return $this->firstNameChild;
     }
 
-    
-
-    public function getF_child(): ?string
+    public function setFirstNameChild(string $firstNameChild): static
     {
-        return $this->firstName_child;
-    }
-
-    public function setF_child(string $firstName_child): static
-    {
-        $this->firstName_child = $firstName_child;
-
+        $this->firstNameChild = $firstNameChild;
         return $this;
     }
 
-    public function getL_child(): ?string
+    // Corrected Getter and Setter for lastNameChild
+    public function getLastNameChild(): ?string
     {
-        return $this->lastName_child;
+        return $this->lastNameChild;
     }
 
-    public function setL_child(string $lnch): static
+    public function setLastNameChild(string $lastNameChild): static
     {
-        $this->lastName_child = $lnch;
-
+        $this->lastNameChild = $lastNameChild;
         return $this;
     }
 
-    public function getBirthday_child(): ?\DateTimeInterface
+    public function getBirthdayChild(): ?\DateTimeInterface
     {
-        return $this->birthday_child;
+        return $this->birthdayChild;
     }
 
-    public function setBirthday_child(\DateTimeInterface $dbch): static
+    public function setBirthdayChild(\DateTimeInterface $birthdayChild): static
     {
-        $this->birthday_child = $dbch;
-
+        $this->birthdayChild = $birthdayChild;
         return $this;
     }
 
-    public function getSexe_child(): ?string
+    public function getSexeChild(): ?string
     {
-        return $this->sexe_child;
+        return $this->sexeChild;
     }
 
-    public function setSexe_child(string $sch): static
+    public function setSexeChild(string $sexeChild): static
     {
-        $this->sexe_child = $sch;
-
+        $this->sexeChild = $sexeChild;
         return $this;
     }
 
-    public function getLearningDifficulties_Child(): ?string
+    public function getLearningDifficultiesChild(): ?string
     {
-        return $this->learningDifficulties_Child;
+        return $this->learningDifficultiesChild;
     }
 
-    public function setLearningDifficulties_Child(string $ldch): static
+    public function setLearningDifficultiesChild(string $learningDifficultiesChild): static
     {
-        $this->learningDifficulties_Child = $ldch;
-
+        $this->learningDifficultiesChild = $learningDifficultiesChild;
         return $this;
     }
-    
-
- 
-
-    
-
-
 }
