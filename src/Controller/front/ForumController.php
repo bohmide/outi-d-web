@@ -56,13 +56,30 @@ final class ForumController extends AbstractController
 
 
     #[Route('/showforum', name: 'app_showforum')]
-    public function showforum(ForumRepository $rep):Response
+    public function showforum(Request $request, ForumRepository $rep): Response
     {
-        $forum=$rep->findAll();
+        $query = $request->query->get('query', '');
+        $page = max(1, $request->query->getInt('page', 1)); // Récupère le numéro de la page (par défaut 1)
+        $limit = 3; // Nombre de forums par page
+    
+        if (!empty($query)) {
+            $forums = $rep->searchForums($query); // Si recherche active, on utilise searchForums()
+            $totalForums = count($forums); // Nombre total de résultats trouvés
+        } else {
+            $forums = $rep->findPaginatedForums($page, $limit); // Sinon, pagination normale
+            $totalForums = count($rep->findAll()); // Nombre total de forums
+        }
+    
+        $totalPages = ceil($totalForums / $limit); // Calcul du nombre total de pages
+    
         return $this->render('front/forum/showforum.html.twig', [
-            'tabforum' => $forum,
+            'tabforum' => $forums,
+            'currentPage' => $page,
+            'totalPages' => $totalPages,
+            'query' => $query, // Pour garder la valeur de recherche dans l’input
         ]);
     }
+    
 
     #[Route('/deleteforum/{id}', name: 'app_deleteforum',methods: ['POST'])]
     public function deleteforum(ManagerRegistry $m,$id,ForumRepository $rep): Response

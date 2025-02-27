@@ -89,7 +89,6 @@ class Post
     {
         return $this->nb_like;
     }
-
     public function setNbLike(?int $nb_like): static
     {
         $this->nb_like = $nb_like;
