@@ -10,6 +10,51 @@
         <div class="alert alert-success text-center">{{ message }}</div>
     {% endfor %}
 
+    <div class="mb-4 text-center">
+    <form method="get" action="{{ path('app_showbackforum') }}" class="d-flex justify-content-center">
+        <div class="position-relative" style="width: 300px;">
+            <input type="text" id="searchInput" name="query" class="form-control" 
+                   placeholder="Rechercher un forum..." value="{{ query }}" 
+                   oninput="this.form.submit()">
+            
+            <!-- Bouton pour effacer le texte -->
+            <button type="button" id="clearSearch" class="btn btn-secondary btn-sm position-absolute" 
+                    style="top: 50%; right: -60px; transform: translateY(-50%); display: none;">
+                Clear
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Script pour autofocus, positionner le curseur et gérer le bouton "Clear" -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let searchInput = document.getElementById("searchInput");
+        let clearSearch = document.getElementById("clearSearch");
+
+        // Mettre le focus et positionner le curseur à la fin du texte
+        searchInput.focus();
+        let length = searchInput.value.length;
+        searchInput.setSelectionRange(length, length);
+
+        // Afficher le bouton "Clear" si l'input n'est pas vide
+        function toggleClearButton() {
+            clearSearch.style.display = searchInput.value ? "block" : "none";
+        }
+
+        searchInput.addEventListener("input", toggleClearButton);
+        toggleClearButton(); // Vérifie à l'affichage
+
+        // Action du bouton "Clear" : vider l'input et soumettre le formulaire
+        clearSearch.addEventListener("click", function() {
+            searchInput.value = "";
+            toggleClearButton();
+            searchInput.focus();
+            searchInput.form.submit(); // Recharge la page avec une recherche vide
+        });
+    });
+</script>
+
     <table class="table table-striped table-bordered">
         <thead class="table-dark">
             <tr>
@@ -24,7 +69,7 @@
         <tbody>
             {% for forum in tabforum %}
                 <tr>
-                    <td>{{ forum.id }}</td>  <!-- Affichage de l'ID du forum -->
+                    <td>{{ forum.id }}</td>
                     <td>
                         {% if forum.imageForum %}
                             <img src="{{ asset('uploads/forums/' ~ forum.imageForum) }}" alt="Image du forum" style="width: 100px; height: 100px; object-fit: cover;">
@@ -37,13 +82,9 @@
                     <td>{{ forum.dateCreation|date('d/m/Y') }}</td>
                     <td>
                         <a href="{{ path('app_showbackposts', {'id': forum.id}) }}" class="btn btn-primary btn-sm">Voir</a>
-                        <a href="{{ path('app_updatebackforum', {'id': forum.id}) }}" class="btn btn-warning btn-sm">
-                            <i class="fas fa-edit"></i>
-                        </a>
+                        <a href="{{ path('app_updatebackforum', {'id': forum.id}) }}" class="btn btn-warning btn-sm">✏️</a>
                         <form action="{{ path('app_deletebackforum', {'id': forum.id}) }}" method="post" class="d-inline" onsubmit="return confirm('Voulez-vous vraiment supprimer ce forum ?');">
-                            <button type="submit" class="btn btn-danger btn-sm">
-                                <i class="fas fa-trash"></i>
-                            </button>
+                            <button type="submit" class="btn btn-danger btn-sm">❌</button>
                         </form>
                     </td>
                 </tr>
@@ -54,7 +95,33 @@
             {% endfor %}
         </tbody>
     </table>
-    
+
+    <!-- Pagination Controls -->
+   <div class="d-flex justify-content-center mt-4">
+    <nav>
+        <ul class="pagination">
+            {% if currentPage > 1 %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ path('app_showbackforum', {'page': currentPage - 1, 'query': query}) }}">Précédent</a>
+                </li>
+            {% endif %}
+
+            {% for i in 1..totalPages %}
+                <li class="page-item {% if i == currentPage %}active{% endif %}">
+                    <a class="page-link" href="{{ path('app_showbackforum', {'page': i, 'query': query}) }}">{{ i }}</a>
+                </li>
+            {% endfor %}
+
+            {% if currentPage < totalPages %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ path('app_showbackforum', {'page': currentPage + 1, 'query': query}) }}">Suivant</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+
+
     <div class="text-center mt-4">
         <a href="{{ path('app_addbackforum') }}" class="btn btn-primary">Ajouter un forum</a>
     </div>
