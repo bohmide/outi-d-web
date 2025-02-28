@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\back;
+namespace App\Controller\profFront;
 
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,7 +21,7 @@ final class QuestionBackController extends AbstractController
     {
         $questions = $quiz->getQuestion();
 
-        return $this->render('back/questions/showQuestion.html.twig', [
+        return $this->render('profFrontCours/questions/showQuestion.html.twig', [
             'quiz' => $quiz,
             'questions' => $questions,
         ]);
@@ -34,7 +34,6 @@ final class QuestionBackController extends AbstractController
         if (!$quiz) {
             throw $this->createNotFoundException('Quiz non trouvé');
         }
-
         // Fetch all the questions associated with the quiz
         $questions = $quiz->getQuestion();
 
@@ -51,7 +50,7 @@ final class QuestionBackController extends AbstractController
             return $this->redirectToRoute('admin_quiz_question', ['id' => $quiz->getId()]);
         }
 
-        return $this->render('back/questions/newQuestion.html.twig', [
+        return $this->render('profFrontCours/questions/newQuestion.html.twig', [
             'quiz' => $quiz,
             'form' => $form,
         ]);
@@ -85,7 +84,7 @@ final class QuestionBackController extends AbstractController
             return $this->redirectToRoute('admin_quiz_question', ['id' => $quiz->getId()]);
         }
 
-        return $this->render('back/questions/editQuestion.html.twig', [
+        return $this->render('profFrontCours/questions/editQuestion.html.twig', [
             'quiz' => $quiz,
             'form' => $form,
             'question' => $question,

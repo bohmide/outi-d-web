@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Controller\back;
+namespace App\Controller\profFront;
 
+use App\Entity\Cours;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
-use App\Entity\Cours;
+
 use App\Repository\CoursRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Form\CoursType;
@@ -14,13 +15,13 @@ use App\Repository\ChapitreRepository;
 
 final class CoursBackController extends AbstractController
 {
-    #[Route('/cours/backshow', name: 'app_cours_back')]
+    #[Route('/Profshow', name: 'app_cours_back')]
     public function index(CoursRepository $coursRepository): Response
     {
         // Récupérer tous les cours pour l'admin
         $cours = $coursRepository->findAll();
 
-        return $this->render('back/cours/index.html.twig', [
+        return $this->render('profFrontCours/cours/index.html.twig', [
             'cours' => $cours,
         ]);
     }
@@ -42,7 +43,7 @@ final class CoursBackController extends AbstractController
             return $this->redirectToRoute('app_cours_back');
         }
 
-        return $this->render('back/cours/new.html.twig', [
+        return $this->render('profFrontCours/cours/new.html.twig', [
             'form' => $form,
         ]);
     }
@@ -60,7 +61,7 @@ final class CoursBackController extends AbstractController
             $em->flush();
             return $this->redirectToRoute('app_cours_back');
         }
-        return $this->render('back/cours/new.html.twig', [
+        return $this->render('profFrontCours/cours/new.html.twig', [
             'form' => $form,]);
         
         }
@@ -78,7 +79,7 @@ final class CoursBackController extends AbstractController
         {
              //  only chapters that belong to the selected cours
             $chapitres = $chapRepo->findBy(['cours' => $cours]);
-                       return $this->render('back/chapitre/listChapitre.html.twig', [
+                       return $this->render('profFrontCours/chapitre/listChapitre.html.twig', [
                        'cours' => $cours,
                        'chapitres' => $chapitres, // Fetching from the database
             ]);
