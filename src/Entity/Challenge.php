@@ -24,7 +24,7 @@ class Challenge
     /**
      * @var Collection<int, QuizKids>
      */
-    #[ORM\OneToMany(targetEntity: QuizKids::class, mappedBy: 'id_challenge')]
+    #[ORM\OneToMany(targetEntity: QuizKids::class, mappedBy: 'challenge')]
     private Collection $quizzes;
 
     public function __construct()

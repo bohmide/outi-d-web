@@ -4,57 +4,40 @@ namespace App\Form;
 
 use App\Entity\Prof;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType; // Assure-toi de bien importer ce type
 
 
-class AddprofType extends AbstractType
+class ProfType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('fnpr', TextType::class, [
-                'attr' => [
-                    'placeholder' => 'Enter the professor\'s first name'
-                ],
+            ->add('email')
+            ->add('firstName')
+            ->add('lastName')
+            ->add('password', PasswordType::class, [
+                'mapped' => true,  // Ce champ est mappé à l'entité Prof
+                'required' => true
             ])
-            ->add('lnpr', TextType::class, [
-                'attr' => [
-                    'placeholder' => 'Enter the professor\'s last name'
-                ],
-            ])
-            ->add('emailpr', EmailType::class, [
-                'attr' => [
-                    'placeholder' => 'Enter the professor\'s email'
-                ],
-            ])
-            ->add('pwpr', PasswordType::class, [
-                'attr' => [
-                    'placeholder' => 'Enter your password'
-                ],
-            ])
-            ->add('pvpr', PasswordType::class, [
-                'attr' => [
-                    'placeholder' => 'Confirm your password'
-                ],
-            ])
-            ->add('interdate', DateType::class, [
-                'widget' => 'single_text',
-            ])
-            ->add('intermode',ChoiceType::class, [
-                'choices' => [
-                    'online' => 'Online',
-                    'face to face' => 'Face to face',
-                ],
-                'expanded' => true, // Pour afficher les boutons radio
-                'multiple' => false, // Un seul choix possible
+            ->add('password_verif', PasswordType::class, [
+                'mapped' => false,
                 'required' => true,
-            ]);  
+                
+            ])
+            
+            ->add('interdate', null, [
+                'widget' => 'single_text'
+            ])
+            ->add('intermode', ChoiceType::class, [
+                'choices' => [
+                    'enligne' => 'enligne',
+                    'présentiel' => 'présentiel',
+                ],
+                'expanded' => true, // Use radio buttons
+                'multiple' => false, // Only one option can be selected
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -63,4 +46,5 @@ class AddprofType extends AbstractType
             'data_class' => Prof::class,
         ]);
     }
+    
 }

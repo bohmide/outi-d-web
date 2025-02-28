@@ -3,6 +3,7 @@
 {% set about_active = 'active' %}
 
 {% block body %}
+<div class="content container-fluid pt-4 px-4">
     <div class="container mt-4">
         <h2 class="mb-3">Students List</h2>
         <table class="table table-striped">
@@ -11,27 +12,25 @@
                     <th>ID</th>
                     <th>First Name</th>
                     <th>Last Name</th>
-                    <th>Password</th>
-                    <th>Password verification</th>
+                    
                     <th>Email</th>
                     <th>Date of Birth</th>
                     <th>Sex</th>
-                    <th>Learning Difficulties</th>
+                    
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                {% for student in students %}
+                {% for student in st %}
                     <tr>
                         <td>{{ student.id }}</td>
-                        <td>{{ student.fn }}</td>
-                        <td>{{ student.ln }}</td>
-                        <td>{{ student.pw }}</td>
-                        <td>{{ student.pv }}</td>
+                        <td>{{ student.firstName }}</td>
+                        <td>{{ student.lastName }}</td>
+                        
                         <td>{{ student.email }}</td>
                         <td>{{ student.datebirth ? student.datebirth|date('Y-m-d') : 'N/A' }}</td>
                         <td>{{ student.sexe }}</td>
-                        <td>{{ student.ld ? 'Yes' : 'No' }}</td>
+                        
                         <td>
                             <a href="{{ path('updatestudent', { 'id': student.id }) }}" class="btn btn-primary btn-sm"> Update </a>
                             <a href="{{ path('deletestudent', { 'id': student.id }) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');"> Delete </a>
@@ -45,4 +44,5 @@
             </tbody>
         </table>
     </div>
+</div>
 {% endblock %}

@@ -3,6 +3,7 @@
 {% set about_active = 'active' %}
 
 {% block body %}
+<div class="content container-fluid pt-4 px-4">
     <div class="container mt-4">
         <h2 class="mb-3">Professors List</h2>
         <table class="table table-striped">
@@ -23,11 +24,9 @@
                 {% for prof in profs %}
                     <tr>
                         <td>{{ prof.id }}</td>
-                        <td>{{ prof.fnpr }}</td>
-                        <td>{{ prof.lnpr }}</td>
-                        <td>{{ prof.pwpr }}</td>
-                        <td>{{ prof.pvpr }}</td>
-                        <td>{{ prof.emailpr }}</td>
+                        <td>{{ prof.firstName }}</td>
+                        <td>{{ prof.lastName }}</td>
+                        <td>{{ prof.email }}</td>
                         <td>{{ prof.interdate ? prof.interdate|date('Y-m-d') : 'N/A' }}</td>
                         <td>{{ prof.intermode }}</td>
                         <td>
@@ -43,4 +42,5 @@
             </tbody>
         </table>
     </div>
+</div>
 {% endblock %}

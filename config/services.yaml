@@ -11,6 +11,8 @@ parameters:
     events_images_directory: '%kernel.project_dir%/public/uploads/events_images'
     chapitres_directory: '%kernel.project_dir%/public/uploads/chapitres'
     upload_directory: '%kernel.project_dir%/public/uploads'
+    upload_puzzlePieces: '%kernel.project_dir%/public/uploads/puzzlePieces'
+    upload_puzzleMain: '%kernel.project_dir%/public/uploads/puzzleMain'
 
 
 services:
@@ -27,8 +29,6 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
-
+    
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
-
-

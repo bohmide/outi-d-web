@@ -19,19 +19,32 @@
                 {% else %}
                     😿 Oops! Try Again! 😿
                 {% endif %}
+                <h3 class="earned-points">
+                    {% if isCorrect %}
+                        You earned <strong>{{ points }}</strong> points! 
+                    {% else %}
+                        No points this time. Try again next time! 💪
+                    {% endif %}
+                    
+                </h3>
             </h1>
 
             <p class="result-message">
                 {% if isCorrect %}
-                    You're amazing! Keep going! 🌟
+                🌟 You're amazing! Keep going! 🌟
+                    
                 {% else %}
                     Don't worry! You can do it next time! 💪
                 {% endif %}
             </p>
+            <h2 class="total-score">Total Score: <span>{{ totalScore }}</span></h2>
 
             <a href="{{ path('quiz_kids', {'level': selectedLevel, 'genre': selectedGenre}) }}" class="btn btn-lg btn-play">🎮 Try Another Quiz!</a>
         </div>
     </div>
+
+    
+    
 
     <audio id="correctSound" src="{{ asset('audio/spongbobhappy.mp3') }}"></audio>
     <audio id="incorrectSound" src="{{ asset('audio/spongbobsad.mp3') }}"></audio>
@@ -51,6 +64,22 @@
     </script>
 
     <style>
+        .earned-points {
+            font-size: 22px; /* Smaller than the main title */
+            font-weight: bold;
+            color:rgb(239, 36, 36); /* Green like success */
+            margin-top: 10px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        
+        .total-score {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+            margin-top: 20px;
+        }
+        
         .result-card {
             background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
             border-radius: 20px;

@@ -1,0 +1,116 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Puzzle Games{% endblock %}
+
+{% block body %}
+<div class="content container-fluid pt-4 px-4">
+    <div class="row g-4 mb-4">
+        <div class="col-12">
+            <div class="bg-secondary rounded h-100 p-4">
+                <h6 class="mb-4">Puzzle Games Table</h6>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Image complète</th>
+                                <th scope="col">Pièces</th>
+                                <th scope="col">Jeu associé</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for puzzle in puzzles %}
+                                <tr>
+                                    <td>{{ puzzle.id }}</td>
+                                    <td>
+                                        {% if puzzle.finalImage %}
+                                            <a href="javascript:void(0);" onclick="openMediaPopup('/uploads/puzzleMain/{{ puzzle.finalImage }}')" style="color: #1932d2;">Voir l'image complète</a>
+                                        {% else %}
+                                            Aucun fichier
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <ul style="list-style-type: none; padding: 0;">
+                                            {% for piece in puzzle.pieces %}
+                                                <li style="display: inline-block; margin-right: 10px;">
+                                                    <a href="javascript:void(0);" onclick="openMediaPopup('/uploads/puzzlePieces/{{ piece }}')" style="color: #1932d2; display: block; text-align: center;">
+                                                        <img src="/uploads/puzzlePieces/{{ piece }}" alt="Pièce {{ loop.index }}" style="width: 50px; height: 50px; border: 1px solid #ccc; border-radius: 5px;">
+                                                        <span style="display: block; font-size: 12px; margin-top: 5px;">Pièce {{ loop.index }}</span>
+                                                    </a>
+                                                </li>
+                                            {% else %}
+                                                <li>Aucune pièce associée</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </td>
+                                    <td>{{ puzzle.game.name }}</td>
+                                    <td>
+                                        <a href="{{ path('puzzle_list', { id: puzzle.id }) }}" class="btn btn-sm btn-primary mb-2">
+                                            <i class="fas fa-edit"></i> <!-- Icône de modification -->
+                                        </a>
+                                        <a href="{{ path('puzzle_delete', { id: puzzle.id }) }}" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce puzzle ?');">
+                                            <i class="fas fa-trash-alt"></i> <!-- Icône de suppression -->
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="5" class="text-center">Aucun puzzle ajouté pour le moment.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <a href="{{ path('puzzle_upload') }}" class="btn btn-success mt-3">Ajouter un Puzzle</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Pop-up Modal -->
+<div id="mediaPopup" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; z-index: 1000;">
+    <div style="background: white; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); max-width: 90%; max-height: 90%; overflow: auto; position: relative;">
+        <button onclick="closeMediaPopup()" style="position: absolute; top: 10px; right: 10px; background: #e74c3c; color: white; border: none; padding: 10px; font-size: 16px; cursor: pointer;">X</button>
+        <img id="mediaContent" src="" alt="Fichier Médias" style="max-width: 100%; max-height: 500px; margin-bottom: 15px;">
+        <div id="mediaText" style="display: none; color: #333;"></div>
+    </div>
+</div>
+
+<script>
+    function openMediaPopup(mediaUrl) {
+        var popup = document.getElementById('mediaPopup');
+        var mediaContent = document.getElementById('mediaContent');
+        var mediaText = document.getElementById('mediaText');
+        
+        // Réinitialiser l'affichage
+        mediaContent.style.display = 'none';
+        mediaText.style.display = 'none';
+        
+        // Vérifier le type de fichier
+        if (mediaUrl.endsWith('.jpg') || mediaUrl.endsWith('.jpeg') || mediaUrl.endsWith('.png') || mediaUrl.endsWith('.gif')) {
+            mediaContent.src = mediaUrl;
+            mediaContent.style.display = 'block';  // Afficher l'image
+        } else {
+            mediaText.textContent = "Le fichier n'est pas une image, vous pouvez le télécharger en cliquant ici.";
+            mediaText.style.display = 'block';  // Afficher un texte ou un lien pour d'autres fichiers
+            mediaText.innerHTML = `<a href="${mediaUrl}" target="_blank" style="color: #1932d2;">Télécharger le fichier</a>`;
+        }
+
+        // Afficher la pop-up avec un effet
+        popup.style.display = 'flex';
+        setTimeout(function() {
+            popup.style.opacity = 1;
+        }, 10);
+    }
+
+    function closeMediaPopup() {
+        var popup = document.getElementById('mediaPopup');
+        popup.style.opacity = 0;
+        setTimeout(function() {
+            popup.style.display = 'none';
+        }, 300);  // Délai pour l'animation de fermeture
+    }
+</script>
+
+{% endblock %}

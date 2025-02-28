@@ -1,0 +1,23 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %} Modifier un Jeu {% endblock %}
+
+{% block body %}
+<div class="content container-fluid pt-4 px-4">
+    <div class="row g-4 mb-4">
+        <div class="col-12">
+            <div class="bg-secondary rounded h-100 p-4">
+                <h6 class="mb-4">Modifier le Jeu</h6>
+                
+                {{ form_start(form) }}
+                    {{ form_row(form.name) }}  <!-- Champ pour modifier le nom du jeu -->
+                    <!-- Si vous avez d'autres champs à modifier, ajoutez-les ici -->
+                    <button type="submit" class="btn btn-success mt-3">Mettre à jour</button>
+                {{ form_end(form) }}
+
+                <a href="{{ path('game_list') }}" class="btn btn-secondary mt-3">Retour à la liste des jeux</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -143,58 +143,58 @@
 					<div
 						class="form-container">
 						<!-- Formulaire de gauche -->
-                        {{ form_start(form2,{'attr': {'novalidate':'novalidate'}} ) }}
-                        <form>
-                            <div class="form-group">
-                                {{ form_label(form2.fnp,"Parent's First Name :") }}
-                                {{ form_widget(form2.fnp, {'attr': {'class': 'form-control'}}) }}
-                                {{form_errors(form2.fnp)}}
-                            </div>
-                            <div class="form-group">
-                                {{ form_label(form2.lnp,"Parent's Last Name :") }}
-                                {{ form_widget(form2.lnp, {'attr': {'class': 'form-control'}}) }}
-                                {{form_errors(form2.lnp)}}
-                            </div>
-                            <div class="form-group">
-                                {{ form_label(form2.pwp,"Password :") }}
-                                {{ form_widget(form2.pwp, {'attr': {'class': 'form-control'}}) }}
-                                {{form_errors(form2.pwp)}}
-                            </div>
-                            <div class="form-group">
-                                {{ form_label(form2.pvp,"Password verfication :") }}
-                                {{ form_widget(form2.pvp, {'attr': {'class': 'form-control'}}) }}
-                                {{form_errors(form2.pvp)}}
-                            </div>
-                            <div class="form-group">
-                                {{ form_label(form2.emailp,"Email adress :") }}
-                                {{ form_widget(form2.emailp, {'attr': {'class': 'form-control'}}) }}
-                                {{form_errors(form2.emailp)}}
-                            </div>
-                            <div class="form-group">
-                                {{ form_label(form2.fnch,"Child's First Name :") }}
-                                {{ form_widget(form2.fnch, {'attr': {'class': 'form-control'}}) }}
-                                {{form_errors(form2.fnch)}}
-                            </div>
-                            <div class="form-group">
-                                {{ form_label(form2.lnch,"Child's Last Name :") }}
-                                {{ form_widget(form2.lnch, {'attr': {'class': 'form-control'}}) }}
-                                {{form_errors(form2.lnch)}}
-                            </div>
-                            <div class="form-group">
-                                {{ form_label(form2.dbch,"date of birth :") }}
-                                {{ form_widget(form2.dbch, {'attr': {'class': 'form-control'}}) }}
-                            </div>
-                            <div class="form-group">
-                                {{ form_label(form2.sch,"Gender :") }}
-                                {{ form_widget(form2.sch, {'attr': {'class': 'form-check'}}) }}
-                            </div>
-                            <div class="form-group">
-                                {{ form_label(form2.ldch,"Does your child have any learning difficulties ?") }}
-                                {{ form_widget(form2.ldch, {'attr': {'class': 'form-check'}}) }}
-                            </div>
-                            <button type="submit">Sign Up</button>
-                        </form>
-                        {{ form_end(form2) }}
+						{{ form_start(form2, {'attr': {'novalidate':'novalidate'}}
+						) }}
+						<div class="form-group">
+							{{ form_label(form2.firstName,"Parent's First Name :") }}
+							{{ form_widget(form2.firstName, {'attr': {'class': 'form-control'}}) }}
+							{{ form_errors(form2.firstName) }}
+						</div>
+						<div class="form-group">
+							{{ form_label(form2.lastName,"Parent's Last Name :") }}
+							{{ form_widget(form2.lastName, {'attr': {'class': 'form-control'}}) }}
+							{{ form_errors(form2.lastName) }}
+						</div>
+						<div class="form-group">
+							{{ form_label(form2.password,"Password :") }}
+							{{ form_widget(form2.password, {'attr': {'class': 'form-control'}}) }}
+							{{ form_errors(form2.password) }}
+						</div>
+						<div class="form-group">
+							{{ form_label(form2.password_verif,"Password Verification :") }}
+							{{ form_widget(form2.password_verif, {'attr': {'class': 'form-control'}}) }}
+							{{ form_errors(form2.password_verif) }}
+						</div>
+						<div class="form-group">
+							{{ form_label(form2.email,"Email Address :") }}
+							{{ form_widget(form2.email, {'attr': {'class': 'form-control'}}) }}
+							{{ form_errors(form2.email) }}
+						</div>
+						<div class="form-group">
+							{{ form_label(form2.firstName_child,"Child's First Name :") }}
+							{{ form_widget(form2.firstName_child, {'attr': {'class': 'form-control'}}) }}
+							{{ form_errors(form2.firstName_child) }}
+						</div>
+						<div class="form-group">
+							{{ form_label(form2.lastName_child,"Child's Last Name :") }}
+							{{ form_widget(form2.lastName_child, {'attr': {'class': 'form-control'}}) }}
+							{{ form_errors(form2.lastName_child) }}
+						</div>
+						<div class="form-group">
+							{{ form_label(form2.birthday_child,"Date of Birth :") }}
+							{{ form_widget(form2.birthday_child, {'attr': {'class': 'form-control'}}) }}
+						</div>
+						<div class="form-group">
+							{{ form_label(form2.sexe_child,"Gender :") }}
+							{{ form_widget(form2.sexe_child, {'attr': {'class': 'form-check'}}) }}
+						</div>
+						<div class="form-group">
+							{{ form_label(form2.learningDifficulties_Child,"Does your child have any learning difficulties ?") }}
+							{{ form_widget(form2.learningDifficulties_Child, {'attr': {'class': 'form-check'}}) }}
+						</div>
+						<button type="submit">Sign Up</button>
+						{{ form_end(form2) }}
+
 					</div>
 				</div>
 			{% endblock %}

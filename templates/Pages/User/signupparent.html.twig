@@ -3,8 +3,6 @@
 {% set about_active = 'active' %}
 
 {% block body %}
-
-
 <style>
 	/* Style général de la section */
 	#hero {
@@ -138,63 +136,61 @@
 	}
 </style>
 
-
 <section id="hero" class="hero section dark-background">
 	<img src="{{ asset('img/user/enfants.jpg') }}" alt="" data-aos="fade-in">
 	<div class="container">
 		{% block content %}
 			<div data-aos="fade-up" data-aos-delay="400">
-				<div
-					class="form-container">
+				<div class="form-container">
 					<!-- Formulaire de gauche -->
-					{{ form_start(form,{'attr': {'novalidate':'novalidate'}} ) }}
+					{{ form_start(form, {'attr': {'novalidate': 'novalidate'}} ) }}
 					<form>
 						<div class="form-group">
-							{{ form_label(form.fnp,"Parent's First Name :") }}
-							{{ form_widget(form.fnp, {'attr': {'class': 'form-control'}}) }}
-							{{form_errors(form.fnp)}}
+							{{ form_label(form.firstName, "Parent's First Name :") }}
+							{{ form_widget(form.firstName, {'attr': {'class': 'form-control'}}) }}
+							{{ form_errors(form.firstName) }}
 						</div>
 						<div class="form-group">
-							{{ form_label(form.lnp,"Parent's Last Name :") }}
-							{{ form_widget(form.lnp, {'attr': {'class': 'form-control'}}) }}
-							{{form_errors(form.lnp)}}
+							{{ form_label(form.lastName, "Parent's Last Name :") }}
+							{{ form_widget(form.lastName, {'attr': {'class': 'form-control'}}) }}
+							{{ form_errors(form.lastName) }}
 						</div>
 						<div class="form-group">
-							{{ form_label(form.pwp,"Password :") }}
-							{{ form_widget(form.pwp, {'attr': {'class': 'form-control'}}) }}
-							{{form_errors(form.pwp)}}
+							{{ form_label(form.password, "Password :") }}
+							{{ form_widget(form.password, {'attr': {'class': 'form-control'}}) }}
+							{{ form_errors(form.password) }}
 						</div>
 						<div class="form-group">
-							{{ form_label(form.pvp,"Password verfication :") }}
-							{{ form_widget(form.pvp, {'attr': {'class': 'form-control'}}) }}
-							{{form_errors(form.pvp)}}
+							{{ form_label(form.password_verif, "Password verification :") }}
+							{{ form_widget(form.password_verif, {'attr': {'class': 'form-control'}}) }}
+							{{ form_errors(form.password_verif) }}
 						</div>
 						<div class="form-group">
-							{{ form_label(form.emailp,"Email adress :") }}
-							{{ form_widget(form.emailp, {'attr': {'class': 'form-control'}}) }}
-							{{form_errors(form.emailp)}}
+							{{ form_label(form.email, "Email address :") }}
+							{{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+							{{ form_errors(form.email) }}
 						</div>
 						<div class="form-group">
-							{{ form_label(form.fnch,"Child's First Name :") }}
-							{{ form_widget(form.fnch, {'attr': {'class': 'form-control'}}) }}
-							{{form_errors(form.fnch)}}
+							{{ form_label(form.firstName_child, "Child's First Name :") }}
+							{{ form_widget(form.firstName_child, {'attr': {'class': 'form-control'}}) }}
+							{{ form_errors(form.firstName_child) }}
 						</div>
 						<div class="form-group">
-							{{ form_label(form.lnch,"Child's Last Name :") }}
-							{{ form_widget(form.lnch, {'attr': {'class': 'form-control'}}) }}
-							{{form_errors(form.lnch)}}
+							{{ form_label(form.lastName_child, "Child's Last Name :") }}
+							{{ form_widget(form.lastName_child, {'attr': {'class': 'form-control'}}) }}
+							{{ form_errors(form.lastName_child) }}
 						</div>
 						<div class="form-group">
-							{{ form_label(form.dbch,"date of birth :") }}
-							{{ form_widget(form.dbch, {'attr': {'class': 'form-control'}}) }}
+							{{ form_label(form.birthday_child, "Date of Birth :") }}
+							{{ form_widget(form.birthday_child, {'attr': {'class': 'form-control'}}) }}
 						</div>
 						<div class="form-group">
-							{{ form_label(form.sch,"Gender :") }}
-							{{ form_widget(form.sch, {'attr': {'class': 'form-check'}}) }}
+							{{ form_label(form.sexe_child, "Gender :") }}
+							{{ form_widget(form.sexe_child, {'attr': {'class': 'form-check'}}) }}
 						</div>
 						<div class="form-group">
-							{{ form_label(form.ldch,"Does your child have any learning difficulties ?") }}
-							{{ form_widget(form.ldch, {'attr': {'class': 'form-check'}}) }}
+							{{ form_label(form.learningDifficulties_Child, "Does your child have any learning difficulties?") }}
+							{{ form_widget(form.learningDifficulties_Child, {'attr': {'class': 'form-check'}}) }}
 						</div>
 						<button type="submit">Sign Up</button>
 					</form>
@@ -203,5 +199,5 @@
 			</div>
 		{% endblock %}
 	</div>
-</section></html>
+</section>
 {% endblock %}
