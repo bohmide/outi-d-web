@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 class Post
@@ -17,6 +19,7 @@ class Post
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le nom du post est obligatoire.")]
     private ?string $nom = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
@@ -33,6 +36,13 @@ class Post
     private ?Forum $forum = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le contenue du post est obligatoire.")]
+    #[Assert\Length(
+        min: 3,
+        max: 30,
+        minMessage: "Le contenu doit contenir au moins {{ limit }} caractères.",
+        maxMessage: "Le contenu ne peut pas dépasser {{ limit }} caractères."
+    )]
     private ?string $contenu = null;
 
     /**
@@ -79,7 +89,6 @@ class Post
     {
         return $this->nb_like;
     }
-
     public function setNbLike(?int $nb_like): static
     {
         $this->nb_like = $nb_like;

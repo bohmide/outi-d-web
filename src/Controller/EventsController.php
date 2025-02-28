@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Evenements;
 use App\Form\EvenementsType;
 use App\Repository\EvenementsRepository;
+use App\Repository\EventGenreRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 final class EventsController extends AbstractController
 {
@@ -37,16 +39,36 @@ final class EventsController extends AbstractController
         ]);
     }
 
-    // show front
-    #[Route('/events/etudiant/showEvents', name: 'app_front_etudiant_show_events')]
-    public function showEventF(EvenementsRepository $er): Response
-    {
-        $events = $er->findAll();
 
+    #[Route('/events/etudiant/showEvents', name: 'app_front_etudiant_show_events')]
+    public function showEventF(EvenementsRepository $er, EventGenreRepository $egr, Request $request, PaginatorInterface $paginator): Response
+    {
+        $genreId = $request->query->get('genre');
+    
+        $genres = $egr->findAll();
+    
+        $queryBuilder = $er->createQueryBuilder('e')
+                           ->orderBy('e.id', 'ASC');
+        
+        if ($genreId) {
+            $queryBuilder->andWhere('e.genre = :genreId')
+                         ->setParameter('genreId', $genreId);
+        }
+    
+        $query = $queryBuilder->getQuery();
+    
+        $events = $paginator->paginate(
+            $query, 
+            $request->query->getInt('page', 1),
+            4 
+        );
+    
         return $this->render('events/front/showEventsV2.html.twig', [
             'events' => $events,
-        ]);
+            'genres' => $genres,
+        ]); 
     }
+    
 
     // show back
     #[Route('/admin/events/prof/showEvents', name: 'app_back_show_events')]
@@ -165,7 +187,7 @@ final class EventsController extends AbstractController
                 $this->addFlash('errorNbrLimit', 'number limit must be positive');
                 return $this->render('events/front/addEvent.html.twig', [
                     'form' => $form,
-            'label' => 'Mise a jour'
+                    'label' => 'Mise a jour'
 
                 ]);
             }

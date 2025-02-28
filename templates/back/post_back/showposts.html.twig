@@ -1,0 +1,105 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Liste des Posts{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <h1 class="text-center mb-4">Liste des Posts</h1>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success text-center">{{ message }}</div>
+    {% endfor %}
+
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark text-center">
+            <tr>
+                <th>#</th>
+                <th>Nom</th>
+                <th>Contenu</th>
+                <th>Date de Création</th>
+                <th>Likes</th>
+                <th>Commentaires</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for post in posts %}
+                <tr>
+                    <td>{{ post.id }}</td>
+                    <td>{{ post.nom }}</td>
+                    <td>{{ post.contenu|length > 50 ? post.contenu|slice(0, 50) ~ '...' : post.contenu }}</td>
+                    <td>{{ post.getDateCreation|date('d/m/Y') }}</td>
+                    <td>
+                        <span id="like-count-{{ post.id }}">{{ post.nbLike is not null ? post.nbLike : 0 }}</span>
+                        <span class="like-btn" data-post-id="{{ post.id }}" style="cursor: pointer;">👍</span>
+                    </td>
+                    <td>
+                        {{ post.nbComment is not null ? post.nbComment : 0 }} 💬
+                        <a href="{{ path('app_showbackcomments', {'id': post.id}) }}" class="text-decoration-none ms-1">Voir</a>
+                    </td>
+                    <td class="text-center">
+                        <a href="{{ path('app_editbackpost', {'id': post.id}) }}" class="btn btn-warning btn-sm">✏️</a>
+                        <form method="POST" action="{{ path('app_deletebackpost', {'id': post.id}) }}" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Voulez-vous vraiment supprimer ce post ?');">❌</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7" class="text-center">Aucun post disponible.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-between mt-3">
+        <a href="{{ path('app_showbackforum') }}" class="btn btn-primary">Retour aux forums</a>
+        <a href="{{ path('app_addbackpost', {'forumId': forum.id}) }}" class="btn btn-success">Ajouter un Post</a>
+    </div>
+</div>
+    <div class="d-flex justify-content-center mt-4">
+         <nav>
+            <ul class="pagination">
+            {% if currentPage > 1 %}
+            <a class="page-link" href="{{ path('app_showbackposts', {'id': forum.id, 'page': currentPage - 1}) }}">Previous</a>
+        {% endif %}
+
+        {% for i in 1..totalPages %}
+            <li class="page-item {% if i == currentPage %}active{% endif %}">
+                <a class="page-link" href="{{ path('app_showbackposts', {'id': forum.id, 'page': i}) }}">{{ i }}</a>
+            </li>
+        {% endfor %}
+
+        {% if currentPage < totalPages %}
+            <a class="page-link" href="{{ path('app_showbackposts', {'id': forum.id, 'page': currentPage + 1}) }}">Next</a>
+        {% endif %}
+
+                </ul>
+            </nav>
+    </div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".like-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                let postId = this.dataset.postId;
+                let likeCountSpan = document.getElementById("like-count-" + postId);
+
+                fetch("/post/" + postId + "/like", {
+                    method: "POST",
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest"
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    likeCountSpan.textContent = data.nbLike;
+                })
+                .catch(error => console.error("Erreur :", error));
+            });
+        });
+    });
+</script>
+
+{% endblock %}
