@@ -55,7 +55,7 @@ class QuizKids
 
     #[ORM\ManyToOne(inversedBy: 'quizzes')]
     #[ORM\JoinColumn(nullable: true, onDelete: 'CASCADE')]
-    private ?Challenge $id_challenge = null;
+    private ?Challenge $challenge = null;
 
     public function setMediaFile(?File $file = null): void
     {
@@ -160,12 +160,12 @@ class QuizKids
 
     public function getIdChallenge(): ?Challenge
     {
-        return $this->id_challenge;
+        return $this->challenge;
     }
 
-    public function setIdChallenge(?Challenge $id_challenge): static
+    public function setIdChallenge(?Challenge $challenge): static
     {
-        $this->id_challenge = $id_challenge;
+        $this->challenge = $challenge;
 
         return $this;
     }

@@ -75,7 +75,8 @@
                                     <div class="dropdown-menu bg-transparent border-0">
                                         <a href="{{ path('challenge_list') }}" class="dropdown-item {% if app.request.pathinfo == path('challenge_list') %}active{% endif %}">Challenge</a>
                                         <a href="{{ path('QuizKids_list_admin') }}" class="dropdown-item {% if app.request.pathinfo == path('QuizKids_list_admin') %}active{% endif %}">QuizKids</a>
-                                        <a href="typography.html" class="dropdown-item">Games</a>
+                                        <a href="{{ path('game_create') }}" class="dropdown-item {% if app.request.pathinfo == path('QuizKids_list_admin') %}active{% endif %}">Games</a>
+                                        <a href="{{ path('puzzle_upload') }}" class="dropdown-item {% if app.request.pathinfo == path('QuizKids_list_admin') %}active{% endif %}">Puzzle</a>
                                     </div>
                                 </div>
                     

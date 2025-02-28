@@ -1,0 +1,95 @@
+{% extends 'base_kids.html.twig' %}
+
+{% block title %}Puzzle Éducatif{% endblock %}
+
+{% block body %}
+<div class="container text-center">
+    <h1 class="game-title">🧩 Assemble le Puzzle ! 🧩</h1>
+    <p>Fais glisser les pièces pour compléter l'image.</p>
+
+    <div id="puzzle-container">
+        {% for piece in pieces %}
+        <img src="{{ asset('uploads/puzzlePieces/' ~ piece) }}" alt="Pièce {{ loop.index }}" 
+             class="puzzle-piece" draggable="true" id="piece{{ loop.index }}" 
+             data-correct-slot="slot{{ loop.index }}">
+    {% endfor %}
+    </div>
+
+    <div id="solution-container">
+        {% for piece in pieces %}
+            <div class="puzzle-slot" id="slot{{ loop.index }}"></div>
+        {% endfor %}
+    </div>
+
+    <p id="message"></p>
+</div>
+
+<style>
+    #puzzle-container, #solution-container {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+    }
+    .puzzle-piece, .puzzle-slot {
+        width: 100px;
+        height: 100px;
+        background-color: lightgray;
+        border: 2px solid black;
+        display: inline-block;
+    }
+    .puzzle-slot {
+        background-color: white;
+        border: 2px dashed black;
+    }
+    
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    let pieces = document.querySelectorAll(".puzzle-piece");
+    let slots = document.querySelectorAll(".puzzle-slot");
+    
+    pieces.forEach(piece => {
+        piece.addEventListener("dragstart", function(event) {
+            event.dataTransfer.setData("text", event.target.id);
+        });
+    });
+
+    slots.forEach(slot => {
+        slot.addEventListener("dragover", function(event) {
+            event.preventDefault();
+        });
+
+        slot.addEventListener("drop", function(event) {
+            event.preventDefault();
+            let pieceId = event.dataTransfer.getData("text");
+            let piece = document.getElementById(pieceId);
+            if (!event.target.hasChildNodes()) {
+                event.target.appendChild(piece);
+            }
+
+            checkWin();
+        });
+    });
+
+    function checkWin() {
+        let correct = true;
+        slots.forEach(slot => {
+            let placedPiece = slot.firstChild;
+            if (placedPiece) {
+                let correctSlotId = placedPiece.getAttribute("data-correct-slot");
+                if (slot.id !== correctSlotId) {
+                    correct = false;
+                }
+            } else {
+                correct = false;
+            }
+        });
+
+        let message = document.getElementById("message");
+        message.innerText = correct ? "🎉 Bravo ! Puzzle complété !" : "❌ Ce n'est pas encore correct.";
+    }
+});
+</script>
+
+{% endblock %}
