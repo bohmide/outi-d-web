@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 final class CompetitionController extends AbstractController
 {
-    
+ //front   
     #[Route('/addcompetition', name: 'addcompetition')]
     public function add(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -38,7 +38,7 @@ final class CompetitionController extends AbstractController
 
             $this->addFlash('success', 'La compétition a été publiée avec succès!');
 
-            return $this->redirectToRoute('addcompetition');
+            return $this->redirectToRoute('competitionlist');
         }
 
         return $this->render('competition/collaborateuraddcomp.html.twig', [
@@ -108,5 +108,30 @@ final class CompetitionController extends AbstractController
             'competition' => $competition,
             'form' => $form->createView(),
         ]);
+    }
+
+   //backoffice
+   #[Route('/listcompadmin', name: 'list-comp')]
+   public function listadmin(CompetitionRepository $competitionRepository): Response
+   {
+       $competitions = $competitionRepository->findAll();
+
+       return $this->render('competition/back/listcomp.html.twig', [
+           'competitions' => $competitions,
+       ]);
+   }
+
+   #[Route('/competition/{id}/deleteadmin', name: 'delete_competition_admin', methods: ['POST'])]
+    public function deleteadmin(Competition $competition, EntityManagerInterface $entityManager): Response
+    {
+        // Supprimer la compétition de la base de données
+        $entityManager->remove($competition);
+        $entityManager->flush();
+
+        // Ajouter un message flash pour confirmer la suppression
+        $this->addFlash('success', 'La compétition a été supprimée avec succès.');
+
+        // Rediriger vers la liste des compétitions
+        return $this->redirectToRoute('list-comp');   
     }
 }

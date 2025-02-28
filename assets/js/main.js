@@ -185,3 +185,15 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Élément fileUpload ou file-preview-container introuvable.");
     }
 });
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("competitionForm");
+
+  form.addEventListener("submit", function (event) {
+      if (!form.checkValidity()) {
+          event.preventDefault(); // Empêche la soumission si HTML5 détecte une erreur
+          event.stopPropagation();
+      }
+
+      form.classList.add("was-validated"); // Ajoute une classe pour afficher les erreurs
+  }, false);
+});

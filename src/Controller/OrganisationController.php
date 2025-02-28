@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\OrganisationRepository;
+use Doctrine\Persistence\ManagerRegistry;
 
 final class OrganisationController extends AbstractController
 {
@@ -18,7 +19,7 @@ final class OrganisationController extends AbstractController
     {
         $organisations = $organisationRepository->findAll();
 
-        return $this->render('organisation/index.html.twig', [
+        return $this->render('organisation/show.html.twig', [
             'organisations' => $organisations,
         ]);
     }
@@ -45,22 +46,25 @@ final class OrganisationController extends AbstractController
     }
 
     #[Route('/organisation/{id}/edit', name: 'edit_organisation', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Organisation $organisation, EntityManagerInterface $entityManager): Response
+    public function edit($id,Request $request, OrganisationRepository $op,ManagerRegistry $entityManager): Response
     {
+        $organisation = $op->find($id);
+
         $form = $this->createForm(OrganisationType::class, $organisation);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+            $entityManager->getManager()->persist($organisation);
+
+            $entityManager->getManager()->flush();
 
             $this->addFlash('success', "L'organisation a été mise à jour avec succès.");
 
             return $this->redirectToRoute('organisation_list');
         }
 
-        return $this->render('organisation/edit.html.twig', [
-            'organisation' => $organisation,
-            'form' => $form->createView(),
+        return $this->render('organisation/add.html.twig', [
+            'form' => $form,
         ]);
     }
 
@@ -73,5 +77,29 @@ final class OrganisationController extends AbstractController
         $this->addFlash('success', "L'organisation a été supprimée avec succès.");
 
         return $this->redirectToRoute('organisation_list');
+    }
+
+
+
+    //back
+    #[Route('/organisationadmin', name: 'show-admin-organisation')]
+    public function showorganisationadmin(OrganisationRepository $organisationRepository): Response
+    {
+        $organisations = $organisationRepository->findAll();
+
+        return $this->render('organisation/back/listadmin.html.twig', [
+            'organisations' => $organisations,
+        ]);
+    }
+
+    #[Route('/admin/organisation/{id}/delete', name: 'delete-admin-organisation', methods: ['POST'])]
+    public function deleteorganisationadmin(Organisation $organisation, EntityManagerInterface $entityManager): Response
+    {
+        $entityManager->remove($organisation);
+        $entityManager->flush();
+
+        $this->addFlash('success', "L'organisation a été supprimée avec succès.");
+
+        return $this->redirectToRoute('show-admin-organisation');
     }
 }

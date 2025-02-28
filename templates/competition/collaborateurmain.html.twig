@@ -3,13 +3,16 @@
 {% block title %} Compétition  {% endblock %}
 
 
-
-
 {% block body %}
 <div class="competition-body">
     <div class="container">
-        <h1>Liste des Compétitions</h1>
-        <a href="{{ path('addcompetition') }}" class="button">Ajouter une Compétition</a>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1>Liste des Compétitions</h1>
+            <a href="{{ path('organisation_list') }}" class="btn btn-secondary">Liste des Organisations</a>
+        </div>
+        
+        <a href="{{ path('addcompetition') }}" class="btn btn-primary mb-3">Ajouter une Compétition</a>
+
         {# Afficher les messages flash #}
         {% for message in app.flashes('success') %}
             <div class="alert alert-success">
@@ -23,24 +26,26 @@
                 <p class="date">Du {{ competition.dateDebut|date('d/m/Y') }} au {{ competition.dateFin|date('d/m/Y') }}</p>
                 <p class="description">{{ competition.description }}</p>
                 <p>Organisée par : {{ competition.nomEntreprise }}</p>
+                
                 {% if competition.fichier %}
-                    <a href="{{ asset('uploads/' ~ competition.fichier) }}" target="_blank" class="button">Voir le fichier</a>
+                    <a href="{{ asset('uploads/' ~ competition.fichier) }}" target="_blank" class="btn btn-info">Voir le fichier</a>
                 {% else %}
                     <p>Aucun fichier disponible</p>
                 {% endif %}
-                <div>
-                    <a href="{{ path('app_competition_edit', {'id': competition.id}) }}" class="button">Modifier</a>
-                    <form method="post" action="{{ path('app_competition_delete', {'id': competition.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette compétition ?');" style="display: inline;">
+                
+                <div class="mt-2">
+                    <a href="{{ path('app_competition_edit', {'id': competition.id}) }}" class="btn btn-warning">Modifier</a>
+                    <form method="post" action="{{ path('app_competition_delete', {'id': competition.id}) }}" 
+                          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette compétition ?');" 
+                          style="display: inline;">
                         <input type="hidden" name="_method" value="DELETE">
-                        <button type="submit" class="button btn-danger">Supprimer</button>
+                        <button type="submit" class="btn btn-danger">Supprimer</button>
                     </form>
                 </div>
             </div>
         {% else %}
             <p>Aucune compétition trouvée.</p>
         {% endfor %}
-
-        <a href="{{ path('addcompetition') }}" class="button">Ajouter une Compétition</a>
     </div>
 </div>
 {% endblock %}

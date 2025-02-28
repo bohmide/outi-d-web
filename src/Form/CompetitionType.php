@@ -3,7 +3,10 @@
 namespace App\Form;
 
 use App\Entity\Competition;
+use App\Entity\Organisation;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -33,6 +36,14 @@ class CompetitionType extends AbstractType
         ->add('description', TextareaType::class, [
             'label' => 'Description'
         ])
+        ->add('organisation', EntityType::class, [
+            'class' => Organisation::class,
+            'choice_label' => 'nomOrganisation', 
+            'label' => 'Organisation Associée',
+            'placeholder' => 'Sélectionnez une organisation',
+            'required' => true,
+        ])
+        
         ->add('fichierFile', FileType::class, [
             'label' => 'Fichier à Télécharger (Image, PDF, Excel)',
             'required' => false, // Rendre le champ obligatoire

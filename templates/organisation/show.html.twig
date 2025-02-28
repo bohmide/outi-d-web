@@ -1,0 +1,40 @@
+{% extends "base.html.twig" %}
+
+{% block title %} Organisations {% endblock %}
+
+{% block body %}
+<div class="organisation-body">
+    <div class="container">
+        <h1>Liste des Organisations</h1>
+        <a href="{{ path('add_organisation') }}" class="button">Ajouter une Organisation</a>
+        
+        {# Afficher les messages flash #}
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        {% for organisation in organisations %}
+            <div class="organisation">
+                <h2>{{ organisation.nomOrganisation }}</h2>
+                <p class="domaine">Domaine : {{ organisation.domaine ?: 'Non spécifié' }}</p>
+                
+                <div>
+                    <a href="{{ path('edit_organisation', {'id': organisation.id}) }}" class="button">Modifier</a>
+                    <form method="post" action="{{ path('delete_organisation', {'id': organisation.id}) }}" 
+                          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette organisation ?');" 
+                          style="display: inline;">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="submit" class="button btn-danger">Supprimer</button>
+                    </form>
+                </div>
+            </div>
+        {% else %}
+            <p>Aucune organisation trouvée.</p>
+        {% endfor %}
+
+        <a href="{{ path('add_organisation') }}" class="button">Ajouter une Organisation</a>
+    </div>
+</div>
+{% endblock %}
