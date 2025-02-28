@@ -44,7 +44,7 @@
         <header id="header" class="header d-flex align-items-center sticky-top">
             <div class="container-fluid container-xl position-relative d-flex align-items-center">
         
-              <a href="index.html" class="logo d-flex align-items-center me-auto">
+              <a href="{{path('use')}}" class="logo d-flex align-items-center me-auto">
                 <!-- Uncomment the line below if you also wish to use an image logo -->
                 
                 <!--<h1 class="sitename">OUTI-D</h1> -->
@@ -54,7 +54,7 @@
         
               <nav id="navmenu" class="navmenu">
                 <ul>
-                  <li><a href="{{path('base')}}" class="{% if app.request.pathinfo == path('base') %}active{% endif %}">Home<br></a></li>
+                  <li><a href="{{path('use')}}" class="{% if app.request.pathinfo == path('use') %}active{% endif %}">Home<br></a></li>
                   <li><a href="{{path('app_showforum')}}"  class="{% if app.request.pathinfo == path('forum') %}active{% endif %}">Forum</a></li>
                   <li><a href="{{path('app_cours_back')}}" class="{% if app.request.pathinfo == path('app_cours_back') %}active{% endif %}">Cours</a></li>
                   <li><a href="{{path('trainers')}}" class="{% if app.request.pathinfo == path('trainers') %}active{% endif %}">Trainers</a></li>
