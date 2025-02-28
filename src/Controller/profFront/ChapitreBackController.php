@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\back;
+namespace App\Controller\profFront;
 
 use App\Entity\Chapitre;
 use App\Entity\Cours;
@@ -21,7 +21,7 @@ final class ChapitreBackController extends AbstractController
     {
          // Fetch only chapters that belong to the selected course
         $chapitres = $chapRepo->findBy(['cours' => $cours]);
-                   return $this->render('back/chapitre/listChapitre.html.twig', [
+                   return $this->render('profFrontCours/chapitre/listChapitre.html.twig', [
                    'cours' => $cours,
                    'chapitres' => $chapitres, // Fetching from the database
         ]);
@@ -68,7 +68,7 @@ final class ChapitreBackController extends AbstractController
         return $this->redirectToRoute('admin_cours_chapitres', ['id' => $cours->getId()]);
     }
 
-    return $this->render('back/chapitre/addChapitre.html.twig', [
+    return $this->render('profFrontCours/chapitre/addChapitre.html.twig', [
         'form' => $form,
         'cours' => $cours,
     ]);
@@ -130,7 +130,7 @@ final class ChapitreBackController extends AbstractController
             ]);
         }
     
-        return $this->render('back/chapitre/editChapitre.html.twig', [
+        return $this->render('profFrontCours/chapitre/editChapitre.html.twig', [
             'form' => $form,
             'chapitre' => $chapitre,
             'cours' => $chapitre->getCours(),
