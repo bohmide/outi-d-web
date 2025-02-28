@@ -57,6 +57,27 @@
         <a href="{{ path('app_addbackpost', {'forumId': forum.id}) }}" class="btn btn-success">Ajouter un Post</a>
     </div>
 </div>
+    <div class="d-flex justify-content-center mt-4">
+         <nav>
+            <ul class="pagination">
+            {% if currentPage > 1 %}
+            <a class="page-link" href="{{ path('app_showbackposts', {'id': forum.id, 'page': currentPage - 1}) }}">Previous</a>
+        {% endif %}
+
+        {% for i in 1..totalPages %}
+            <li class="page-item {% if i == currentPage %}active{% endif %}">
+                <a class="page-link" href="{{ path('app_showbackposts', {'id': forum.id, 'page': i}) }}">{{ i }}</a>
+            </li>
+        {% endfor %}
+
+        {% if currentPage < totalPages %}
+            <a class="page-link" href="{{ path('app_showbackposts', {'id': forum.id, 'page': currentPage + 1}) }}">Next</a>
+        {% endif %}
+
+                </ul>
+            </nav>
+    </div>
+
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
