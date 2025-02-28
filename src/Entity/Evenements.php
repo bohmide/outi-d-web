@@ -47,9 +47,13 @@ class Evenements
     #[ORM\ManyToMany(targetEntity: Sponsors::class, inversedBy: 'evenements')]
     private Collection $sponsors;
 
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTimeInterface $dateCreation = null;
+
     public function __construct()
     {
         $this->sponsors = new ArrayCollection();
+        $this->dateCreation = new \DateTime();
     }
 
     public function getId(): ?int
@@ -149,6 +153,18 @@ class Evenements
     public function removeSponsor(Sponsors $sponsor): static
     {
         $this->sponsors->removeElement($sponsor);
+
+        return $this;
+    }
+
+    public function getDateCreation(): ?\DateTimeInterface
+    {
+        return $this->dateCreation;
+    }
+
+    public function setDateCreation(\DateTimeInterface $dateCreation): static
+    {
+        $this->dateCreation = $dateCreation;
 
         return $this;
     }
