@@ -119,7 +119,7 @@ class Question
     #[Assert\Callback]
     public function validateCorrectAnswers(ExecutionContextInterface $context)
     {
-        $correctAnswers = $this->$this->getReponses()->filter(fn(Reponse $reponse) => $reponse->isCorrect());
+        $correctAnswers = $this->getReponse()->filter(fn(Reponse $reponse) => $reponse->isCorrect());
     
         if ($this->type === 'choix_unique' && count($correctAnswers) > 1) {
             $context->buildViolation('Une seule réponse correcte est autorisée pour un choix unique.')

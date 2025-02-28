@@ -26,12 +26,12 @@
         {{ form_errors(form.type) }}
     </div>
 
-    <!-- Sélection du Quiz -->
-    <div class="form-group mb-3">
-        {{ form_label(form.quiz, 'Quiz Associé', {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(form.quiz, {'attr': {'class': 'form-control' ~ (form.quiz.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
-        {{ form_errors(form.quiz) }}
-    </div>
+   {# <!-- Sélection du Quiz -->#}
+   {#  <div class="form-group mb-3">#}
+    {#  {{ form_label(form.quiz, 'Quiz Associé', {'label_attr': {'class': 'form-label'}}) }}#}
+    {# {{ form_widget(form.quiz, {'attr': {'class': 'form-control' ~ (form.quiz.vars.errors|length > 0 ? ' is-invalid' : '')}}) }} #}
+    {#   {{ form_errors(form.quiz) }} #}
+    {#  </div> #}
 
     {{ form_end(form) }}
 </div>
