@@ -1,46 +1,66 @@
 {% extends "base.html.twig" %}
 
-{% block title %} Compétition  {% endblock %}
-
-
-
+{% block title %} Compétition {% endblock %}
 
 {% block body %}
 <div class="competition-body">
     <div class="container">
-        <h1>Liste des Compétitions</h1>
-        <a href="{{ path('addcompetition') }}" class="button">Ajouter une Compétition</a>
-        {# Afficher les messages flash #}
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1>Liste des Compétitions</h1>
+            <div class="d-flex flex-column gap-2">
+                <a href="{{ path('addcompetition') }}" class="btn btn-circle">+</a>
+                <a href="{{ path('organisation_list') }}" class="btn btn-secondary">Liste des Organisations</a>
+            </div>
+        </div>
+
+        {# Form for searching competitions #}
+        <form method="GET" action="{{ path('competitionlist') }}" class="mb-3">
+            <div class="input-group">
+                <input type="text" name="query" class="form-control" placeholder="Rechercher une compétition..." value="{{ query }}">
+                <button type="submit" class="btn btn-primary">Rechercher</button>
+            </div>
+        </form>
+
+        {# Flash messages #}
         {% for message in app.flashes('success') %}
             <div class="alert alert-success">
                 {{ message }}
             </div>
         {% endfor %}
 
-        {% for competition in competitions %}
-            <div class="competition">
-                <h2>{{ competition.nomComp }}</h2>
-                <p class="date">Du {{ competition.dateDebut|date('d/m/Y') }} au {{ competition.dateFin|date('d/m/Y') }}</p>
-                <p class="description">{{ competition.description }}</p>
-                <p>Organisée par : {{ competition.nomEntreprise }}</p>
-                {% if competition.fichier %}
-                    <a href="{{ asset('uploads/' ~ competition.fichier) }}" target="_blank" class="button">Voir le fichier</a>
-                {% else %}
-                    <p>Aucun fichier disponible</p>
-                {% endif %}
-                <div>
-                    <a href="{{ path('app_competition_edit', {'id': competition.id}) }}" class="button">Modifier</a>
-                    <form method="post" action="{{ path('app_competition_delete', {'id': competition.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette compétition ?');" style="display: inline;">
-                        <input type="hidden" name="_method" value="DELETE">
-                        <button type="submit" class="button btn-danger">Supprimer</button>
-                    </form>
-                </div>
-            </div>
-        {% else %}
-            <p>Aucune compétition trouvée.</p>
-        {% endfor %}
+        {# Competition list #}
+        <div class="competition-grid">
+            {% for competition in competitions %}
+                <div class="competition">
+                    <h2>{{ competition.getNomComp() }}</h2>
+                                        <p class="date">Du {{ competition.dateDebut|date('d/m/Y') }} au {{ competition.dateFin|date('d/m/Y') }}</p>
+                    <p class="description">{{ competition.description }}</p>
+                    <p>Organisée par : {{ competition.getNomEntreprise() }}</p>
 
-        <a href="{{ path('addcompetition') }}" class="button">Ajouter une Compétition</a>
+                    {% if competition.fichier %}
+                        <a href="{{ asset('uploads/' ~ competition.fichier) }}" target="_blank" class="btn btn-info">Voir le fichier</a>
+                        <a href="{{ path('competition_details', {'id': competition.id}) }}" class="btn btn-info2">Détails</a>
+                    {% else %}
+                        <p>Aucun fichier disponible</p>
+                    {% endif %}
+
+                    <div class="dots-menu" tabindex="0"> <!-- Ajouter tabindex pour permettre le focus -->
+                        <i class="bi bi-three-dots-vertical dots-icon"></i> <!-- Icône par défaut -->
+                        <i class="bi bi-x close-icon"></i> <!-- Icône de fermeture -->
+                        <div class="dropdown-content">
+                            <a href="{{ path('app_competition_edit', {'id': competition.id}) }}" class="dropdown-item">Modifier</a>
+                            <form method="post" action="{{ path('app_competition_delete', {'id': competition.id}) }}" 
+                                  onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette compétition ?');">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit" class="dropdown-item">Supprimer</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p>Aucune compétition trouvée.</p>
+            {% endfor %}
+        </div>
     </div>
 </div>
-{% endblock %}
+{% endblock %} 

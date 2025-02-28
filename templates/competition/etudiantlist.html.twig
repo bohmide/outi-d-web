@@ -1,0 +1,64 @@
+{% extends "base.html.twig" %}
+
+{% block title %} Compétitions {% endblock %}
+
+{% block body %}
+<div class="competition-body">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1>Liste des Compétitions</h1>
+            
+        </div>
+
+        {# Form for searching competitions #}
+        <form method="GET" action="{{ path('competitionlistetudiant') }}" class="mb-3">
+            <div class="input-group">
+                <input type="text" name="query" class="form-control" placeholder="Rechercher une compétition..." value="{{ query }}">
+                <button type="submit" class="btn btn-primary">Rechercher</button>
+            </div>
+        </form>
+
+        {# Afficher les messages flash #}
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        {# Conteneur pour les compétitions #}
+        <div class="competition-grid">
+            {% for competition in competitions %}
+            <div class="competition">
+                <h2>{{ competition.nomComp }}</h2>
+                <p class="date">Du {{ competition.dateDebut|date('d/m/Y') }} au {{ competition.dateFin|date('d/m/Y') }}</p>
+                <p class="description">{{ competition.description }}</p>
+                <p>Organisée par : {{ competition.nomEntreprise }}</p>
+            
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="{{ path('competition_details', {'id': competition.id}) }}" class="btn btn-info">Détails</a>
+                    <a href="{{ path('competition_participation', {'id': competition.id}) }}" class="btn btn-info2">participer</a>
+                    <a href="{{ path('competition_reservation', {'id': competition.id}) }}" class="btn btn-info2">Réserver</a>
+                    
+                </div>
+            
+                <div class="dots-menu" tabindex="0">
+                    <i class="bi bi-three-dots-vertical dots-icon"></i>
+                    <i class="bi bi-x close-icon"></i>
+                    <div class="dropdown-content">
+                        <a href="{{ path('app_competition_edit', {'id': competition.id}) }}" class="dropdown-item">Modifier</a>
+                        <form method="post" action="{{ path('app_competition_delete', {'id': competition.id}) }}" 
+                              onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette compétition ?');">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button type="submit" class="dropdown-item">Supprimer</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            {% else %}
+                <p>Aucune compétition trouvée.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

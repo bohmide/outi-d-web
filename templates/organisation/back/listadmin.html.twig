@@ -1,0 +1,60 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %} Organisations {% endblock %}
+
+{% block body %}
+<!-- Content Start -->
+<div class="content container-fluid pt-4 px-4">
+   
+
+    <div class="col-12">
+        <div class="bg-secondary rounded h-100 p-4">
+            <h6 class="mb-4">Liste des Organisations</h6>
+
+            {# Afficher les messages flash #}
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success">
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Nom</th>
+                            <th scope="col">Domaine</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for organisation in organisations %}
+                            <tr>
+                                <th scope="row">{{ loop.index }}</th>
+                                <td>{{ organisation.nomOrganisation }}</td>
+                                <td>{{ organisation.domaine ?: 'Non spécifié' }}</td>
+                                <td>
+                                   
+                                    <form method="post" action="{{ path('delete-admin-organisation', { id: organisation.id }) }}" 
+                                          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette organisation ?');" 
+                                          style="display: inline;">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center">Aucune organisation trouvée.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>        
+{% endblock %}

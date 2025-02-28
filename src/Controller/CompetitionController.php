@@ -10,11 +10,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\CompetitionRepository;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 final class CompetitionController extends AbstractController
 {
-    
+ //front   
     #[Route('/addcompetition', name: 'addcompetition')]
     public function add(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -38,7 +39,7 @@ final class CompetitionController extends AbstractController
 
             $this->addFlash('success', 'La compétition a été publiée avec succès!');
 
-            return $this->redirectToRoute('addcompetition');
+            return $this->redirectToRoute('competitionlist');
         }
 
         return $this->render('competition/collaborateuraddcomp.html.twig', [
@@ -49,14 +50,85 @@ final class CompetitionController extends AbstractController
 
     
     #[Route('/listcompetition', name: 'competitionlist')]
-    public function list(CompetitionRepository $competitionRepository): Response
+    public function list(Request $request, CompetitionRepository $competitionRepository): Response
     {
-        $competitions = $competitionRepository->findAll();
-
+        $query = $request->query->get('query', '');
+    
+        if (!empty($query)) {
+            $competitions = $competitionRepository->searchCompetitions($query);
+        } else {
+            $competitions = $competitionRepository->findAll();
+        }
+    
         return $this->render('competition/collaborateurmain.html.twig', [
             'competitions' => $competitions,
+            'query' => $query,
         ]);
     }
+    
+    
+    // src/Controller/CompetitionController.php
+    #[Route('/competition/search/{query}', name: 'competition_search', methods: ['GET'])]
+    public function search(string $query, CompetitionRepository $competitionRepository): JsonResponse
+    {
+        // Debugging: Log the query
+        error_log("Search Query: " . $query);
+    
+        if (empty($query)) {
+            return new JsonResponse([]);
+        }
+    
+        // Get competitions
+        $competitions = $competitionRepository->searchCompetitions($query);
+    
+        // Debugging: Log if competitions are found
+        error_log("Competitions found: " . count($competitions));
+    
+        // Convert to JSON
+        $results = [];
+        foreach ($competitions as $competition) {
+            $results[] = [
+                'id' => $competition->getId(),
+                'nomComp' => $competition->getNomComp(), // Ensure this matches your entity
+                'dateDebut' => $competition->getDateDebut()->format('d/m/Y'),
+                'dateFin' => $competition->getDateFin()->format('d/m/Y'),
+                'description' => $competition->getDescription(),
+                'nomEntreprise' => $competition->getNomEntreprise(), // Ensure this matches your entity
+            ];
+        }
+    
+        return new JsonResponse($results);
+    }
+    
+    
+    
+    #[Route('/listcompetitionetudiant', name: 'competitionlistetudiant')]
+    public function listcompetudiant(Request $request,CompetitionRepository $competitionRepository): Response
+    {
+        $competitions = $competitionRepository->findAll();
+        $query = $request->query->get('query', '');
+    
+        if (!empty($query)) {
+            $competitions = $competitionRepository->searchCompetitions($query);
+        } else {
+            $competitions = $competitionRepository->findAll();
+        }
+
+        return $this->render('competition/etudiantlist.html.twig', [
+            'competitions' => $competitions,
+            'query' => $query,
+        ]);
+        
+    }
+
+    #[Route('/competition/{id}', name: 'competition_details', methods: ['GET'])]
+    public function details(Competition $competition): Response
+    {
+        return $this->render('competition/etudiantcompdetails.html.twig', [
+            'competition' => $competition,
+        ]);
+    }
+    
 
     #[Route('/competition/{id}/delete', name: 'app_competition_delete', methods: ['POST'])]
     public function delete(Competition $competition, EntityManagerInterface $entityManager): Response
@@ -108,5 +180,60 @@ final class CompetitionController extends AbstractController
             'competition' => $competition,
             'form' => $form->createView(),
         ]);
+    }
+
+
+    #[Route('/competition/{id}/reservation', name: 'competition_reservation')]
+    public function reservation(int $id, CompetitionRepository $competitionRepository): Response
+    {
+        $competition = $competitionRepository->find($id);
+
+        if (!$competition) {
+            throw $this->createNotFoundException("Cette compétition n'existe pas.");
+        }
+
+        return $this->render('competition/etudiantcompreserver.html.twig', [
+            'competition' => $competition
+        ]);
+    }
+    #[Route('/competition/{id}/participation', name: 'competition_participation')]
+    public function participation(int $id, CompetitionRepository $competitionRepository): Response
+    {
+        $competition = $competitionRepository->find($id);
+
+        if (!$competition) {
+            throw $this->createNotFoundException("Cette compétition n'existe pas.");
+        }
+
+        return $this->render('competition/etudiantcomparticiper.html.twig', [
+            'competition' => $competition
+        ]);
+    }
+
+
+
+   //backoffice
+   #[Route('/listcompadmin', name: 'list-comp')]
+   public function listadmin(CompetitionRepository $competitionRepository): Response
+   {
+       $competitions = $competitionRepository->findAll();
+
+       return $this->render('competition/back/listcomp.html.twig', [
+           'competitions' => $competitions,
+       ]);
+   }
+
+   #[Route('/competition/{id}/deleteadmin', name: 'delete_competition_admin', methods: ['POST'])]
+    public function deleteadmin(Competition $competition, EntityManagerInterface $entityManager): Response
+    {
+        // Supprimer la compétition de la base de données
+        $entityManager->remove($competition);
+        $entityManager->flush();
+
+        // Ajouter un message flash pour confirmer la suppression
+        $this->addFlash('success', 'La compétition a été supprimée avec succès.');
+
+        // Rediriger vers la liste des compétitions
+        return $this->redirectToRoute('list-comp');   
     }
 }

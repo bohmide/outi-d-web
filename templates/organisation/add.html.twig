@@ -1,0 +1,38 @@
+{% extends "base.html.twig" %}
+
+{% block title %} Ajouter une Organisation {% endblock %}
+
+{% block body %}
+<div class="collaborateur">
+   
+
+    <div class="publish-competition-container">
+        <h1>Ajouter une Nouvelle Organisation</h1>
+        
+        {{ form_start(form) }}
+        <div class="form-columns">
+            <div class="form-column">
+                <div class="form-group">
+                    {{ form_label(form.nomOrganisation) }}
+                    {{ form_widget(form.nomOrganisation) }}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.domaine) }}
+                    {{ form_widget(form.domaine) }}
+                </div>
+            </div>
+
+            <div class="form-column">
+                <div class="form-group">
+                    {{ form_label(form.motDePasse) }}
+                    {{ form_widget(form.motDePasse) }}
+                </div>
+            
+                <button type="submit" class="submit-button">Ajouter l'Organisation</button>
+            </div>
+        </div>
+        {{ form_end(form) }}
+    </div>
+</div>
+
+{% endblock %}
