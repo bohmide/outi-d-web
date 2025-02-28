@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter une Réponse - {% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <h1 class="text-center mb-4">Ajouter une Réponse</h1>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'form-horizontal'}}) }}
+
+    <!-- Champ Réponse -->
+    <div class="form-group mb-3">
+        {{ form_label(form.reponse, 'Réponse', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.reponse, {'attr': {'class': 'form-control' ~ (form.reponse.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+        {{ form_errors(form.reponse) }}
+    </div>
+
+    <!-- Champ Est Correct -->
+    <div class="form-group mb-3">
+        {{ form_label(form.isCorrect, 'Est-ce la bonne réponse ?', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.isCorrect, {'attr': {'class': 'form-check-input' ~ (form.isCorrect.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+        {{ form_errors(form.isCorrect) }}
+    </div>
+
+    {{ form_end(form) }}
+</div>
+{% endblock %}

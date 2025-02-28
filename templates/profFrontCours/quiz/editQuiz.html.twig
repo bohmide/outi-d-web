@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier un Quiz - {% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <h1 class="text-center mb-4">Modifier le Quiz</h1>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'form-horizontal'}}) }}
+ 
+    <!-- Hidden Chapitre ID -->
+    {# {{ form_widget(form.chapitre) }} #}
+
+    <!-- Titre du Quiz -->
+    <div class="form-group mb-3">
+        {{ form_label(form.titre, 'Titre du Quiz', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.titre, {
+            {{ form_widget(form.titre, {'attr': {'class': 'form-control' ~ (form.titre.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+        
+        {{ form_errors(form.titre) }}
+    </div>
+
+    {{ form_end(form) }}
+</div>
+{% endblock %}

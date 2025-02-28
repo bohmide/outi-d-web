@@ -34,7 +34,7 @@ final class PageController extends AbstractController{
         #[Route('/events', name: 'events')]
         public function events(): Response
         {
-            return $this->render('../events/showEvents.html.twig');
+            return $this->render('../events/prof/showEvents.html.twig');
         }
     
         #[Route('/pricing', name: 'pricing')]
@@ -77,6 +77,60 @@ final class PageController extends AbstractController{
         public function student(): Response
         {
             return $this->render('pages/user/student.html.twig');
+        }
+
+        #[Route('/showparent', name: 'showparent')]
+        public function parentback(): Response
+        {
+            return $this->render('pages/user/parentback.html.twig');
+        }
+        
+        #[Route('/showprof', name: 'showprof')]
+        public function proftback(): Response
+        {
+            return $this->render('pages/user/profback.html.twig');
+        }
+        
+        #[Route('/showstudent', name: 'showstudent')]
+        public function studenttback(): Response
+        {
+            return $this->render('pages/user/studentback.html.twig');
+        }
+
+        #[Route('/updateparent', name: 'updateparent')]
+        public function updateparent(): Response
+        {
+            return $this->render('pages/user/parentback.html.twig');
+        }
+
+        #[Route('/deleteparent', name: 'deleteparent')]
+        public function deleteparent(): Response
+        {
+            return $this->render('pages/user/parentback.html.twig');
+        }
+
+        #[Route('/updateprof', name: 'updateprof')]
+        public function updateprof(): Response
+        {
+            return $this->render('pages/user/profback.html.twig');
+        }
+
+        #[Route('/deleteprof', name: 'deleteprof')]
+        public function deleteprof(): Response
+        {
+            return $this->render('pages/user/profback.html.twig');
+        }
+
+        #[Route('/updatestudent', name: 'updatestudent')]
+        public function updatestudent(): Response
+        {
+            return $this->render('pages/user/studentback.html.twig');
+        }
+
+        #[Route('/deletestudent', name: 'deletestudent')]
+        public function deletestudent(): Response
+        {
+            return $this->render('pages/user/studentback.html.twig');
         }
 
         #[Route('/', name: 'use')]

@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commentaires du Post - {{ post.nom }}{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <!-- Carte principale du Post, centrée -->
+    <div class="d-flex justify-content-center">
+        <div class="card shadow-lg p-4 mb-4" style="max-width: 900px; width: 100%;">
+            <div class="card-body text-center">
+                <h1 class="fw-bold text-primary">{{ post.nom }}</h1>
+                <p class="text-muted">Posté le {{ post.dateCreation|date('d/m/Y') }}</p>
+                <p>{{ post.contenu }}</p>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="mt-4">Commentaires :</h3>
+
+    <div class="row g-4 justify-content-center">
+        {% for comment in comments %}
+            <div class="col-12 d-flex justify-content-center">
+                <div class="card shadow-sm" style="max-width: 900px; width: 100%;">
+                    <div class="card-body">
+                        <!-- Boutons Modifier et Supprimer (Toujours visibles) -->
+                        <div class="d-flex justify-content-between">
+                            <!-- Bouton Modifier (🖊️) -->
+                            <a href="{{ path('app_editfrontcomment', {'id': comment.id}) }}" 
+                               class="text-primary text-decoration-none">
+                                🖊️
+                            </a>
+                            <!-- Bouton Supprimer (❌) -->
+                            <a href="{{ path('app_deletecomment', {'id': comment.id}) }}" 
+                               class="text-danger text-decoration-none"
+                               onclick="return confirm('Voulez-vous vraiment supprimer ce commentaire ?')">
+                                ❌
+                            </a>
+                        </div>
+
+                        <!-- Contenu du Commentaire - Toujours visible -->
+                        <p class="card-text">{{ comment.description }}</p>
+
+                        <!-- Date de création -->
+                        <p class="text-muted"><small>Ajouté le {{ comment.dateCreation|date('d/m/Y') }}</small></p>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <p class="text-center">Aucun commentaire pour ce post.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Boutons pour ajouter un commentaire et retour -->
+    <div class="mt-4 d-flex gap-2 justify-content-center">
+        <a href="{{ path('app_addcomment', {'id': post.id}) }}" class="btn btn-primary">
+            Ajouter un Commentaire
+        </a>
+        <a href="{{ path('app_showfrontposts', {'id': post.forum.id}) }}" class="btn btn-secondary">
+            Retour aux Posts
+        </a>
+    </div>
+</div>
+{% endblock %}

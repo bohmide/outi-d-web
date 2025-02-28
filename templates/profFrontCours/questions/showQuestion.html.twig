@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Questions du Quiz - {{ quiz.titre }}{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <h1 class="text-center mb-4">Questions du quiz : {{ quiz.titre }}</h1>
+
+    {% for message in app.flashes('success') %}
+    <div class="alert alert-success">{{ message }}</div>
+        {% endfor %}
+
+      {% for message in app.flashes('error') %}
+    <div class="alert alert-danger">{{ message }}</div>
+          {% endfor %}
+
+    {% if questions is not empty %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Question</th>
+                    <th>Type</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for question in questions %}
+                    <tr>
+                        <td>{{ question.question }}</td>
+                        <td>{{ question.type }}</td>
+                        <td>
+                            <a href="{{ path('admin_quiz_question_edit', {'quiz_id': quiz.id, 'id': question.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                            <form action="{{ path('admin_quiz_question_delete', {'quiz_id': quiz.id, 'id': question.id}) }}" method="post" class="d-inline">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Voulez-vous vraiment supprimer cette question ?');">Supprimer</button>
+                                <a href ="{{ path('admin_question_reponse', {'id': question.id}) }}">Voir les réponses</a>
+                                </form>                            
+                        </td>
+                    </tr>
+                {% endfor %} 
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-center">Aucune question associée à ce quiz.</p>
+    {% endif %}
+
+    <a href="{{ path('admin_questions_new', {'id': quiz.id}) }}" class="btn btn-primary">Ajouter une nouvelle question</a>
+    <a href="{{ path('admin_chapitre_quiz', {'id': quiz.chapitre.id}) }}" class="btn btn-secondary mt-3">Retour au quiz</a>
+</div>
+{% endblock %}

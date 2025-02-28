@@ -1,0 +1,48 @@
+{% extends "base_admin.html.twig" %}
+
+{% set about_active = 'active' %}
+
+{% block body %}
+<div class="content container-fluid pt-4 px-4">
+    <div class="container mt-4">
+        <h2 class="mb-3">Students List</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    
+                    <th>Email</th>
+                    <th>Date of Birth</th>
+                    <th>Sex</th>
+                    
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in st %}
+                    <tr>
+                        <td>{{ student.id }}</td>
+                        <td>{{ student.firstName }}</td>
+                        <td>{{ student.lastName }}</td>
+                        
+                        <td>{{ student.email }}</td>
+                        <td>{{ student.datebirth ? student.datebirth|date('Y-m-d') : 'N/A' }}</td>
+                        <td>{{ student.sexe }}</td>
+                        
+                        <td>
+                            <a href="{{ path('updatestudent', { 'id': student.id }) }}" class="btn btn-primary btn-sm"> Update </a>
+                            <a href="{{ path('deletestudent', { 'id': student.id }) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');"> Delete </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="8" class="text-center">No students found.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

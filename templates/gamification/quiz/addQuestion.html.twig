@@ -12,41 +12,103 @@
             <div class="bg-secondary rounded h-100 p-4">
                 <h4 class="mb-4">Ajouter une nouvelle question pour votre QuizKids</h4>
                 
-                {{ form_start(form) }}
-                <div class="form-floating">
+                {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }} 
+
+                <div class="form-floating " >
                     {{ form_widget(form.question, { 'attr': {'class': 'form-control mb-4', 'placeholder': 'Leave question here'} }) }}
                     {{ form_label(form.question, 'Question') }}
+                    <div class="invalid-feedbacks d-block">
+                        {{ form_errors(form.question) }}  
+                    </div>
                 </div>
                 
                     
 
                    
 
-                    <div class="form-floating">
-                        {{ form_widget(form.options, { 'attr': {'class': 'form-control mb-4', 'placeholder': 'Leave options here', 'style': 'height: 150px;' } }) }}
-                        {{ form_label(form.options, 'Options (séparées par des virgules)') }}
-                    </div>
+                <div id="options-container" >
+                    
+                    {% for option in form.options %}
+                        <div class="option-item d-flex align-items-center">
+                            {{ form_widget(option, { 'attr': {'class': 'form-control mb-2'} }) }}
+                            
+                            <button type="button" class="btn btn-danger btn-sm ms-2 remove-option">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        
+                    {% endfor %}
+                        
+                </div>
+               
+                <button type="button" id="add-option" class="btn btn-primary btn-sm mb-3">
+                    <i class="fas fa-plus"></i> Ajouter une option
+                </button>
+                
+                
+                <script>
+                    document.addEventListener("DOMContentLoaded", function () {
+                        let container = document.getElementById("options-container");
+                        let addButton = document.getElementById("add-option");
+                        let index = container.children.length;
+                
+                        addButton.addEventListener("click", function () {
+                            let newOption = document.createElement("div");
+                            
+                            newOption.classList.add("option-item", "mb-2", "d-flex", "align-items-center");
+                            newOption.innerHTML = 
+                                `
+                                <input type="text" name="quiz_kids[options][${index}]" class="form-control" placeholder="Option">
+                                <button type="button" class="btn btn-danger btn-sm ms-2 remove-option">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                
+                            `;
+                            container.appendChild(newOption);
+                            index++;
+                        });
+                
+                        container.addEventListener("click", function (e) {
+                            if (e.target.closest(".remove-option")) {
+                                e.target.closest(".option-item").remove();
+                            }
+                        });
+                    });
+                </script>
+                  
                     
                     <div class="form-floating">
                         {{ form_widget(form.correctAnswer, { 'attr': {'class': 'form-control mb-4', 'placeholder': 'Leave answer here'} }) }}
                         {{ form_label(form.correctAnswer, 'Réponse exacte') }}
+                        <div class="invalid-feedbacks d-block">
+                            {{ form_errors(form.correctAnswer) }}  
+                        </div>
                     </div>
 
 
                     <div class="form-floating mb-3">
                         {{ form_widget(form.genre, { 'attr': {'class': 'form-select'} }) }}
                         {{ form_label(form.genre, 'Choisir le genre de question') }}
+                        <div class="invalid-feedbacks d-block">
+                            {{ form_errors(form.genre) }}  
+                        </div>
                     </div>
 
                     <div class="form-floating mb-3">
                         {{ form_widget(form.level, { 'attr': {'class': 'form-select'} }) }}
                         {{ form_label(form.level, 'Choisir le Niveau de difficulté de la question') }}
+                        <div class="invalid-feedbacks d-block">
+                            {{ form_errors(form.level) }}  
+                        </div>
                     </div>
 
                    
 
                     <div class="mb-3">
                         {{ form_widget(form.mediaFile, { 'attr': {'class': 'form-label mb-4 form-control bg-dark' ,'type':'file'} }) }}
+                            
+                                
+
                         
                     </div>    
 
@@ -87,59 +149,7 @@
 
     </div>
     
-    <div class="col-12 ">
-        <div class="bg-secondary rounded h-100 p-4">
-            <h6 class="mb-4">QuizKids/Question Table</h6>
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Question</th>
-                            <th scope="col">Options</th>
-                            <th scope="col">Réponse exacte</th>
-                            <th scope="col">Genre</th>
-                            <th scope="col">Niveau</th>
-                            <th scope="col">Média</th>
-                            <th scope="col">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for question in questions %}
-                            <tr>
-                                <th scope="row">{{ loop.index }}</th>
-                                <td>{{ question.question }}</td>
-                                <td>{{ question.options|join(', ') }}</td>
-                                <td>{{ question.correctAnswer }}</td>
-                                <td>{{ question.genre }}</td>
-                                <td>{{ question.level }}</td>
-                                <td>
-                                    {% if question.media %}
-                                    <a href="/uploads/media/{{ question.media }}" style="color: #1932d2;">Voir le fichier</a>
-                                    {% else %}
-                                        Aucun fichier
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    <a href="{{ path('edit_QuizKids', { id: question.id }) }}" class="btn btn-sm btn-primary mb-2">
-                                        <i class="fas fa-edit"></i> <!-- Icône de modification -->
-                                    </a>
-                                    <a href="{{ path('delete_QuizKids', { id: question.id }) }}" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette question ?');">
-                                        <i class="fas fa-trash-alt"></i> <!-- Icône de suppression -->
-                                    </a>
-                                    
-                                </td>
-                            </tr>
-                        {% else %}
-                            <tr>
-                                <td colspan="7" class="text-center">Aucune question ajoutée pour le moment.</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+    
     
 </div>        
 {% endblock %}

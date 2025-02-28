@@ -1,0 +1,54 @@
+{% extends "base.html.twig" %}
+
+{% block title %} Détails du Chapitre - {{ chapitre.getNomChapitre() }} {% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="bg-light p-5 rounded shadow">
+        <div class="bg-white p-4 rounded shadow">
+            <header class="text-center mb-4">
+                <h1 class="text-primary">{{ chapitre.getNomChapitre() }}</h1>
+            </header>
+            
+            <section>
+                <h2 class="text-center text-dark mb-4">📜 Contenu du Chapitre</h2>
+
+                {% if chapitre.contenuText %}
+                    <div class="border p-3 bg-light rounded">
+                        {{ chapitre.contenuText|nl2br }}
+                    </div>
+                {% else %}
+                    <div class="alert alert-info text-center">💡 Ce chapitre ne contient pas de texte.</div>
+                {% endif %}
+
+                {% if chapitre.contenu %}
+                    <div class="mt-4 text-center">
+                        <h3>📂 Fichier du Chapitre</h3>
+                        {% if chapitre.contenu ends with '.pdf' %}
+                            <embed src="{{ asset('uploads/chapitres/' ~ chapitre.contenu) }}" type="application/pdf" width="100%" height="600px" />
+                        {% endif %}
+                        <p class="mt-2">
+                            <a href="{{ asset('uploads/chapitres/' ~ chapitre.contenu) }}" target="_blank" class="btn btn-outline-success">
+                                📥 Télécharger le fichier du chapitre
+                            </a>
+                    <div>
+                        {% if quiz is not null %}
+                        <a href="{{ path('front_chapitre_lancer_quiz', {'id': chapitre.getId()}) }}" class="btn btn-primary">
+                            🎯 Lancer le Quiz
+                        </a>
+                    {% else %}
+                        <p class="text-muted">Aucun quiz disponible pour ce chapitre.</p>
+                    {% endif %}
+                        </div>
+                        </p>
+                    </div>
+                {% endif %}
+            </section>
+
+            <div class="text-center mt-4">
+                <a href="{{ path('front_cours_inscrire', {id: chapitre.cours.id}) }}" class="btn btn-secondary">⬅ Retour aux chapitres</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

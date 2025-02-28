@@ -1,0 +1,198 @@
+{% extends "base_admin.html.twig" %}
+
+
+{% block body %}
+
+	<style>
+		/* Style général de la section */
+		#hero {
+			position: relative;
+			padding: 30px 0;
+			background-color: #333; /* Couleur de fond sombre */
+			color: #fff; /* Texte en blanc */
+		}
+
+		#hero img {
+			width: 100%;
+			height: auto;
+			opacity: 0.7; /* Opacité pour l'image de fond */
+		}
+
+		.container {
+			position: relative;
+			z-index: 2;
+			max-width: 900px; /* Réduction de la largeur du conteneur */
+			margin: 0 auto;
+			padding: 15px;
+		}
+
+		/* Conteneur des formulaires */
+		.form-container {
+			display: flex;
+			gap: 15px; /* Espace réduit entre les formulaires */
+			justify-content: center;
+			background-color: rgba(255, 255, 255, 0.1); /* Fond semi-transparent */
+			padding: 15px;
+			border-radius: 6px;
+			width: 80%; /* Réduction de la largeur globale */
+			margin: auto;
+		}
+
+		/* Style des formulaires */
+		form {
+			flex: 1;
+			max-width: 350px; /* Réduction de la largeur des formulaires */
+			background-color: rgba(255, 255, 255, 0.1); /* Fond semi-transparent */
+			padding: 15px;
+			border-radius: 6px;
+		}
+
+		/* Style des groupes de formulaire */
+		.form-group {
+			margin-bottom: 1rem;
+		}
+
+		/* Style des labels */
+		.form-group label {
+			display: block;
+			font-weight: bold;
+			margin-bottom: 0.3rem;
+			color: #fff; /* Texte en blanc */
+			font-size: 0.9rem; /* Réduction de la taille du texte */
+		}
+
+		/* Style des champs de formulaire */
+		.form-control {
+			width: 100%;
+			padding: 8px; /* Réduction du padding */
+			border: 1px solid #555;
+			border-radius: 4px;
+			background-color: rgba(255, 255, 255, 0.1); /* Fond semi-transparent */
+			color: #fff; /* Texte en blanc */
+			font-size: 0.9rem; /* Réduction de la taille du texte */
+			transition: border-color 0.3s ease, box-shadow 0.3s ease;
+		}
+
+		.form-control:focus {
+			border-color: #007bff;
+			outline: none;
+			box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+		}
+
+		/* Style des groupes de cases à cocher */
+		.form-check-group {
+			display: flex;
+			gap: 1rem; /* Réduction de l’espace entre les éléments */
+			flex-wrap: wrap;
+		}
+
+		/* Style pour chaque case à cocher et son label */
+		.form-check {
+			display: flex;
+			align-items: center;
+			margin-bottom: 0.8rem; /* Réduction de l’espace entre les éléments */
+		}
+
+		/* Style pour la case à cocher */
+		.form-check-input {
+			margin-right: 0.8rem; /* Réduction de l’espace */
+		}
+
+		/* Style pour le label */
+		.form-check-label {
+			color: #fff; /* Texte en blanc */
+			font-size: 0.85rem; /* Réduction de la taille du texte */
+		}
+
+		/* Style des boutons */
+		button[type="submit"] {
+			width: 50%;
+			padding: 8px; /* Réduction du padding */
+			background-color: #007bff;
+			color: #fff;
+			border: none;
+			border-radius: 4px;
+			font-size: 0.9rem; /* Réduction de la taille */
+			cursor: pointer;
+			transition: background-color 0.3s ease;
+		}
+
+		button[type="submit"]:hover {
+			background-color: #0056b3;
+		}
+
+		/* Adaptation pour les petits écrans */
+		@media(max-width: 768px) {
+			.form-container {
+				flex-direction: column; /* Empiler les formulaires sur petits écrans */
+				width: 90%; /* Ajustement de la largeur */
+			}
+
+			form {
+				width: 100%;
+				max-width: 300px; /* Réduction supplémentaire */
+				margin: auto;
+			}
+		}
+	</style>
+
+	<section id="hero" class="hero section dark-background">
+		<div class="container">
+			{% block content %}
+				<div data-aos="fade-up" data-aos-delay="400">
+					<div
+						class="form-container">
+						<!-- Formulaire de gauche -->
+						{{ form_start(formp2, {'attr': {'novalidate':'novalidate'}}
+						) }}
+						<form>
+							<div class="form-group">
+								{{ form_label(formp2.firstName,"Prof's First Name :") }}
+								{{ form_widget(formp2.firstName, {'attr': {'class': 'form-control', 'placeholder': 'Enter you first name'}}) }}
+								{{form_errors(formp2.firstName)}}
+							</div>
+							<div class="form-group">
+								{{ form_label(formp2.lastName,"Prof's Last Name :") }}
+								{{ form_widget(formp2.lastName, {'attr': {'class': 'form-control', 'placeholder': 'Enter your last name'}}) }}
+								{{form_errors(formp2.lastName)}}
+							</div>
+							<div class="form-group">
+								{{ form_label(formp2.password,"Password :") }}
+								{{ form_widget(formp2.password, {'attr': {'class': 'form-control', 'placeholder': 'Enter your password'}}) }}
+								{{form_errors(formp2.password)}}
+							</div>
+							<div class="form-group">
+								{{ form_label(formp2.password_verif,"Password verfication :") }}
+								{{ form_widget(formp2.password_verif, {'attr': {'class': 'form-control', 'placeholder': 'Confirm your password'}}) }}
+								{{form_errors(formp2.password_verif)}}
+							</div>
+							<div class="form-group">
+								{{ form_label(formp2.email,"Email adress :") }}
+								{{ form_widget(formp2.email, {'attr': {'class': 'form-control', 'placeholder': 'Enter your email'}}) }}
+								{{form_errors(formp2.email)}}
+							</div>
+							<div class="form-group">
+								{{ form_label(formp2.interdate,"date of interview :") }}
+								{{ form_widget(formp2.interdate, {'attr': {'class': 'form-control'}}) }}
+							</div>
+							<div class="form-group">
+								{{ form_label(formp2.intermode,"Choose the interview\'s mode") }}
+								<div class="form-check-group">
+									{% for child in formp2.intermode %}
+										<div class="form-check">
+											{{ form_widget(child, {'attr': {'class': 'form-check-input'}}) }}
+											{{ form_label(child, null, {'label_attr': {'class': 'form-check-label'}}) }}
+										</div>
+									{% endfor %}
+								</div>
+							</div>
+							<button type="submit">edit</button>
+						</form>
+						{{ form_end(formp2) }}
+					</div>
+				</div>
+			{% endblock %}
+		</div>
+	</section>
+
+{% endblock %}

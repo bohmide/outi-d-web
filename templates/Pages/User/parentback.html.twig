@@ -1,0 +1,57 @@
+{% extends "base_admin.html.twig" %}
+
+{% set about_active = 'active' %}
+
+{% block body %}
+	<div class="content container-fluid pt-4 px-4">
+		<div class="container mt-4">
+			<h2 class="mb-3">Parents List</h2>
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>First Name</th>
+						<th>Last Name</th>
+
+						<th>Email</th>
+						<th>Child First Name</th>
+						<th>Child Last Name</th>
+						<th>Child Birthdate</th>
+						<th>Gender</th>
+						<th>Learning Difficulties</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for parent in parents %}
+						<tr>
+							<td>{{ parent.id }}</td>
+							<td>{{ parent.firstName }}</td>
+							<td>{{ parent.lastName }}</td>
+							<td>{{ parent.email }}</td>
+							<td>{{ parent.firstNameChild }}</td>
+							<td>{{ parent.lastNameChild }}</td>
+							<td>{{ parent.birthdayChild ? parent.birthdayChild|date('Y-m-d') : 'N/A' }}</td>
+							<td>{{ parent.sexeChild }}</td>
+							<td>{{ parent.learningDifficultiesChild }}</td>
+
+							<td>
+								<a href="{{ path('updateparent', { 'id': parent.id }) }}" class="btn btn-primary btn-sm">
+									Update
+								</a>
+								<a href="{{ path('deleteparent', { 'id': parent.id }) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">
+									Delete
+								</a>
+							</td>
+
+						</tr>
+					{% else %}
+						<tr>
+							<td colspan="10" class="text-center">No parents found.</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+{% endblock %}

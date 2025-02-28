@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Quiz du Chapitre - {{ chapitre.getNomChapitre() }}{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <h1 class="text-center mb-4">Quiz du Chapitre : {{ chapitre.getNomChapitre() }}</h1>
+    {% for message in app.flashes('success') %}
+    <div class="alert alert-success">{{ message }}</div>
+        {% endfor %}
+
+      {% for message in app.flashes('error') %}
+    <div class="alert alert-danger">{{ message }}</div>
+          {% endfor %}
+
+    {% if quiz %}
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ quiz.titre }}</h5>
+                <a href="{{ path('admin_quiz_edit', {'id': quiz.id}) }}" class="btn btn-warning">Modifier</a>
+                <form action="{{ path('admin_quiz_delete', {'id': quiz.id}) }}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                </form>
+                <div>
+                    <a href="{{ path('admin_quiz_question', {'id': quiz.id}) }}" class="btn btn-info">Voir les questions</a>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <p class="text-center">Aucun quiz associé à ce chapitre.</p>
+        <a href="{{ path('admin_quiz_new', {'id': chapitre.id}) }}" class="btn btn-primary">Créer un quiz</a>
+    {% endif %}
+
+    <a href="{{ path('admin_cours_chapitres', {'id': chapitre.getCours().getId()}) }}" class="btn btn-secondary mt-4">Retour aux chapitres</a>
+</div>
+{% endblock %}

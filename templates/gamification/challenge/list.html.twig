@@ -1,0 +1,59 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %} Challenges {% endblock %}
+
+{% block body %}
+<div class="content container-fluid pt-4 px-4">
+    <div class="row g-4 mb-4">
+        <div class="col-12">
+            <div class="bg-secondary rounded h-100 p-4">
+                <h6 class="mb-4">Liste des Challenges</h6>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nom du Challenge</th>
+                                <th>Progression</th>
+                                <th>Quiz Associés</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for challenge in challenges %}
+                                <tr>
+                                    <th scope="row">{{ loop.index }}</th>
+                                    <td>{{ challenge.name }}</td>
+                                    <td>{{ challenge.progress }}%</td>
+                                    <td>
+                                        <ul>
+                                            {% for quiz in challenge.quizzes %}
+                                                <li>{{ quiz.question }}</li>
+                                            {% else %}
+                                                <li>Aucun quiz associé</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path('edit_challenge', { id: challenge.id }) }}" class="btn btn-sm btn-primary">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="{{ path('delete_challenge', { id: challenge.id }) }}" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce challenge ?');">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="5" class="text-center">Aucun challenge ajouté pour le moment.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <a href="{{ path('create_challenge') }}" class="btn btn-success mt-3">Ajouter un Challenge</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

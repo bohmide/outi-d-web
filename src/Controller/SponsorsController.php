@@ -32,6 +32,8 @@ final class SponsorsController extends AbstractController
     #[Route('/sponsors/addSponsor', name: 'app_add_sponsor')]
     public function addSponsor(Request $request, ManagerRegistry $mr, SponsorsRepository $sr, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
+        $sponsors = $sr->findAll();
+
         $sponsor = new Sponsors();
         $form = $this->createForm(SponsorsType::class, $sponsor);
         $form->handleRequest($request);
@@ -70,6 +72,7 @@ final class SponsorsController extends AbstractController
 
         return $this->render('sponsors/addSponsors.html.twig', [
             'form' => $form,
+            'sponsors' => $sponsors
         ]);
     }
 
@@ -88,6 +91,8 @@ final class SponsorsController extends AbstractController
     #[Route('/sponsors/updateSponsor/{id}', name: 'app_update_sponsor')]
     public function updateSponsor($id, Request $request, ManagerRegistry $mr, SponsorsRepository $sr, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
+
+        $sponsors = $sr->findAll();
         $sponsor =$sr->find($id);
         $form = $this->createForm(SponsorsType::class, $sponsor);
         $form->handleRequest($request);
@@ -119,6 +124,8 @@ final class SponsorsController extends AbstractController
 
         return $this->render('sponsors/addSponsors.html.twig', [
             'form' => $form,
+            'sponsors' => $sponsors
+
         ]);
     }
 

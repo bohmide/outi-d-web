@@ -4,6 +4,9 @@ namespace App\Entity;
 
 use App\Repository\ReponseRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+
 
 #[ORM\Entity(repositoryClass: ReponseRepository::class)]
 class Reponse
@@ -14,9 +17,13 @@ class Reponse
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "La réponse ne peut pas être vide.")]
+    #[Assert\Length(min: 3, max: 255, minMessage: "La réponse doit comporter au moins {{ limit }} caractères.",
+     maxMessage: "La réponse ne peut pas dépasser {{ limit }} caractères.")]
     private ?string $reponse = null;
 
     #[ORM\Column]
+    #[Assert\NotNull(message: "La valeur de la réponse doit être spécifiée.")]
     private ?bool $isCorrect = null;
 
     #[ORM\ManyToOne(inversedBy: 'reponse')]
@@ -47,8 +54,21 @@ class Reponse
 
     public function setIsCorrect(bool $isCorrect): static
     {
+        if ($isCorrect && $this->question && $this->question->getType() === 'choix_unique') {
+            $existingCorrectAnswers = $this->question->getReponse()->filter(fn(Reponse $r) => $r->isCorrect());
+    
+            // Vérifier si une autre réponse est déjà correcte et ce n'est pas celle-ci qu'on modifie
+            if (count($existingCorrectAnswers) > 0 && !$existingCorrectAnswers->contains($this)) {
+                // Désactiver la bonne réponse actuelle avant d'enregistrer la nouvelle
+                foreach ($existingCorrectAnswers as $existing) {
+                    $existing->isCorrect = false;
+                }
+            }
+        }
+    
         $this->isCorrect = $isCorrect;
-
+    
+        // Return the current instance to allow method chaining
         return $this;
     }
 
@@ -63,4 +83,18 @@ class Reponse
 
         return $this;
     }
+    #[Assert\Callback]
+    public function validateCorrectAnswers(ExecutionContextInterface $context)
+    {
+        if ($this->isCorrect && $this->question && $this->question->getType() === 'choix_unique') {
+            $existingCorrectAnswers = $this->question->getReponse()->filter(fn(Reponse $r) => $r->isCorrect());
+    
+            if (count($existingCorrectAnswers) > 0 && !$existingCorrectAnswers->contains($this))
+            {
+                $context->buildViolation('Une question à choix unique ne peut avoir qu’une seule bonne réponse.')
+                    ->atPath('isCorrect')
+                    ->addViolation();
+            }
+    }    
+}
 }

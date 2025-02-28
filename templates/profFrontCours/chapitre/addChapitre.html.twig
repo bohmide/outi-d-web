@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un Chapitre - {% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <h1 class="text-center mb-4">Créer un Chapitre</h1>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'form-horizontal'}}) }}
+
+    <div class="form-group mb-3">
+        {{ form_label(form.nom_chapitre, 'Titre du Chapitre', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.nom_chapitre, {
+            'attr': {'class': 'form-control' ~ (form.nom_chapitre.vars.errors|length > 0 ? ' is-invalid' : '')}
+        }) }}
+        {% for error in form.nom_chapitre.vars.errors %}
+            <div class="invalid-feedback">{{ error.message }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="form-group mb-3">
+        {{ form_label(form.contenu, 'Contenu (fichier)', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.contenu, {
+            'attr': {'class': 'form-control' ~ (form.contenu.vars.errors|length > 0 ? ' is-invalid' : '')}
+        }) }}
+        {% for error in form.contenu.vars.errors %}
+            <div class="invalid-feedback">{{ error.message }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="form-group mb-3">
+        {{ form_label(form.contenuText, 'Contenu Texte', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.contenuText, {
+            'attr': {'class': 'form-control' ~ (form.contenuText.vars.errors|length > 0 ? ' is-invalid' : '')}
+        }) }}
+        {% for error in form.contenuText.vars.errors %}
+            <div class="invalid-feedback">{{ error.message }}</div>
+        {% endfor %}
+    </div>
+    
+    <div class="form-group mb-3">
+        {{ form_label(form.file, 'Fichier du Chapitre', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.file, {
+            'attr': {'class': 'form-control' ~ (form.file.vars.errors|length > 0 ? ' is-invalid' : '')}
+        }) }}
+        {% for error in form.file.vars.errors %}
+            <div class="invalid-feedback">{{ error.message }}</div>
+        {% endfor %}
+    </div>
+    
+
+    {{ form_end(form) }}
+</div>
+{% endblock %}
