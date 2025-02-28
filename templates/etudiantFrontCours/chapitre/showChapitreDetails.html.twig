@@ -31,6 +31,15 @@
                             <a href="{{ asset('uploads/chapitres/' ~ chapitre.contenu) }}" target="_blank" class="btn btn-outline-success">
                                 📥 Télécharger le fichier du chapitre
                             </a>
+                    <div>
+                        {% if quiz is not null %}
+                        <a href="{{ path('front_chapitre_lancer_quiz', {'id': chapitre.getId()}) }}" class="btn btn-primary">
+                            🎯 Lancer le Quiz
+                        </a>
+                    {% else %}
+                        <p class="text-muted">Aucun quiz disponible pour ce chapitre.</p>
+                    {% endif %}
+                        </div>
                         </p>
                     </div>
                 {% endif %}

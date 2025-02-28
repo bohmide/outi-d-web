@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\back;
+namespace App\Controller\profFront;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,37 +19,54 @@ final class ReponseBackController extends AbstractController
     {
         $reponses = $question->getReponse();
 
-        return $this->render('back/reponse/showReponse.html.twig', [
+        return $this->render('profFrontCours/reponse/showReponse.html.twig', [
             'question' => $question,
             'reponses' => $reponses,
         ]);
     }
-    #[Route('/questions/{id}/reponse/new', name: 'app_reponse_add')]
-    public function new($id,Request $request, ManagerRegistry $ma, Question $question): Response
+    #[Route('/questions/{id}/reponse/new', name: 'app_reponse_add')] 
+    public function new($id, Request $request, ManagerRegistry $ma, Question $question): Response
     {
         $em = $ma->getManager();
         
-        //  Associer la réponse à la question
+        // Create the new Reponse and associate it with the current question
         $reponse = new Reponse();
         $reponse->setQuestion($question);
-
+    
+        // Create the form for the new Reponse
         $form = $this->createForm(ReponseType::class, $reponse);
         $form->handleRequest($request);
-
+    
+        // Check if the form is submitted and valid
         if ($form->isSubmitted() && $form->isValid()) {
+            
+            // Get the value of 'isCorrect' from the form data
+            $isCorrect = $reponse->isCorrect();
+    
+            // If this answer is marked as correct, set all other answers as incorrect
+            if ($isCorrect) {
+                foreach ($question->getReponse() as $existingReponse) {
+                    $existingReponse->setIsCorrect(false);
+                    $em->persist($existingReponse);  // Persist each updated response
+                }
+            }
+    
+            // Persist the new response
             $em->persist($reponse);
             $em->flush();
-
+    
             $this->addFlash('success', 'Réponse enregistrée avec succès !');
-
+    
             return $this->redirectToRoute('admin_question_reponse', ['id' => $question->getId()]);
         }
-
-        return $this->render('back/reponse/addReponse.html.twig', [
-            'form' => $form,
-            'question' => $question, //  Passer la question au template
+    
+        // Render the form in the template
+        return $this->render('profFrontCours/reponse/addReponse.html.twig', [
+            'form' => $form->createView(),
+            'question' => $question,
         ]);
     }
+    
     #[Route('/questions/{id}/reponse/{reponseId}/edit', name: 'app_reponse_edit')]
     public function edit(int $id, int $reponseId, Request $request, ManagerRegistry $ma): Response
     {
@@ -80,7 +97,7 @@ final class ReponseBackController extends AbstractController
         }
 
         // Rendu du formulaire d'édition avec la question et la réponse
-        return $this->render('back/reponse/editReponse.html.twig', [
+        return $this->render('profFrontCours/reponse/editReponse.html.twig', [
             'form' => $form,
             'question' => $question,
             'reponses' => $question->getReponse(), // Récupérer toutes les réponses

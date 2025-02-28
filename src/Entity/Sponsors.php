@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\SponsorsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 use Symfony\Component\Validator\Constraints as Assert;
@@ -33,10 +34,14 @@ class Sponsors
     #[ORM\ManyToMany(targetEntity: Evenements::class, mappedBy: 'sponsors')]
     private Collection $evenements;
 
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTimeInterface $date_creation = null;
+
     public function __construct()
     {
         $this->evenements = new ArrayCollection();
-    }
+        $this->date_creation = new \DateTime(); // Set current date
+    }  
 
     public function getId(): ?int
     {
@@ -102,6 +107,18 @@ class Sponsors
         if ($this->evenements->removeElement($evenement)) {
             $evenement->removeSponsor($this);
         }
+
+        return $this;
+    }
+
+    public function getDateCreation(): ?\DateTimeInterface
+    {
+        return $this->date_creation;
+    }
+
+    public function setDateCreation(\DateTimeInterface $date_creation): static
+    {
+        $this->date_creation = $date_creation;
 
         return $this;
     }

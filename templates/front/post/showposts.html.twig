@@ -4,73 +4,107 @@
 
 {% block body %}
 <div class="container my-5">
-    <div class="card shadow-lg p-4">
-        <div class="card-body">
-            <h1 class="text-center fw-bold text-primary">{{ forum.nom }}</h1>
+    <!-- Carte principale du Forum -->
+    <div class="d-flex justify-content-center">
+        <div class="card shadow-lg p-4" style="max-width: 900px; width: 100%;"> 
+            <div class="card-body text-center">
+                <h1 class="fw-bold text-primary">{{ forum.nom }}</h1>
 
-            <!-- Affichage de l'image du forum, centré dans un cadre -->
-            <div class="d-flex justify-content-center">
-                <div class="border rounded p-3" style="max-width: 600px;">
-                    {% if forum.imageForum %}
-                        <img src="{{ asset('uploads/forums/' ~ forum.imageForum) }}" class="img-fluid rounded" alt="Image du forum" style="max-height: 300px; object-fit: cover;">
-                    {% else %}
-                        <img src="{{ asset('uploads/forums/default.png') }}" class="img-fluid rounded" alt="Image par défaut" style="max-height: 300px; object-fit: cover;">
-                    {% endif %}
-                </div>
-            </div>
-            
-            <p class="text-center"><strong>Thème :</strong> {{ forum.theme }}</p>
-            <p class="text-center text-muted">Créé le {{ forum.dateCreation|date('d/m/Y') }}</p>
-
-            <!-- Bouton Ajouter un Post -->
-            <div class="text-center my-4">
-                <a href="{{ path('app_addpost', {'forumId': forum.id}) }}" class="btn btn-success">
-                    ➕ Ajouter un Post
-                </a>
-            </div>
-
-            <div class="mt-4">
-                {% for post in posts %}
-                    <div class="card mb-3 shadow-sm" id="post-{{ post.id }}">
-                        <div class="card-body position-relative">
-                            <!-- Boutons Modifier et Supprimer -->
-                            <div class="position-absolute top-0 end-0 m-2 d-flex align-items-center gap-2">
-                                <a href="{{ path('app_editpost', {'id': post.id}) }}" class="border-0 bg-transparent text-primary" style="font-size: 18px; cursor: pointer;">
-                                    ✏️
-                                </a>
-                                <form method="POST" action="{{ path('app_deletepost', {'id': post.id}) }}">
-                                    <button type="submit" class="border-0 bg-transparent text-danger"
-                                            style="font-size: 18px; cursor: pointer;"
-                                            onclick="return confirm('Voulez-vous vraiment supprimer ce post ?');">
-                                        ❌
-                                    </button>
-                                </form>
-                            </div>
-                            <h5 class="card-title">{{ post.nom }}</h5>
-                            <p class="card-text"><small class="text-muted">Posté le {{ post.getDateCreation|date('d/m/Y') }}</small></p>
-                            
-                            <!-- Contenu du post -->
-                            <p class="card-text">{{ post.contenu }}</p>
-
-                            <!-- Likes et Commentaires -->
-                            <div class="d-flex justify-content-end align-items-center mt-3">
-                                <span id="like-count-{{ post.id }}">{{ post.nbLike is not null ? post.nbLike : 0 }}</span>
-                                
-                                <span class="like-btn mx-2" data-post-id="{{ post.id }}" style="font-size: 24px; cursor: pointer;">👍</span>
-                                
-                                <span id="comment-count-{{ post.id }}">
-                                    {{ post.nbComment is not null ? post.nbComment : 0 }} 💬
-                                    <a href="{{ path('app_showcomments', {'id': post.id}) }}" class="text-decoration-none ms-1">Voir les commentaires</a>
-                                </span>
-                            </div>
-                        </div>
+                <!-- Affichage de l'image du forum -->
+                <div class="d-flex justify-content-center">
+                    <div class="border rounded p-3" style="max-width: 600px;">
+                        {% if forum.imageForum %}
+                            <img src="{{ asset('uploads/forums/' ~ forum.imageForum) }}" class="img-fluid rounded" alt="Image du forum" style="max-height: 300px; object-fit: cover;">
+                        {% else %}
+                            <img src="{{ asset('uploads/forums/default.png') }}" class="img-fluid rounded" alt="Image par défaut" style="max-height: 300px; object-fit: cover;">
+                        {% endif %}
                     </div>
-                {% else %}
-                    <p class="text-center">Aucun post disponible pour ce forum.</p>
-                {% endfor %}
+                </div>
+                <div class="text-center">
+                    <p class="mb-1"><strong>Thème :</strong> {{ forum.theme }}</p>
+                    <p class="text-muted">Créé le {{ forum.dateCreation|date('d/m/Y') }}</p>
+                </div>
+                <!-- Bouton Ajouter un Post -->
+                <div class="my-4">
+                    <a href="{{ path('app_addpost', {'forumId': forum.id}) }}" class="btn btn-success">
+                        ➕ Ajouter un Post
+                    </a>
+                </div>
             </div>
         </div>
     </div>
+</div>
+
+<!-- Section des Posts -->
+<div class="container mt-4">
+    <div class="row g-4 justify-content-center">
+        {% for post in posts %}
+            <div class="col-12 d-flex justify-content-center">
+                <div class="card h-100 shadow-sm" id="post-{{ post.id }}" style="max-width: 1000px; width: 100%; min-height: 200px; padding: 20px;"> 
+                    <div class="card-body position-relative">
+                        <!-- Boutons Modifier et Supprimer en haut à droite -->
+                        <div class="position-absolute top-0 end-0 m-2 d-flex align-items-center gap-2">
+                            <form action="{{ path('app_editpost', {'id': post.id}) }}" method="GET">
+                                <button type="submit" class="border-0 bg-transparent text-primary edit-btn" style="font-size: 18px; cursor: pointer;">
+                                    ✏️
+                                </button>
+                            </form>
+
+                            <form method="POST" action="{{ path('app_deletepost', {'id': post.id}) }}">
+                                <button type="submit" class="border-0 bg-transparent text-danger" style="font-size: 18px; cursor: pointer;" onclick="return confirm('Voulez-vous vraiment supprimer ce post ?');">
+                                    ❌
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Titre du post -->
+                        <h5 class="card-title">{{ post.nom }}</h5>
+                        <p class="card-text"><small class="text-muted">Posté le {{ post.getDateCreation|date('d/m/Y') }}</small></p>
+
+                        <!-- Contenu du post -->
+                        <p class="card-text">{{ post.contenu }}</p>
+
+                        <!-- Icônes Like et Commentaire en bas à droite -->
+                        <div class="position-absolute bottom-0 end-0 m-3 d-flex align-items-center gap-3">
+                            <span id="like-count-{{ post.id }}">{{ post.nbLike is not null ? post.nbLike : 0 }}</span>
+                            <span class="like-btn" data-post-id="{{ post.id }}" style="font-size: 24px; cursor: pointer;">👍</span>
+                        
+                            <span id="comment-count-{{ post.id }}" class="d-flex align-items-center">
+                                <span>{{ post.nbComment is not null ? post.nbComment : 0 }} 💬</span>
+                                <a href="{{ path('app_showcomments', {'id': post.id}) }}" class="ms-1 text-decoration-none text-primary">Voir les commentaires</a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <p class="text-center">Aucun post disponible pour ce forum.</p>
+        {% endfor %}
+    </div>
+</div>
+<!-- Pagination Controls -->
+<div class="d-flex justify-content-center mt-4">
+    <nav>
+        <ul class="pagination">
+            {% if currentPage > 1 %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ path('app_showfrontposts', {id: forum.id, page: currentPage - 1}) }}">Précédent</a>
+                </li>
+            {% endif %}
+
+            {% for i in 1..totalPages %}
+                <li class="page-item {% if i == currentPage %}active{% endif %}">
+                    <a class="page-link" href="{{ path('app_showfrontposts', {id: forum.id, page: i}) }}">{{ i }}</a>
+                </li>
+            {% endfor %}
+
+            {% if currentPage < totalPages %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ path('app_showfrontposts', {id: forum.id, page: currentPage + 1}) }}">Suivant</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
 </div>
 
 <!-- Script AJAX pour les Likes et la Suppression -->

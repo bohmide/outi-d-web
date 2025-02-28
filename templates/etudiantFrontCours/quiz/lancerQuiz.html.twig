@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Quiz: {{ quiz.titre }}{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h2 class="text-center">{{ quiz.titre }}</h2>
+
+        <form method="post" action="{{ path('quiz_submit', {'id': quiz.id}) }}">
+            {% for question in quiz.getQuestion %}
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h5>{{ loop.index }}. {{ question.question }}</h5>
+                        {% if question.type == 'choix_multiple' %}
+                            <p><strong>(Plusieurs réponses possibles)</strong></p>
+                            {% for reponse in question.reponse %}
+                                <div class="form-check">
+                                    <input type="checkbox" name="reponses[{{ question.id }}][]" value="{{ reponse.id }}" class="form-check-input">
+                                    <label class="form-check-label">{{ reponse.reponse }}</label>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p><strong>(Une seule réponse est correcte)</strong></p>
+                            {% for reponse in question.reponse %}
+                                <div class="form-check">
+                                    <input type="radio" name="reponses[{{ question.id }}]" value="{{ reponse.id }}" class="form-check-input" required>
+                                    <label class="form-check-label">{{ reponse.reponse }}</label>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-success">Valider</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

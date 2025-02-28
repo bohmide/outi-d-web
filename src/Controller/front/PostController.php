@@ -6,6 +6,7 @@ use App\Entity\Post;
 use App\Entity\Forum;
 use App\Form\PostType;
 use App\Repository\ForumRepository;
+use App\Repository\PostRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -42,12 +43,17 @@ final class PostController extends AbstractController
             'forum' => $forum, 
         ]);
     }
-    #[Route('/forum/{id}/posts', name: 'app_showfrontposts')]
-    public function showPosts(Forum $forum): Response
+    #[Route('/forum/{id}/posts/{page}', name: 'app_showfrontposts', requirements: ['page' => '\d+'], defaults: ['page' => 1])]
+    public function showPosts(Forum $forum, PostRepository $postRepository, int $page): Response
     {
+        $limit = 3;
+        $posts = $postRepository->findPaginatedPosts($forum, $page, $limit);
+    
         return $this->render('front/post/showposts.html.twig', [
             'forum' => $forum,
-            'posts' => $forum->getPosts(),
+            'posts' => $posts,
+            'currentPage' => $page,
+            'totalPages' => ceil(count($forum->getPosts()) / $limit),
         ]);
     }
 
