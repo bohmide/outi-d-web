@@ -13,7 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 
 
-class AddprofType extends AbstractType
+class ProfType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {

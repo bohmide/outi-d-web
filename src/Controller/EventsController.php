@@ -288,18 +288,18 @@ final class EventsController extends AbstractController
         return $this->redirectToRoute('app_front_prof_show_events');
     }
 
-    // delete back
-    #[Route('/events/deleteEvent/{id}', name: 'app_delete_event')]
-    public function deleteSponosrB($id, EvenementsRepository $er, ManagerRegistry $managerRegistry): Response
-    {
-        $event = $er->find($id);
-        $manager = $managerRegistry->getManager();
-        $manager->remove($event);
-        $eventGenre = $event->getGenre();
-        $eventGenre->setNbr($eventGenre->getNbr() - 1);
-        $manager->flush();
+    // // delete back
+    // #[Route('/events/deleteEvent/{id}', name: 'app_delete_event')]
+    // public function deleteSponosrB($id, EvenementsRepository $er, ManagerRegistry $managerRegistry): Response
+    // {
+    //     $event = $er->find($id);
+    //     $manager = $managerRegistry->getManager();
+    //     $manager->remove($event);
+    //     $eventGenre = $event->getGenre();
+    //     $eventGenre->setNbr($eventGenre->getNbr() - 1);
+    //     $manager->flush();
 
 
-        return $this->redirectToRoute('app_back_show_events');
-    }
+    //     return $this->redirectToRoute('app_back_show_events');
+    // }
 }
