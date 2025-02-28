@@ -9,7 +9,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 Use App\Repository\ForumRepository;
-use App\Repository\PostRepository as RepositoryPostRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
@@ -56,11 +55,27 @@ final class ForumBackController extends AbstractController
 
 
     #[Route('/showbackforum', name: 'app_showbackforum')]
-    public function showforum(ForumRepository $rep):Response
+    public function showforum(Request $request,ForumRepository $rep):Response
     {
-        $forum=$rep->findAll();
+        $query = $request->query->get('query', '');
+        $page = max(1, $request->query->getInt('page', 1)); // Récupère le numéro de la page (par défaut 1)
+        $limit = 5; // Nombre de forums par page
+    
+        if (!empty($query)) {
+            $forums = $rep->searchForums($query); // Si recherche active, on utilise searchForums()
+            $totalForums = count($forums); // Nombre total de résultats trouvés
+        } else {
+            $forums = $rep->findPaginatedForums($page, $limit); // Sinon, pagination normale
+            $totalForums = count($rep->findAll()); // Nombre total de forums
+        }
+    
+        $totalPages = ceil($totalForums / $limit); // Calcul du nombre total de pages
+    
         return $this->render('back/forum_back/showforum.html.twig', [
-            'tabforum' => $forum,
+            'tabforum' => $forums,
+            'currentPage' => $page,
+            'totalPages' => $totalPages,
+            'query' => $query, // Pour garder la valeur de recherche dans l’input
         ]);
     }
 

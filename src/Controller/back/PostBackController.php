@@ -6,6 +6,7 @@ use App\Entity\Post;
 use App\Entity\Forum;
 use App\Form\PostType;
 use App\Repository\ForumRepository;
+use App\Repository\PostRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -43,14 +44,21 @@ final class PostBackController extends AbstractController
         ]);
     }
 
-    #[Route('/forum/posts/{id}', name: 'app_showbackposts')]
-    public function showPosts(Forum $forum): Response
+    #[Route('/forum/posts/{id}/{page}', name: 'app_showbackposts', requirements: ['page' => '\d+'], defaults: ['page' => 1])]
+    public function showPosts(Forum $forum, PostRepository $postRepository, int $page = 1): Response
     {
+        $limit = 3;
+        $posts = $postRepository->findPaginatedPosts($forum, $page, $limit);
+        $totalPages = ceil(count($forum->getPosts()) / $limit);
+    
         return $this->render('back/post_back/showposts.html.twig', [
             'forum' => $forum,
-            'posts' => $forum->getPosts(),
+            'posts' => $posts,
+            'currentPage' => $page,
+            'totalPages' => $totalPages,
         ]);
     }
+     
 
     #[Route('/post/{id}/like', name: 'app_like_post', methods: ['POST'])]
     public function likePost(Post $post, ManagerRegistry $doctrine): JsonResponse

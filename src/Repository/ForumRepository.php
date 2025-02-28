@@ -40,4 +40,21 @@ class ForumRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+    public function searchForums(string $query): array
+    {
+        $qb = $this->createQueryBuilder('f')
+            ->where('f.nom LIKE :query OR f.theme LIKE :query')
+            ->setParameter('query', '%' . $query . '%')
+            ->getQuery();
+        return $qb->getResult();
+    }
+
+    public function findPaginatedForums(int $page, int $limit = 3)
+    {
+        return $this->createQueryBuilder('f')
+            ->setFirstResult(($page - 1) * $limit) // OFFSET
+            ->setMaxResults($limit) // LIMIT
+            ->getQuery()
+            ->getResult();
+    }
 }
