@@ -197,3 +197,120 @@ document.addEventListener("DOMContentLoaded", function () {
       form.classList.add("was-validated"); // Ajoute une classe pour afficher les erreurs
   }, false);
 });
+
+ // Validation du formulaire
+ document.getElementById('competitionForm').addEventListener('submit', function(event) {
+  let valid = true;
+
+  // Réinitialiser les erreurs
+  resetErrors();
+
+  // Récupérer les champs du formulaire
+  let nomEntreprise = document.getElementById('{{ form.nom_entreprise.vars.id }}');
+  let nomComp = document.getElementById('{{ form.nom_comp.vars.id }}');
+  let dateDebut = document.getElementById('{{ form.date_debut.vars.id }}');
+  let dateFin = document.getElementById('{{ form.date_fin.vars.id }}');
+  let description = document.getElementById('{{ form.description.vars.id }}');
+  let fichierFile = document.getElementById('{{ form.fichierFile.vars.id }}');
+
+  // Validation des champs
+  if (!nomEntreprise.value.trim()) {
+      valid = false;
+      showError('nomEntrepriseError', 'Le nom de l\'entreprise est obligatoire.');
+  }
+
+  if (!nomComp.value.trim() || nomComp.value.length < 3) {
+      valid = false;
+      showError('nomCompError', 'Le nom de la compétition doit contenir au moins 3 caractères.');
+  }
+
+  if (!dateDebut.value.trim()) {
+      valid = false;
+      showError('dateDebutError', 'Veuillez sélectionner une date de début.');
+  }
+
+  if (!dateFin.value.trim()) {
+      valid = false;
+      showError('dateFinError', 'Veuillez sélectionner une date de fin.');
+  }
+
+  if (!description.value.trim() || description.value.length < 10) {
+      valid = false;
+      showError('descriptionError', 'La description doit contenir au moins 10 caractères.');
+  }
+
+  if (fichierFile.files.length === 0) {
+      valid = false;
+      showError('fichierFileError', 'Veuillez télécharger un fichier.');
+  }
+
+  // Si la validation échoue, empêcher l'envoi du formulaire
+  if (!valid) {
+      event.preventDefault();
+  }
+});
+
+// Fonction pour réinitialiser les erreurs
+function resetErrors() {
+  document.querySelectorAll('.invalid-feedback').forEach(function(errorElement) {
+      errorElement.textContent = '';
+  });
+}
+
+// Fonction pour afficher les erreurs
+function showError(errorId, message) {
+  document.getElementById(errorId).textContent = message;
+}
+
+
+function toggleMenu(element) {
+  // Ferme tous les autres menus ouverts
+  const openMenus = document.querySelectorAll('.dropdown-content');
+  openMenus.forEach(menu => {
+      if (menu !== element.querySelector('.dropdown-content')) {
+          menu.style.display = 'none';
+      }
+  });
+
+  // Affiche ou cache le menu actuel
+  const dropdown = element.querySelector('.dropdown-content');
+  if (dropdown.style.display === 'block') {
+      dropdown.style.display = 'none';
+  } else {
+      dropdown.style.display = 'block';
+  }
+}document.getElementById('searchCompetition').addEventListener('keyup', function() {
+  let query = this.value.trim();
+  console.log("Recherche en cours :", query); // Debugging
+
+  if (query === "") {
+      document.querySelector('.competition-grid').innerHTML = '<p>Aucune compétition trouvée.</p>';
+      return;
+  }
+
+  fetch(`/competition/search/${encodeURIComponent(query)}`)
+      .then(response => response.json())
+      .then(data => {
+          console.log("Résultats retournés :", data); // Debugging
+
+          let container = document.querySelector('.competition-grid');
+          container.innerHTML = ''; // Clear existing competitions
+
+          if (data.length === 0) {
+              container.innerHTML = '<p>Aucune compétition trouvée.</p>';
+          } else {
+              data.forEach(comp => {
+                  let competitionDiv = `
+                      <div class="competition">
+                          <h2>${comp.nomComp}</h2>
+                          <p class="date">Du ${comp.dateDebut} au ${comp.dateFin}</p>
+                          <p class="description">${comp.description}</p>
+                          <p>Organisée par : ${comp.nomEntreprise}</p>
+                      </div>
+                  `;
+                  container.innerHTML += competitionDiv;
+              });
+          }
+      })
+      .catch(error => console.error('Erreur AJAX:', error));
+});

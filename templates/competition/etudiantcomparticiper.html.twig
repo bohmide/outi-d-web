@@ -1,0 +1,23 @@
+{% extends "base.html.twig" %}
+
+{% block title %} Compétition - Participer {% endblock %}
+
+{% block body %}
+<div class="participation-body">
+    <div class="participation-container">
+        <h1 class="participation-title">{{ competition.nomComp }}</h1>
+        <p>{{ competition.description }}</p>
+        <p><strong>Du :</strong> {{ competition.dateDebut|date('d/m/Y') }} <strong>au :</strong> {{ competition.dateFin|date('d/m/Y') }}</p>
+        <p><strong>Organisée par :</strong> {{ competition.nomEntreprise }}</p>
+
+        <h3>Soumettre votre fichier</h3>
+        <form action="#" method="POST" enctype="multipart/form-data" class="participation-form">
+            <div class="form-group">
+                <label for="file" class="form-label">Sélectionnez un fichier (ex. .zip)</label>
+                <input type="file" name="file" id="file" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-success">Soumettre</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

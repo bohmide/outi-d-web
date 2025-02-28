@@ -3,7 +3,10 @@
 {% block title %} Compétition  {% endblock %}
 
 {% block body %}
-<h1>Modifier la Compétition</h1>
+<div class="collaborateur">
+
+    <div class="publish-competition-container">
+        <h1>Modifier la Compétition</h1>
 
     {# Afficher les messages flash #}
     {% for message in app.flashes('success') %}
@@ -13,11 +16,64 @@
     {% endfor %}
 
     {# Formulaire de mise à jour #}
-    {{ form_start(form) }}
-        {{ form_widget(form) }}
+    
+    <div class="form-group">
+    {{ form_start(form,{'attr': {'novalidate': 'novalidate'}}) }}
+    <div class="mb-3">
+        {{ form_label(form.nom_comp, 'Nom de la Compétition', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.nom_comp, {'attr': {'class': 'form-control', 'placeholder': 'Entrer le nom de la compétition'}}) }}
+        {{ form_errors(form.nom_comp) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.nom_entreprise, 'Entreprise Organisatrice', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.nom_entreprise,{'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.nom_entreprise) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.date_debut, 'Date de Début', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.date_debut, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.date_debut) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.date_fin, 'Date de Fin', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.date_fin, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.date_fin) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': 6}}) }}
+        {{ form_errors(form.description) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.fichierFile, 'Télécharger un fichier', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.fichierFile, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.fichierFile) }}
+
+        {% if competition.fichier %}
+            <p>Fichier actuel : 
+                <a href="{{ asset('uploads/' ~ competition.fichier) }}" target="_blank">
+                {{ competition.fichier }}
+                </a>
+            </p>
+        {% endif %}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.organisation, 'Organisation Associée', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.organisation, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.organisation) }}
+    </div>
         <button type="submit" class="btn btn-primary">Mettre à jour</button>
     {{ form_end(form) }}
 
     {# Lien pour retourner à la liste #}
     <a href="{{ path('competitionlist') }}" class="btn btn-secondary mt-3">Retour à la liste</a>
+    </div>
+    </div>
+</div>
 {% endblock %}

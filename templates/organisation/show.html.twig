@@ -3,10 +3,15 @@
 {% block title %} Organisations {% endblock %}
 
 {% block body %}
-<div class="organisation-body">
+<div class="competition-body">
     <div class="container">
-        <h1>Liste des Organisations</h1>
-        <a href="{{ path('add_organisation') }}" class="button">Ajouter une Organisation</a>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1>Liste des Organisations</h1>
+            <div class="d-flex flex-column gap-2"> <!-- Conteneur flexible en colonne avec espace entre les boutons -->
+                <a href="{{ path('add_organisation') }}" class="btn btn-circle">+</a> <!-- Bouton en cercle -->
+                <a href="{{ path('competitionlist') }}" class="btn btn-secondary">Liste des Compétitions</a>
+            </div>
+        </div>
         
         {# Afficher les messages flash #}
         {% for message in app.flashes('success') %}
@@ -15,26 +20,30 @@
             </div>
         {% endfor %}
 
-        {% for organisation in organisations %}
-            <div class="organisation">
-                <h2>{{ organisation.nomOrganisation }}</h2>
-                <p class="domaine">Domaine : {{ organisation.domaine ?: 'Non spécifié' }}</p>
-                
-                <div>
-                    <a href="{{ path('edit_organisation', {'id': organisation.id}) }}" class="button">Modifier</a>
-                    <form method="post" action="{{ path('delete_organisation', {'id': organisation.id}) }}" 
-                          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette organisation ?');" 
-                          style="display: inline;">
-                        <input type="hidden" name="_method" value="DELETE">
-                        <button type="submit" class="button btn-danger">Supprimer</button>
-                    </form>
+        {# Conteneur pour les organisations #}
+        <div class="competition-grid">
+            {% for organisation in organisations %}
+                <div class="competition">
+                    <h2>{{ organisation.nomOrganisation }}</h2>
+                    <p class="domain"><strong>Domaine :</strong> {{ organisation.domaine ?: 'Non spécifié' }}</p>
+                    
+                    <div class="dots-menu" tabindex="0"> <!-- Ajouter tabindex pour permettre le focus -->
+                        <i class="bi bi-three-dots-vertical dots-icon"></i> <!-- Icône par défaut -->
+                        <i class="bi bi-x close-icon"></i> <!-- Icône de fermeture -->
+                        <div class="dropdown-content">
+                            <a href="{{ path('edit_organisation', {'id': organisation.id}) }}" class="dropdown-item">Modifier</a>
+                            <form method="post" action="{{ path('delete_organisation', {'id': organisation.id}) }}" 
+                                  onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette organisation ?');">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit" class="dropdown-item">Supprimer</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        {% else %}
-            <p>Aucune organisation trouvée.</p>
-        {% endfor %}
-
-        <a href="{{ path('add_organisation') }}" class="button">Ajouter une Organisation</a>
+            {% else %}
+                <p>Aucune organisation trouvée.</p>
+            {% endfor %}
+        </div>
     </div>
 </div>
 {% endblock %}
