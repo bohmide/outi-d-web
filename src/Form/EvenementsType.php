@@ -8,6 +8,7 @@ use App\Entity\Sponsors;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -15,6 +16,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class EvenementsType extends AbstractType
@@ -51,6 +53,22 @@ class EvenementsType extends AbstractType
                 'class' => Sponsors::class,
                 'choice_label' => 'nom_sponsor',
                 'multiple' => true,
+            ])
+            ->add('prix', NumberType::class, [
+                'required' => false,
+                'scale' => 2, // Nombre de décimales affichées
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => 'Entrez le prix',
+                    'step' => '0.01', // Permet d'accepter des valeurs décimales
+                    'min' => '0', // Empêche les valeurs négatives
+                ],
+                'constraints' => [
+                    new GreaterThanOrEqual([
+                        'value' => 0,
+                        'message' => 'Le prix ne peut pas être négatif.',
+                    ]),
+                ],
             ])
             ->add('image_file', FileType::class, [
                 'label' => 'Upload Image',

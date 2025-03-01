@@ -23,6 +23,12 @@
 
 					<div class="formbold-event-details">
 						<h5>Event Details</h5>
+						{% if event.getPrix() is null or event.getPrix() == 0 %}
+							<h5>Gratuit</h5>
+						{% else %}
+							<h5>{{ event.getPrix() }} DT</h5>
+						{% endif %}
+
 						<ul>
 							<li>
 								<svg width="18" height="18" viewbox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -73,9 +79,11 @@
 							</li>
 							<li>
 								<div style="text-align: right;">
+									<!--
 									<button style="background-color: #28a745; color: white; border: none; padding: 5px 10px; font-size: 14px; border-radius: 5px; cursor: pointer; margin : 10px 10px">
 										Participate
-									</button>
+									</button> -->
+									<a href="{{ path('cart_add', {'id': event.id}) }}" class="btn btn-primary">Participer</a>
 								</div>
 							</li>
 

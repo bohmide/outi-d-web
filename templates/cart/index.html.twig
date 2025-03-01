@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Mon Panier</h1>
+
+    {% if cart is empty %}
+        <p>Votre panier est vide.</p>
+    {% else %}
+        <ul>
+            {% for key, item in cart %}
+                <li>
+                    {{ item.name }} - {{ item.price }} € (x{{ item.quantity }})
+                    <a href="{{ path('cart_decrease', {'key': key}) }}">➖</a>
+                    <a href="{{ path('cart_add', {'id': item.id}) }}">➕</a>
+                    <a href="{{ path('cart_remove', {'key': key}) }}">❌</a>
+                </li>
+            {% endfor %}
+        </ul>
+        <p><strong>Total :</strong> {{ total }} €</p>
+        <a href="{{ path('cart_clear') }}" class="btn btn-danger">Vider le panier</a>
+    {% endif %}
+{% endblock %}
