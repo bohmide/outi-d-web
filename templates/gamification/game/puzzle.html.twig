@@ -37,11 +37,17 @@
         border: 2px solid black;
         display: inline-block;
     }
-    .puzzle-slot {
-        background-color: white;
-        border: 2px dashed black;
+    #solution-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* Deux colonnes */
+        gap: 10px; /* Espacement entre les cases */
+        width: max-content;
     }
-    
+    .puzzle-slot {
+        width: 100px;  /* Ajuste selon tes besoins */
+        height: 100px; /* Ajuste selon tes besoins */
+        border: 1px solid black;
+    }
 </style>
 
 <script>
