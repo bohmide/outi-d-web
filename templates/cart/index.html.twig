@@ -1,22 +1,61 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Mon Panier</h1>
+	<div class="container my-5">
+		<h1 class="mb-4 text-center">🛒 Mon Panier</h1>
 
-    {% if cart is empty %}
-        <p>Votre panier est vide.</p>
-    {% else %}
-        <ul>
-            {% for key, item in cart %}
-                <li>
-                    {{ item.name }} - {{ item.price }} € (x{{ item.quantity }})
-                    <a href="{{ path('cart_decrease', {'key': key}) }}">➖</a>
-                    <a href="{{ path('cart_add', {'id': item.id}) }}">➕</a>
-                    <a href="{{ path('cart_remove', {'key': key}) }}">❌</a>
-                </li>
-            {% endfor %}
-        </ul>
-        <p><strong>Total :</strong> {{ total }} €</p>
-        <a href="{{ path('cart_clear') }}" class="btn btn-danger">Vider le panier</a>
-    {% endif %}
+		{% if cart is empty %}
+			<div class="alert alert-warning text-center" role="alert">
+				Votre panier est vide.
+			</div>
+		{% else %}
+			<div class="table-responsive">
+				<table class="table table-bordered text-center align-middle">
+					<thead class="table-dark">
+						<tr>
+							<th>Produit</th>
+							<th>Prix</th>
+							<th>Sous-total</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for key, item in cart %}
+							<tr>
+								<td>{{ item.name }}</td>
+								<td>{{ item.price }}
+									dt</td>
+								
+								<td>
+									<strong>{{ item.price * item.quantity }}
+										dt</strong>
+								</td>
+								<td>
+									<a href="{{ path('cart_remove', {'key': key}) }}" class="btn btn-sm btn-danger">❌</a>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+					<tfoot>
+						<tr class="table-info">
+							<td colspan="3" class="text-end">
+								<strong>Total :</strong>
+							</td>
+							<td colspan="2">
+								<strong>{{ total }}
+									dt</strong>
+							</td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+
+			<div class="text-center mt-4">
+				<a href="{{ path('cart_clear') }}" class="btn btn-danger">
+					🗑️ Vider le panier
+				</a>
+			</div>
+		{% endif %}
+	</div>
+
 {% endblock %}

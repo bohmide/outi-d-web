@@ -1,191 +1,229 @@
-`<!DOCTYPE html>
+`
+<!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}{% endblock %}OUTI-D</title>
-        <meta content="width=device-width, initial-scale=1.0" name="viewport">
-        <link rel="icon" href="{{asset('/img/logo.png')}},<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-       
-        <!-- Favicons -->
-  <link href="{{asset('img/LOGO.png')}}" rel="icon">
-  <link href="{{asset('img/LOGO.png')}}" rel="apple-touch-icon">
+	<head>
+		<meta charset="UTF-8">
+		<title>
+			{% block title %}{% endblock %}OUTI-D</title>
+		<meta content="width=device-width, initial-scale=1.0" name="viewport">
+		<link rel="icon" href="{{asset('/img/logo.png')}},<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+		<link
+		rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com" rel="preconnect">
-  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+		<!-- Favicons -->
+		<link href="{{asset('img/LOGO.png')}}" rel="icon">
+		<link
+		href="{{asset('img/LOGO.png')}}" rel="apple-touch-icon">
 
-  
-
-        {% block stylesheets %}
-        <!-- Vendor CSS Files -->
-        <link href="{{asset('js/frontoffice/vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
-        <link href="{{asset('js/frontoffice/vendor/bootstrap-icons/bootstrap-icons.css')}}" rel="stylesheet">
-        <link href="{{asset('js/frontoffice/vendor/aos/aos.css')}}" rel="stylesheet">
-        <link href="{{asset('js/frontoffice/vendor/glightbox/css/glightbox.min.css')}}"rel="stylesheet">
-        <link href="{{asset('js/frontoffice/vendor/swiper/swiper-bundle.min.css')}}" rel="stylesheet">
-      
-        <!-- Main CSS File -->
-
-        <link href="{{asset('styles/frontoffice/css/main.css')}}" rel="stylesheet">
-        <link href="{{asset('styles/frontoffice/Event_utils/Card_style.css')}}" rel="stylesheet">
-
-        {% endblock %}
-
-{% block header %}
-       
-
-<head> 
-    <body>  
-    <!-- header -->         
-        <header id="header" class="header d-flex align-items-center sticky-top">
-            <div class="container-fluid container-xl position-relative d-flex align-items-center">
-        
-              <a href="{{path('use')}}" class="logo d-flex align-items-center me-auto">
-                <!-- Uncomment the line below if you also wish to use an image logo -->
-                
-                <!--<h1 class="sitename">OUTI-D</h1> -->
-
-                <img src="{{asset('img/logo11.png')}}" alt="" data-aos="fade-in">
-              </a>
-        
-              <nav id="navmenu" class="navmenu">
-                <ul>
-                  <li><a href="{{path('use')}}" class="{% if app.request.pathinfo == path('use') %}active{% endif %}">Home<br></a></li>
-                  <li><a href="{{path('app_showforum')}}"  class="{% if app.request.pathinfo == path('forum') %}active{% endif %}">Forum</a></li>
-                  <li><a href="{{path('app_cours_back')}}" class="{% if app.request.pathinfo == path('app_cours_back') %}active{% endif %}">Cours</a></li>
-                  <li><a href="{{path('trainers')}}" class="{% if app.request.pathinfo == path('trainers') %}active{% endif %}">Trainers</a></li>
-                  <li><a href="{{path('app_front_etudiant_show_events')}}" class="{% if app.request.pathinfo == path('app_front_etudiant_show_events') %}active{% endif %}">Events</a></li>
-                  <li><a href="{{path('competitionlist')}}" class="{% if app.request.pathinfo == path('competitionlist') %}active{% endif %}">Competition List</a></li>
-                  <li><a href="{{path('contact')}}" class="{% if app.request.pathinfo == path('contact') %}active{% endif %}">Contact</a></li>
-                  <li class="dropdown"><a href="#"><span>Sign Up</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-                    <ul>
-                      <li><a href="{{path('Signprof')}}">As a professor</a></li>
-                      <li><a href="{{path('Signparent')}}">As a parent</a></li>
-                      <li><a href="{{path('Signstudent')}}">As a student</a></li>
-                    </ul>
-                  </li>
-                </ul>
-                <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
-              </nav>
-        
-              
-              <a  class="btn-getstarted" href="{{path('login')}}">Sign In</a>
-        
-            </div>
-         </header>
-        
-    
-    <!-- header -->
-    
-    {% endblock %}
-
-    {% block body %}
-    
-    
-    {% endblock %}
-
-    {% block footer %}
-        
-    <!-- footer -->
-        <footer id="footer" class="footer position-relative light-background">
-
-            <div class="container footer-top">
-              <div class="row gy-4">
-                <div class="col-lg-4 col-md-6 footer-about">
-                  <a href="{{path('base')}}" class="logo d-flex align-items-center">
-                    <span class="sitename">OUTI-D</span>
-                  </a>
-                  <div class="footer-contact pt-3">
-                    <p>2081 Ariena Soghra</p>
-                    <p>Rue Esprit, N° 535022</p>
-                    <p class="mt-3"><strong>Phone:</strong> <span>+216 25880884</span></p>
-                    <p><strong>Email:</strong> <span>outi-d@gmail.com</span></p>
-                  </div>
-                  <div class="social-links d-flex mt-4">
-                    <a href=""><i class="bi bi-twitter-x"></i></a>
-                    <a href="https://www.facebook.com/profile.php?id=61572848907111"><i class="bi bi-facebook" ></i></a>
-                    <a href="https://www.instagram.com/outideducation/"><i class="bi bi-instagram"></i></a>
-                    <a href=""><i class="bi bi-linkedin"></i></a>
-                  </div>
-                </div>
-        
-                <div class="col-lg-2 col-md-3 footer-links">
-                  <h4>Useful Links</h4>
-                  <ul>
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">About us</a></li>
-                    <li><a href="#">Services</a></li>
-                    <li><a href="#">Terms of service</a></li>
-                    <li><a href="#">Privacy policy</a></li>
-                  </ul>
-                </div>
-        
-                <div class="col-lg-2 col-md-3 footer-links">
-                  <h4>Our Services</h4>
-                  <ul>
-                    <li><a href="#">Web Design</a></li>
-                    <li><a href="#">Web Development</a></li>
-                    <li><a href="#">Product Management</a></li>
-                    <li><a href="#">Marketing</a></li>
-                    <li><a href="#">Graphic Design</a></li>
-                  </ul>
-                </div>
-        
-                <div class="col-lg-4 col-md-12 footer-newsletter">
-                  <h4>Our Newsletter</h4>
-                  <p>Subscribe to our newsletter and receive the latest news about our products and services!</p>
-                  <form action="forms/newsletter.php" method="post" class="php-email-form">
-                    <div class="newsletter-form"><input type="email" name="email"><input type="submit" value="Subscribe"></div>
-                    <div class="loading">Loading</div>
-                    <div class="error-message"></div>
-                    <div class="sent-message">Your subscription request has been sent. Thank you!</div>
-                  </form>
-                </div>
-        
-              </div>
-            </div>
-        
-            <div class="container copyright text-center mt-4">
-              <p>© <span>Copyright</span> <strong class="px-1 sitename">OUTI-D</strong> <span>All Rights Reserved</span></p>
-              <div class="credits">
-                <!-- All the links in the footer should remain intact. -->
-                <!-- You can delete the links only if you've purchased the pro version. -->
-                <!-- Licensing information: https://bootstrapmade.com/license/ -->
-                <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
-                Designed by <a href="https://bootstrapmade.com/">Brain't</a> Distributed by <a href=“https://themewagon.com>خليها على الله
-              </div>
-            </div>
-        
-          </footer>
-    <!-- footer -->          
-    {% endblock %}
+		<!-- Fonts -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+		<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com" rel="preconnect">
+		<link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
 
+		{% block stylesheets %}
+			<!-- Vendor CSS Files -->
+			<link href="{{asset('js/frontoffice/vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+			<link href="{{asset('js/frontoffice/vendor/bootstrap-icons/bootstrap-icons.css')}}" rel="stylesheet">
+			<link href="{{asset('js/frontoffice/vendor/aos/aos.css')}}" rel="stylesheet">
+			<link href="{{asset('js/frontoffice/vendor/glightbox/css/glightbox.min.css')}}" rel="stylesheet">
+			<link
+			href="{{asset('js/frontoffice/vendor/swiper/swiper-bundle.min.css')}}" rel="stylesheet">
 
-    <!-- Vendor JS Files -->
-    <script src="{{asset('js/frontoffice/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-    <script src="{{asset('js/frontoffice/vendor/php-email-form/validate.js')}}"></script>
-    <script src="{{asset('js/frontoffice/vendor/aos/aos.js')}}"></script>
-    <script src="{{asset('js/frontoffice/vendor/glightbox/js/glightbox.min.js')}}"></script>
-    <script src="{{asset('js/frontoffice/vendor/purecounter/purecounter_vanilla.js')}}"></script>
-    <script src="{{asset('js/frontoffice/vendor/swiper/swiper-bundle.min.js')}}"></script>
+			<!-- Main CSS File -->
 
-    <!-- Scroll Top -->
-  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+			<link href="{{asset('styles/frontoffice/css/main.css')}}" rel="stylesheet">
+			<link href="{{asset('styles/frontoffice/Event_utils/Card_style.css')}}" rel="stylesheet">
 
-  <!-- Preloader -->
-  <div id="preloader"></div>
-  
-    <!-- Main JS File -->
-    <script src="{{asset('js/main.js')}}"></script>
+		{% endblock %}
+		{% block header %}
+		</head>
+		<head>
+			<body>
+				<!-- header -->
+				<header id="header" class="header d-flex align-items-center sticky-top">
+					<div class="container-fluid container-xl position-relative d-flex align-items-center">
+
+						<a href="{{path('use')}}" class="logo d-flex align-items-center me-auto">
+							<!-- Uncomment the line below if you also wish to use an image logo -->
+
+							<!--<h1 class="sitename">OUTI-D</h1> -->
+
+						<img src="{{asset('img/logo11.png')}}" alt="" data-aos="fade-in"> </a>
+
+						<nav id="navmenu" class="navmenu">
+							<ul>
+								<li>
+									<a href="{{path('use')}}" class="{% if app.request.pathinfo == path('use') %}active{% endif %}">Home<br></a>
+								</li>
+								<li>
+									<a href="{{path('app_showforum')}}" class="{% if app.request.pathinfo == path('forum') %}active{% endif %}">Forum</a>
+								</li>
+								<li>
+									<a href="{{path('app_cours_back')}}" class="{% if app.request.pathinfo == path('app_cours_back') %}active{% endif %}">Cours</a>
+								</li>
+								<li>
+									<a href="{{path('trainers')}}" class="{% if app.request.pathinfo == path('trainers') %}active{% endif %}">Trainers</a>
+								</li>
+								<li>
+									<a href="{{path('app_front_etudiant_show_events')}}" class="{% if app.request.pathinfo == path('app_front_etudiant_show_events') %}active{% endif %}">Events</a>
+								</li>
+								<li>
+									<a href="{{path('competitionlist')}}" class="{% if app.request.pathinfo == path('competitionlist') %}active{% endif %}">Competition List</a>
+								</li>
+								<li>
+									<a href="{{path('contact')}}" class="{% if app.request.pathinfo == path('contact') %}active{% endif %}">Contact</a>
+								</li>
+								<li class="dropdown">
+									<a href="#">
+										<span>Sign Up</span>
+										<i class="bi bi-chevron-down toggle-dropdown"></i>
+									</a>
+									<ul>
+										<li><ahref="{{path('Signprof')}}">As a professor</a></li>
+										<li><ahref="{{path('Signparent')}}">As a parent</a></li>
+										<li><ahref="{{path('Signstudent')}}">As a student</a></li>
+									</ul>
+								</li>
+							</ul>
+							<i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+						</nav>
 
 
-    
-            {% block javascripts %}
-            
-            {% endblock %}
+						<a class="btn-getstarted" href="{{path('login')}}">Sign In</a>
+
+					</div>
+				</header>
+
+
+				<!-- header -->
+
+			{% endblock %}
+
+			{% block body %}{% endblock %}
+
+			{% block footer %}
+
+				<!-- footer -->
+				<footer id="footer" class="footer position-relative light-background">
+
+					<div class="container footer-top">
+						<div class="row gy-4">
+							<div class="col-lg-4 col-md-6 footer-about">
+								<a href="{{path('base')}}" class="logo d-flex align-items-center">
+									<span class="sitename">OUTI-D</span>
+								</a>
+								<div class="footer-contact pt-3">
+									<p>2081 Ariena Soghra</p>
+									<p>Rue Esprit, N° 535022</p>
+									<p class="mt-3">
+										<strong>Phone:</strong>
+										<span>+216 25880884</span>
+									</p>
+									<p>
+										<strong>Email:</strong>
+										<span>outi-d@gmail.com</span>
+									</p>
+								</div>
+								<div class="social-links d-flex mt-4">
+									<a href="">
+										<i class="bi bi-twitter-x"></i>
+									</a>
+									<a href="https://www.facebook.com/profile.php?id=61572848907111">
+										<i class="bi bi-facebook"></i>
+									</a>
+									<a href="https://www.instagram.com/outideducation/">
+										<i class="bi bi-instagram"></i>
+									</a>
+									<a href="">
+										<i class="bi bi-linkedin"></i>
+									</a>
+								</div>
+							</div>
+
+							<div class="col-lg-2 col-md-3 footer-links">
+								<h4>Useful Links</h4>
+								<ul>
+									<li><a href="#">Home</a></li>
+									<li><a href="#">About us</a></li>
+									<li><a href="#">Services</a></li>
+									<li><a href="#">Terms of service</a></li>
+									<li><a href="#">Privacy policy</a></li>
+								</ul>
+							</div>
+
+							<div class="col-lg-2 col-md-3 footer-links">
+								<h4>Our Services</h4>
+								<ul>
+									<li><a href="#">Web Design</a></li>
+									<li><a href="#">Web Development</a></li>
+									<li><a href="#">Product Management</a></li>
+									<li><a href="#">Marketing</a></li>
+									<li><a href="#">Graphic Design</a></li>
+								</ul>
+							</div>
+
+							<div class="col-lg-4 col-md-12 footer-newsletter">
+								<h4>Our Newsletter</h4>
+								<p>Subscribe to our newsletter and receive the latest news about our products and services!</p>
+								<form action="forms/newsletter.php" method="post" class="php-email-form">
+									<div class="newsletter-form"><input type="email" name="email"><input type="submit" value="Subscribe"></div>
+									<div class="loading">Loading</div>
+									<div class="error-message"></div>
+									<div class="sent-message">Your subscription request has been sent. Thank you!</div>
+								</form>
+							</div>
+
+						</div>
+					</div>
+
+					<div class="container copyright text-center mt-4">
+						<p>©
+							<span>Copyright</span>
+							<strong class="px-1 sitename">OUTI-D</strong>
+							<span>All Rights Reserved</span>
+						</p>
+						<div class="credits">
+							<!-- All the links in the footer should remain intact. -->
+							<!-- You can delete the links only if you've purchased the pro version. -->
+							<!-- Licensing information: https://bootstrapmade.com/license/ -->
+							<!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
+							Designed by<a href="https://bootstrapmade.com/"> Brain't</a>
+							Distributed by
+							<a href="“https://themewagon.com">خليها على الله
+							</div>
+						</div>
+
+					</footer>
+					<!-- footer -->
+				{% endblock %}
+
+
+				<!-- Vendor JS Files -->
+				<script src="{{asset('js/frontoffice/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+				<script src="{{asset('js/frontoffice/vendor/php-email-form/validate.js')}}"></script>
+				<script src="{{asset('js/frontoffice/vendor/aos/aos.js')}}"></script>
+				<script src="{{asset('js/frontoffice/vendor/glightbox/js/glightbox.min.js')}}"></script>
+				<script src="{{asset('js/frontoffice/vendor/purecounter/purecounter_vanilla.js')}}"></script>
+				<script src="{{asset('js/frontoffice/vendor/swiper/swiper-bundle.min.js')}}"></script>
+
+				<!-- Scroll Top -->
+				<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center">
+					<i class="bi bi-arrow-up-short"></i>
+				</a>
+
+				<!-- Preloader -->
+				<div id="preloader"></div>
+
+				<!-- Main JS File -->
+				<script src="{{asset('js/main.js')}}"></script>
+
+
+				{% block javascripts %}{% endblock %}
+			</html>
+		</body>
+	</head>
 </html>
