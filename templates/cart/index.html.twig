@@ -25,7 +25,7 @@
 								<td>{{ item.name }}</td>
 								<td>{{ item.price }}
 									dt</td>
-								
+
 								<td>
 									<strong>{{ item.price * item.quantity }}
 										dt</strong>
@@ -57,5 +57,45 @@
 			</div>
 		{% endif %}
 	</div>
+	<p>Debug: Total =
+		{{ total }}</p>
+
+	<button id="participate-btn">Participer</button>
+	<script>
+		document.getElementById("participate-btn").addEventListener("click", function () {
+let totalAmount = {{ total|default(0) }};
+
+if (isNaN(totalAmount) || totalAmount <= 0) {
+alert("Erreur: Montant invalide !");
+return;
+}
+
+fetch("http://127.0.0.1:8000/payment/initiate", {
+method: "POST",
+headers: {
+"Content-Type": "application/json"
+},
+body: JSON.stringify(
+{
+amount: totalAmount,
+first_name: "Ahmed",
+last_name: "Doe",
+email: "ahmed@example.com",
+phone: "+21611223344"
+}
+)
+}).then(response => response.json()).then(data => {
+console.log("Réponse API Paymee:", data);
+if (data.payment_url) {
+window.location.href = data.payment_url;
+} else {
+alert("Erreur lors du paiement: " + (
+data.details ?. message || "Réponse invalide"
+));
+}
+}).catch(error => console.error("Erreur:", error));
+});
+	</script>
+
 
 {% endblock %}

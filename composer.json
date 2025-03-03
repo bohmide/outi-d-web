@@ -13,6 +13,7 @@
         "doctrine/orm": "^3.3",
         "endroid/qr-code": "^6.0",
         "knplabs/knp-paginator-bundle": "^6.6",
+        "nelmio/cors-bundle": "^2.5",
         "symfony/asset": "6.4.*",
         "symfony/asset-mapper": "6.4.*",
         "symfony/console": "6.4.*",
