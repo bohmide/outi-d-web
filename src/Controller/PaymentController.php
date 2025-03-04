@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Service\CartService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -73,9 +74,11 @@ class PaymentController extends AbstractController
     }
 
     #[Route('/payment/success', name: 'payment_success')]
-    public function paymentSuccess(): Response
+    public function paymentSuccess(CartService $cartService): Response
     {
-        return new Response("<h1>Paiement réussi !</h1>");
+        $cartService->clearCart();
+        $this->addFlash('paymeeSuccess','payment t3ada ya zi***');
+        return $this->redirectToRoute('cart_show');
     }
 
     #[Route('/payment/cancel', name: 'payment_cancel')]
