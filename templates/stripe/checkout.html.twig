@@ -1,0 +1,113 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Paiement Sécurisé{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">Paiement de {{ total|format_currency('USD') }}</h2>
+                    
+                    <div id="payment-messages">
+                        {% for message in app.flashes('error') %}
+                            <div class="alert alert-danger">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <form id="payment-form">
+                        <div class="mb-3">
+                            <div id="card-element" class="form-control p-3"></div>
+                            <div id="card-errors" class="text-danger mt-2"></div>
+                        </div>
+                        
+                        <button id="submit-btn" class="btn btn-primary w-100 py-3">
+                            Confirmer le paiement
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const stripe = Stripe('{{ stripe_key }}');
+    const elements = stripe.elements();
+    
+    // Style personnalisé pour la carte
+    const card = elements.create('card', {
+        style: {
+            base: {
+                fontSize: '16px',
+                color: '#32325d',
+                '::placeholder': {
+                    color: '#aab7c4'
+                }
+            },
+            invalid: {
+                color: '#fa755a'
+            }
+        }
+    });
+
+    // Montage de l'élément de carte
+    card.mount('#card-element');
+
+    // Gestion des erreurs en temps réel
+    card.on('change', (event) => {
+        const displayError = document.getElementById('card-errors');
+        displayError.textContent = event.error ? event.error.message : '';
+    });
+
+    // Soumission du formulaire
+    const form = document.getElementById('payment-form');
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const submitBtn = document.getElementById('submit-btn');
+        submitBtn.disabled = true;
+
+        // Création du PaymentMethod
+        const { paymentMethod, error } = await stripe.createPaymentMethod({
+            type: 'card',
+            card: card
+        });
+
+        if (error) {
+            document.getElementById('card-errors').textContent = error.message;
+            submitBtn.disabled = false;
+            return;
+        }
+
+        // Envoi au serveur
+        try {
+            const response = await fetch("{{ path('payment_create_charge') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    paymentMethodId: paymentMethod.id,
+                    amount: {{ total * 100 }}
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                // Redirection après le paiement réussi
+                window.location.href = data.redirect;  // Assurez-vous que l'ID est dans l'URL
+            } else {
+                throw new Error(data.error || 'Erreur de paiement');
+            }
+        } catch (error) {
+            document.getElementById('card-errors').textContent = error.message;
+            submitBtn.disabled = false;
+        }
+    });
+});
+</script>
+
+{% endblock %}

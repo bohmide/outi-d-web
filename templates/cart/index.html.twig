@@ -1,127 +1,157 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-	<div class="container my-5">
-		<h1 class="mb-4 text-center">Mon Panier</h1>
+<div class="container my-5">
+    <h1 class="mb-4 text-center">Mon Panier</h1>
 
-		{% if cart is empty %}
-			{% set messages = app.flashes('paymeeSuccess') %}
+    {% if cart is empty %}
+    {% if app.flashes('success') %}
+    <div class="alert alert-success text-center" role="alert">
+        {% for message in app.flashes('success') %}
+        <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% elseif app.flashes('error') %}
+    <div class="alert alert-danger text-center" role="alert">
+        {% for message in app.flashes('error') %}
+        <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-warning text-center" role="alert">
+        Votre panier est vide.
+    </div>
+    {% endif %}
 
-			{% if messages %}
-				{% for message in messages %}
-					<div class="alert alert-success text-center" role="alert">
-						<p>{{message}}</p>
-					</div>
-				{% endfor %}
+    {% else %}
+    <div class="table-responsive">
+        <table class="table table-bordered text-center align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Produit</th>
+                    <th>Prix unitaire</th>
+                    <th>Quantité</th>
+                    <th>Sous-total</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for key, item in cart %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.price|format_currency('USD') }}</td>
+                    <td>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <a href="{{ path('cart_decrease', {'key': key}) }}"
+                                class="btn btn-sm btn-outline-secondary">-</a>
+                            <span class="mx-2">{{ item.quantity }}</span>
+                            <a href="{{ path('cart_add', {'id': item.id}) }}"
+                                class="btn btn-sm btn-outline-secondary">+</a>
+                        </div>
+                    </td>
+                    <td>{{ (item.price * item.quantity)|format_currency('USD') }}</td>
+                    <td>
+                        <a href="{{ path('cart_remove', {'key': key}) }}" class="btn btn-sm btn-danger">❌</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr class="table-info">
+                    <td colspan="3" class="text-end">
+                        <strong>Total :</strong>
+                    </td>
+                    <td colspan="2">
+                        <strong>{{ total|format_currency('USD') }}</strong>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
 
-			{% else %}
-				<div class="alert alert-warning text-center" role="alert">
-					Votre panier est vide.
-				</div>
-			{% endif %}
+    <div class="text-center mt-4">
+            <a href="{{ path('cart_clear') }}" class="btn btn-danger">Vider le panier</a>
+            <a href="{{ path('payment_checkout') }}" class="btn btn-success">Passer au paiement</a>
+    
+</div>
+    {% endif %}
+</div>
 
-		{% else %}
-			<div class="table-responsive">
-				<table class="table table-bordered text-center align-middle">
-					<thead class="table-dark">
-						<tr>
-							<th>Produit</th>
-							<th>Prix</th>
-							<th>Sous-total</th>
-							<th>Actions</th>
-						</tr>
-					</thead>
-					<tbody>
-						{% for key, item in cart %}
-							<tr>
-								<td>{{ item.name }}</td>
-								<td>{{ item.price }}
-									dt</td>
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const stripe = Stripe('{{ stripe_key }}');
+    const elements = stripe.elements();
+    
+    // Style personnalisé pour la carte
+    const card = elements.create('card', {
+        style: {
+            base: {
+                fontSize: '16px',
+                color: '#32325d',
+                '::placeholder': {
+                    color: '#aab7c4'
+                }
+            },
+            invalid: {
+                color: '#fa755a'
+            }
+        }
+    });
 
-								<td>
-									<strong>{{ item.price * item.quantity }}
-										dt</strong>
-								</td>
-								<td>
-									<a href="{{ path('cart_remove', {'key': key}) }}" class="btn btn-sm btn-danger">❌</a>
-								</td>
-							</tr>
-						{% endfor %}
-					</tbody>
-					<tfoot>
-						<tr class="table-info">
-							<td colspan="3" class="text-end">
-								<strong>Total :</strong>
-							</td>
-							<td colspan="2">
-								<strong>{{ total }}
-									dt</strong>
-							</td>
-						</tr>
-					</tfoot>
-				</table>
-			</div>
+    // Montage de l'élément de carte
+    card.mount('#card-element');
 
-			<div class="text-center mt-4">
-				<a href="{{ path('cart_clear') }}" class="btn btn-danger btn-lg rounded-pill px-4 py-2 me-2 shadow-sm" style="transition: all 0.3s ease; font-weight: 600;">
-					Vider le panier
-				</a>
-				<a href="{{ path('cart_clear') }}" class="btn btn-success btn-lg rounded-pill px-4 py-2 shadow-sm" id="participate-btn" style="transition: all 0.3s ease; font-weight: 600;">
-					Payer
-				</a>
-			</div>
+    // Gestion des erreurs en temps réel
+    card.on('change', (event) => {
+        const displayError = document.getElementById('card-errors');
+        displayError.textContent = event.error ? event.error.message : '';
+    });
 
+    // Soumission du formulaire
+    const form = document.getElementById('payment-form');
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const submitBtn = document.getElementById('submit-btn');
+        submitBtn.disabled = true;
 
-		{% endif %}
-	</div>
+        // Création du PaymentMethod
+        const { paymentMethod, error } = await stripe.createPaymentMethod({
+            type: 'card',
+            card: card
+        });
 
+        if (error) {
+            document.getElementById('card-errors').textContent = error.message;
+            submitBtn.disabled = false;
+            return;
+        }
 
-	<button id="participate-btn">Participer</button>
-	<script>
-		document.addEventListener("DOMContentLoaded", function () {
-let participateBtn = document.getElementById("participate-btn");
+        // Envoi au serveur
+        try {
+            const response = await fetch("{{ path('payment_create_charge') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    paymentMethodId: paymentMethod.id,
+                    amount: {{ total * 100 }}
+                })
+            });
 
-if (participateBtn) {
-participateBtn.addEventListener("click", function () {
-let totalAmount = {{ total|default(0) }};
+            const data = await response.json();
 
-if (isNaN(totalAmount) || totalAmount <= 0) {
-alert("Erreur: Montant invalide !");
-return;
-}
-
-fetch("https://127.0.0.1:8000/payment/initiate", {
-method: "POST",
-headers: {
-"Content-Type": "application/json"
-},
-body: JSON.stringify(
-{
-amount: totalAmount,
-first_name: "Ahmed",
-last_name: "Doe",
-email: "ahmed@example.com",
-phone: "+21611223344"
-}
-)
-}).then(response => response.json()).then(data => {
-console.log("Réponse API Paymee:", data);
-
-if (data.payment_url) {
-window.location.href = data.payment_url;
-} else {
-console.error("Erreur lors du paiement :", data);
-alert("Erreur lors du paiement : " + (
-data.details ?. message || "Réponse invalide de l'API"
-));
-}
-}).catch(error => {
-console.error("Erreur:", error);
-alert("Une erreur s'est produite lors du paiement. Veuillez réessayer.");
+            if (data.success) {
+                window.location.href = data.redirect;
+            } else {
+                throw new Error(data.error || 'Erreur de paiement');
+            }
+        } catch (error) {
+            document.getElementById('card-errors').textContent = error.message;
+            submitBtn.disabled = false;
+        }
+    });
 });
-});
-}
-});
-	</script>
-
+</script>
 {% endblock %}

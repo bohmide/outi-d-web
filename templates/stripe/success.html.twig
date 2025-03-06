@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Confirmation de paiement{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="alert alert-success text-center">
+        <h2 class="mb-3">✅ Paiement réussi !</h2>
+        <p>Merci pour votre commande <strong>#{{ payment.orderId }}</strong></p>
+        <p>Montant : {{ payment.amount|format_currency('USD') }}</p>
+        
+    </div>
+</div>
+{% endblock %}

@@ -17,6 +17,7 @@ class CartController extends AbstractController
         return $this->render('cart/index.html.twig', [
             'cart' => $cartService->getCart(),
             'total' => $cartService->getTotalPrice(),
+            'stripe_key' => $_ENV["STRIPE_KEY"]
         ]);
     }
 

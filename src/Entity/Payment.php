@@ -3,8 +3,10 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\PaymentRepository;
+use DateTimeImmutable;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: PaymentRepository::class)]
 class Payment
 {
     #[ORM\Id]
@@ -12,11 +14,11 @@ class Payment
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'string', unique: true)]
+    #[ORM\Column(type: 'string', length: 50, unique: true)]
     private string $orderId;
 
-    #[ORM\Column(type: 'string', unique: true)]
-    private string $token;
+    #[ORM\Column(type: 'string', length: 50, nullable: true, unique: true)]
+    private ?string $stripePaymentId = null;
 
     #[ORM\Column(type: 'float')]
     private float $amount;
@@ -25,12 +27,9 @@ class Payment
     private string $status = 'pending';
 
     #[ORM\Column(type: 'datetime_immutable')]
-    private \DateTimeImmutable $createdAt;
+    private DateTimeImmutable $createdAt;
 
-    public function __construct()
-    {
-        $this->createdAt = new \DateTimeImmutable();
-    }
+    // Getters et Setters
 
     public function getId(): ?int
     {
@@ -48,14 +47,14 @@ class Payment
         return $this;
     }
 
-    public function getToken(): string
+    public function getStripePaymentId(): ?string
     {
-        return $this->token;
+        return $this->stripePaymentId;
     }
 
-    public function setToken(string $token): self
+    public function setStripePaymentId(?string $stripePaymentId): self
     {
-        $this->token = $token;
+        $this->stripePaymentId = $stripePaymentId;
         return $this;
     }
 
@@ -81,8 +80,26 @@ class Payment
         return $this;
     }
 
-    public function getCreatedAt(): \DateTimeImmutable
+    public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
+    }
+
+    public function setCreatedAt(DateTimeImmutable $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
+
+    // Méthodes utilitaires
+
+    public function isSucceeded(): bool
+    {
+        return $this->status === 'succeeded';
+    }
+
+    public function getFormattedAmount(): string
+    {
+        return number_format($this->amount, 2, '.', ' ') . ' $';
     }
 }
