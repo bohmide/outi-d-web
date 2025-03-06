@@ -9,6 +9,8 @@ use App\Repository\EventGenreRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -18,8 +20,20 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
+
+
 final class EventsController extends AbstractController
 {
+
+    private RequestStack $requestStack;
+
+    public function __construct(RequestStack $requestStack)
+    {
+        $this->requestStack = $requestStack;
+    }
+
     #[Route('/events', name: 'app_events')]
     public function index(): Response
     {
@@ -28,47 +42,107 @@ final class EventsController extends AbstractController
         ]);
     }
 
-    // show front
     #[Route('/events/prof/showEvents', name: 'app_front_prof_show_events')]
-    public function showEventGenreF(EvenementsRepository $er): Response
+    public function showEvents(Request $request, EvenementsRepository $eventRepository, EventGenreRepository $genreRepository, EntityManagerInterface $entityManager)
     {
-        $events = $er->findAll();
+        // Récupération des filtres depuis la requête
+        $searchTerm = $request->query->get('search', '');
+        $genreId = $request->query->get('genre', '');
+        $minPrice = $request->query->get('min_price', null);
+        $maxPrice = $request->query->get('max_price', null);
 
+        // Récupérer tous les genres pour le filtre
+        $genres = $genreRepository->findAll();
+
+        // Construire la requête avec les filtres
+        $queryBuilder = $eventRepository->createQueryBuilder('e')
+            ->leftJoin('e.genre', 'g')
+            ->addSelect('g');
+
+        if (!empty($searchTerm)) {
+            $queryBuilder->andWhere('e.nom_event LIKE :search')
+                ->setParameter('search', '%' . $searchTerm . '%');
+        }
+
+        if (!empty($genreId)) {
+            $queryBuilder->andWhere('g.id = :genreId')
+                ->setParameter('genreId', $genreId);
+        }
+
+        if (!empty($minPrice)) {
+            $queryBuilder->andWhere('e.prix >= :minPrice')
+                ->setParameter('minPrice', $minPrice);
+        }
+
+        if (!empty($maxPrice)) {
+            $queryBuilder->andWhere('e.prix <= :maxPrice')
+                ->setParameter('maxPrice', $maxPrice);
+        }
+
+        // Exécuter la requête
+        $events = $queryBuilder->getQuery()->getResult();
+
+        // Retourner la vue avec les données
         return $this->render('events/front/showEvents.html.twig', [
             'events' => $events,
+            'genres' => $genres,
+            'searchTerm' => $searchTerm,
+            'minPrice' => $minPrice,
+            'maxPrice' => $maxPrice
         ]);
     }
-
 
     #[Route('/events/etudiant/showEvents', name: 'app_front_etudiant_show_events')]
     public function showEventF(EvenementsRepository $er, EventGenreRepository $egr, Request $request, PaginatorInterface $paginator): Response
     {
         $genreId = $request->query->get('genre');
-    
+        $searchTerm = $request->query->get('search');
+        $minPrice = $request->query->get('min_price');
+        $maxPrice = $request->query->get('max_price');
+
         $genres = $egr->findAll();
-    
+
         $queryBuilder = $er->createQueryBuilder('e')
-                           ->orderBy('e.id', 'ASC');
-        
+            ->orderBy('e.id', 'ASC');
+
         if ($genreId) {
             $queryBuilder->andWhere('e.genre = :genreId')
-                         ->setParameter('genreId', $genreId);
+                ->setParameter('genreId', $genreId);
         }
-    
+
+        if ($searchTerm) {
+            $queryBuilder->andWhere('e.nom_event LIKE :searchTerm OR e.description LIKE :searchTerm')
+                ->setParameter('searchTerm', '%' . $searchTerm . '%');
+        }
+
+        if ($minPrice) {
+            $queryBuilder->andWhere('e.prix >= :minPrice')
+                ->setParameter('minPrice', $minPrice);
+        }
+
+        if ($maxPrice) {
+            $queryBuilder->andWhere('e.prix <= :maxPrice')
+                ->setParameter('maxPrice', $maxPrice);
+        }
+
         $query = $queryBuilder->getQuery();
-    
+
         $events = $paginator->paginate(
-            $query, 
+            $query,
             $request->query->getInt('page', 1),
-            4 
+            4
         );
-    
+
         return $this->render('events/front/showEventsV2.html.twig', [
             'events' => $events,
             'genres' => $genres,
-        ]); 
+            'searchTerm' => $searchTerm,
+            'minPrice' => $minPrice,
+            'maxPrice' => $maxPrice
+        ]);
     }
-    
+
+
 
     // show back
     #[Route('/admin/events/prof/showEvents', name: 'app_back_show_events')]
@@ -301,5 +375,50 @@ final class EventsController extends AbstractController
 
 
         return $this->redirectToRoute('app_back_show_events');
+    }
+
+
+    #[Route('/event/delete/{id}', name: 'app_delete_event_ajax', methods: ['DELETE'])]
+    public function deleteEventAjax(Request $request, EntityManagerInterface $entityManager, Evenements $event): JsonResponse
+    {
+        if (!$request->isXmlHttpRequest()) {
+            return new JsonResponse(['success' => false, 'error' => 'Requête invalide'], 400);
+        }
+
+        try {
+            $entityManager->remove($event);
+            $entityManager->flush();
+
+            return new JsonResponse(['success' => true]);
+        } catch (\Exception $e) {
+            return new JsonResponse(['success' => false, 'error' => $e->getMessage()], 500);
+        }
+    }
+
+
+
+
+
+    #[Route('/qrcode/{id}', name: 'app_qrcode')]
+    public function generateQrCode($id, Evenements $event): Response
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        $baseUrl = $request->getSchemeAndHttpHost();
+
+        // Générer l'URL complète
+        $data = sprintf("%s/events/etudiant/details/%s", $baseUrl, $id);
+
+        // Créer une instance de QR code
+        $qrCode = new QrCode($data);
+
+        // Générer la sortie PNG
+        $writer = new PngWriter();
+        $result = $writer->write($qrCode);
+
+        return new Response(
+            $result->getString(),
+            Response::HTTP_OK,
+            ['Content-Type' => 'image/png']
+        );
     }
 }
