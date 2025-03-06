@@ -39,7 +39,7 @@
                             {% endif %}
 
                             <!-- Début du formulaire -->
-                            {{ form_start(form, { enctype: 'multipart/form-data' }) }}
+                            {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'enctype': 'multipart/form-data', 'class': 'form-horizontal'}}) }}
 
                             <div class="form-group">
                                 {{ form_label(form.nom, 'Nom du Forum') }}
