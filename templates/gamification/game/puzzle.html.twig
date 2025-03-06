@@ -4,7 +4,7 @@
 
 {% block body %}
 <div class="container text-center">
-    <h1 class="game-title">🧩 Assemble le Puzzle ! 🧩</h1>
+    <h4 class="display-3 text-primary mb-5">🧩 Assemble le Puzzle ! 🧩</h4>
     <p>Fais glisser les pièces pour compléter l'image.</p>
 
     <div id="puzzle-container">
@@ -23,6 +23,44 @@
 
     <p id="message"></p>
 </div>
+<!-- Modal de réussite -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-center">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="successModalLabel">Félicitations ! 🎉</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Bravo ! Tu as complété le puzzle !</p>
+                <img src="{{ asset('uploads/puzzleMain/' ~ finalImage )}}" class="img-fluid rounded shadow" alt="Final Image">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal d'erreur -->
+<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-center">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="errorModalLabel">Erreur</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><i class="bi bi-x-circle-fill"></i> Mauvais emplacement ! Essaie encore.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 <style>
     #puzzle-container, #solution-container {
@@ -48,54 +86,113 @@
         height: 100px; /* Ajuste selon tes besoins */
         border: 1px solid black;
     }
+    .error-message {
+        font-size: 1.5rem; /* Augmente la taille du texte */
+        font-weight: bold; /* Texte en gras */
+        color: #d9534f; /* Rouge vif */
+        background-color: #f8d7da; /* Fond rouge pâle */
+        padding: 10px 15px; /* Un peu d'espace autour du texte */
+        border-radius: 5px; /* Coins arrondis */
+        border: 2px solid #d9534f; /* Bordure rouge vif */
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Ombre autour du message */
+        margin-top: 10px;
+        display: inline-block; /* Pour ne pas prendre toute la largeur */
+        animation: shake 0.5s ease-in-out; /* Animation shake */
+    }
+    
+    .error-message i {
+        margin-right: 10px; /* Espace entre l'icône et le texte */
+        font-size: 1.3rem; /* Taille de l'icône */
+    }
+    
+    @keyframes shake {
+        0% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        50% { transform: translateX(10px); }
+        75% { transform: translateX(-10px); }
+        100% { transform: translateX(0); }
+    }
+    
 </style>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    let pieces = document.querySelectorAll(".puzzle-piece");
-    let slots = document.querySelectorAll(".puzzle-slot");
+    document.addEventListener("DOMContentLoaded", function() {
+        let pieces = document.querySelectorAll(".puzzle-piece");
+        let slots = document.querySelectorAll(".puzzle-slot");
+        let message = document.getElementById("message");
     
-    pieces.forEach(piece => {
-        piece.addEventListener("dragstart", function(event) {
-            event.dataTransfer.setData("text", event.target.id);
+        // Crée un tableau pour mémoriser la position initiale des pièces
+        let initialPositions = [];
+    
+        pieces.forEach(piece => {
+            // Mémorise le conteneur initial pour chaque pièce
+            initialPositions.push(piece.parentNode);
+    
+            piece.addEventListener("dragstart", function(event) {
+                event.dataTransfer.setData("text", event.target.id);
+            });
         });
-    });
-
-    slots.forEach(slot => {
-        slot.addEventListener("dragover", function(event) {
-            event.preventDefault();
-        });
-
-        slot.addEventListener("drop", function(event) {
-            event.preventDefault();
-            let pieceId = event.dataTransfer.getData("text");
-            let piece = document.getElementById(pieceId);
-            if (!event.target.hasChildNodes()) {
-                event.target.appendChild(piece);
-            }
-
-            checkWin();
-        });
-    });
-
-    function checkWin() {
-        let correct = true;
+    
         slots.forEach(slot => {
-            let placedPiece = slot.firstChild;
-            if (placedPiece) {
-                let correctSlotId = placedPiece.getAttribute("data-correct-slot");
+            slot.addEventListener("dragover", function(event) {
+                event.preventDefault();  // Permet de déposer la pièce dans le slot
+            });
+    
+            slot.addEventListener("drop", function(event) {
+                event.preventDefault();
+    
+                // Récupère l'ID de la pièce
+                let pieceId = event.dataTransfer.getData("text");
+                let piece = document.getElementById(pieceId);
+                let correctSlotId = piece.getAttribute("data-correct-slot");
+    
+                // Si la pièce n'est pas placée dans le bon slot
                 if (slot.id !== correctSlotId) {
+                    let errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+                    errorModal.show();
+    
+                    // Remettre la pièce à sa place initiale après un petit délai
+                    setTimeout(() => {
+                        let initialPosition = initialPositions[parseInt(piece.id.replace('piece', '')) - 1];
+                        initialPosition.appendChild(piece);  // Remet la pièce à sa place initiale
+                        piece.style.order = '';  // Réinitialise l'ordre de la pièce si nécessaire
+                    }, 1000);  // Attendre 1 seconde avant de remettre la pièce à sa place
+                } else {
+                    message.textContent = ''; // Effacer le message d'erreur
+    
+                    // Si la pièce est au bon endroit, on la place dans le slot
+                    slot.appendChild(piece);  // Place la pièce dans le slot
+                    checkWin();  // Vérifie si le puzzle est complet
+                }
+            });
+        });
+    
+        // Fonction qui vérifie si toutes les pièces sont correctement placées
+        function checkWin() {
+            let correct = true;
+            let slots = document.querySelectorAll(".puzzle-slot");
+    
+            slots.forEach(slot => {
+                let placedPiece = slot.firstChild;  // Vérifie la pièce placée dans le slot
+                if (placedPiece) {
+                    let correctSlotId = placedPiece.getAttribute("data-correct-slot");
+                    if (slot.id !== correctSlotId) {
+                        correct = false;
+                    }
+                } else {
                     correct = false;
                 }
-            } else {
-                correct = false;
+            });
+    
+            // Si toutes les pièces sont correctement placées, on montre le modal de succès
+            if (correct) {
+                let successModal = new bootstrap.Modal(document.getElementById('successModal'));
+                successModal.show();
             }
-        });
-
-        let message = document.getElementById("message");
-        message.innerText = correct ? "🎉 Bravo ! Puzzle complété !" : "❌ Ce n'est pas encore correct.";
-    }
-});
-</script>
+        }
+    });
+    </script>
+    
+    
 
 {% endblock %}

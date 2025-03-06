@@ -15,6 +15,20 @@ class PuzzleRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Puzzle::class);
     }
+    public function findBySearchQuery(string $searchQuery)
+    {
+        $qb = $this->createQueryBuilder('b');
+
+        // Si une requête de recherche existe, on applique le filtre
+        if ($searchQuery) {
+            $qb->andWhere('b.id LIKE :searchQuery')
+            
+            
+               ->setParameter('searchQuery', '%'.$searchQuery.'%');
+        }
+
+        return $qb->getQuery()->getResult(); // Exécution de la requête et récupération des résultats
+    }
 
 //    /**
 //     * @return Puzzle[] Returns an array of Puzzle objects

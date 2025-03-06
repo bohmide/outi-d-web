@@ -8,6 +8,11 @@
         <div class="col-12">
             <div class="bg-secondary rounded h-100 p-4">
                 <h6 class="mb-4">Puzzle Games Table</h6>
+                    <!-- Barre de recherche -->
+                <div class="d-flex justify-content-between mb-3">
+                    <input type="text" id="searchpuzz" class="form-control" placeholder="Rechercher un puzzle..." />
+                </div>
+                
                 <div class="table-responsive">
                     <table class="table">
                         <thead>
@@ -111,6 +116,31 @@
             popup.style.display = 'none';
         }, 300);  // Délai pour l'animation de fermeture
     }
+
+    jQuery(document).ready(function() {
+        jQuery('#searchpuzz').on('keydown', function (e) {
+            if (e.key === "Enter") {  // Vérifie si la touche pressée est "Enter"
+                var searchQuery = jQuery(this).val();
+        
+                // Effectuer la requête AJAX
+                jQuery.ajax({
+                    url: '{{ path('puzzle_search') }}',  // La route qui gère la recherche des badges
+                    type: 'GET',
+                    data: { search: searchQuery },  // Paramètre de recherche
+                    success: function(response) {
+                        // Remplacer le contenu du tableau avec les nouveaux résultats
+                        jQuery('tbody').html(jQuery(response).find('tbody').html());
+                        // Met à jour l'URL sans recharger la page
+                        history.pushState(null, '', '?search=' + searchQuery);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Erreur AJAX:', error);
+                    }
+                });
+            }
+        });
+    });
 </script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 {% endblock %}

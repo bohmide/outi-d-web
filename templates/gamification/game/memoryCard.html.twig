@@ -1,0 +1,164 @@
+{% extends 'base_kids.html.twig' %}
+
+{% block title %}Memory Card Game{% endblock %}
+
+{% block body %}
+<div class="container text-center">
+    <h4 class="display-3 text-primary mb-5">🧠 Memory Card Game 🧠</h4>
+    <p>Find the matching pairs! Flip two cards at a time.</p>
+    
+    <div id="game-board" class="game-board">
+        <!-- Cards will be dynamically added here -->
+    </div>
+
+    <p id="game-status" class="text-success"></p>
+    <!-- Zone pour afficher le message d'erreur -->
+    <p id="error-message" class="text-danger"></p> <!-- Message d'erreur ici -->
+</div>
+
+<!-- Modal de réussite -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-center">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="successModalLabel">Félicitations ! 🎉</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Bravo ! Tu as trouvé toutes les paires !</p>
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .game-board {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr); /* 4 cards per row */
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .card {
+        width: 100px;
+        height: 100px;
+        background-color: lightgray;
+        border: 2px solid black;
+        display: inline-block;
+        cursor: pointer;
+        position: relative;
+        font-size: 2rem;
+        text-align: center;
+        line-height: 100px;
+        transition: transform 0.3s;
+    }
+
+    .card img {
+        width: 100%;
+        height: 100%;
+        display: none;
+    }
+
+    .flipped {
+        background-color: white;
+        transform: rotateY(180deg);
+    }
+
+    .flipped img {
+        display: block;
+    }
+
+    #game-status {
+        margin-top: 20px;
+    }
+
+    #error-message {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: red;
+        margin-top: 20px;
+    }
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const cardsArray = [
+        'cat', 'cat', 'dog', 'dog', 'rabbit', 'rabbit', 'frog', 'frog',
+        'apple', 'apple', 'banana', 'banana', 'strawberry', 'strawberry', 'pineapple', 'pineapple'
+    ];
+
+    // Shuffle the cards
+    function shuffle(array) {
+        let shuffled = [...array];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+    }
+
+    const shuffledCards = shuffle(cardsArray);
+
+    const gameBoard = document.getElementById('game-board');
+    let flippedCards = [];
+    let matchedPairs = 0;
+
+    // Create card elements
+    shuffledCards.forEach((card, index) => {
+        const cardElement = document.createElement('div');
+        cardElement.classList.add('card');
+        cardElement.dataset.index = index;
+
+        const cardFace = document.createElement('img');
+        cardFace.src = `/uploads/memoryCards/${card}.png`; // Ensure the path is correct
+        cardElement.appendChild(cardFace);
+
+        cardElement.addEventListener('click', function() {
+            if (flippedCards.length < 2 && !cardElement.classList.contains('flipped')) {
+                cardElement.classList.add('flipped');
+                flippedCards.push(cardElement);
+
+                if (flippedCards.length === 2) {
+                    setTimeout(() => {
+                        checkMatch(flippedCards);
+                    }, 1000);
+                }
+            }
+        });
+
+        gameBoard.appendChild(cardElement);
+    });
+
+    // Check if two flipped cards match
+    function checkMatch(cards) {
+        const [card1, card2] = cards;
+        if (card1.querySelector('img').src === card2.querySelector('img').src) {
+            matchedPairs++;
+            document.getElementById('game-status').innerText = `${matchedPairs} Pairs Found!`;
+            if (matchedPairs === shuffledCards.length / 2) {
+                document.getElementById('game-status').innerText = 'You win! 🎉';
+                // Show success modal
+                let successModal = new bootstrap.Modal(document.getElementById('successModal'));
+                successModal.show();
+            }
+            // Clear the error message if the cards match
+            document.getElementById('error-message').textContent = '';
+        } else {
+            // Display the error message below the game board if the cards don't match
+            document.getElementById('error-message').textContent = "Les cartes ne correspondent pas ! Essaie encore.";
+            // Flip back the cards after a small delay
+            setTimeout(() => {
+                card1.classList.remove('flipped');
+                card2.classList.remove('flipped');
+            }, 1000);
+        }
+        flippedCards = [];
+    }
+});
+</script>
+
+{% endblock %}

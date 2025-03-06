@@ -42,6 +42,27 @@ class QuizKidsRepository extends ServiceEntityRepository
     
         return $qb->getQuery()->getResult();
     }
+    public function findBySearchQuery(string $searchQuery)
+    {
+        $qb = $this->createQueryBuilder('b');
+
+        // Si une requête de recherche existe, on applique le filtre
+        if ($searchQuery) {
+            $qb->andWhere('b.question LIKE :searchQuery')
+            ->orWhere('b.options LIKE :searchQuery')  // Filtrer par score requis
+            ->orWhere('b.correctAnswer LIKE :searchQuery')           // Filtrer par icône (si nécessaire)
+        
+            ->orWhere('b.level LIKE :searchQuery')  // Filtrer par score requis
+            ->orWhere('b.score LIKE :searchQuery')           // Filtrer par icône (si nécessaire)
+            ->orWhere('b.genre LIKE :searchQuery')  // Filtrer par score requis
+            ->orWhere('b.country LIKE :searchQuery')  // Filtrer par score requis
+            
+          
+               ->setParameter('searchQuery', '%'.$searchQuery.'%');
+        }
+
+        return $qb->getQuery()->getResult(); // Exécution de la requête et récupération des résultats
+    }
 
 
 //    /**

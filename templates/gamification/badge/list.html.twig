@@ -1,0 +1,95 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Liste des Badges{% endblock %}
+
+{% block body %}
+<div class="content container-fluid pt-4 px-4">
+    <div class="row g-4 mb-4">
+        <div class="col-12">
+            <div class="bg-secondary rounded h-100 p-4">
+                <h6 class="mb-4">Table des Badges</h6>
+                
+                <!-- Barre de recherche -->
+                <div class="d-flex justify-content-between mb-3">
+                    <input type="text" id="searchBadge" class="form-control" placeholder="Rechercher un badge..." />
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Nom du Badge</th>
+                                <th scope="col">Score Requis</th>
+                                <th scope="col">Icône</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for badge in badges %}
+                                <tr>
+                                    <td>{{ badge.id }}</td>
+                                    <td>{{ badge.name }}</td>
+                                    <td>{{ badge.requiredScore }}</td>
+                                    <td>
+                                        {% if badge.icon %}
+                                            <a href="javascript:void(0);" onclick="openMediaPopup('/uploads/badges/{{ badge.icon }}')" style="color: #1932d2;">
+                                                <img src="/uploads/badges/{{ badge.icon }}" alt="Badge Icon" style="width: 50px; height: 50px; border-radius: 5px;">
+                                            </a>
+                                        {% else %}
+                                            Aucun fichier
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{{ path('badge_update', { id: badge.id }) }}" class="btn btn-sm btn-primary mb-2">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="{{ path('badge_delete', { id: badge.id }) }}" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce badge ?');">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="5" class="text-center">Aucun badge trouvé.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <a href="{{ path('badge_add') }}" class="btn btn-success mt-3">Ajouter un Badge</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    jQuery(document).ready(function() {
+        jQuery('#searchBadge').on('keydown', function (e) {
+            if (e.key === "Enter") {  // Vérifie si la touche pressée est "Enter"
+                var searchQuery = jQuery(this).val();
+        
+                // Effectuer la requête AJAX
+                jQuery.ajax({
+                    url: '{{ path('badge_search') }}',  // La route qui gère la recherche des badges
+                    type: 'GET',
+                    data: { search: searchQuery },  // Paramètre de recherche
+                    success: function(response) {
+                        // Remplacer le contenu du tableau avec les nouveaux résultats
+                        jQuery('tbody').html(jQuery(response).find('tbody').html());
+                        // Met à jour l'URL sans recharger la page
+                        history.pushState(null, '', '?search=' + searchQuery);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Erreur AJAX:', error);
+                    }
+                });
+            }
+        });
+    });
+    
+    
+</script>
+
+{% endblock %}

@@ -14,6 +14,8 @@ parameters:
     stability_ai_api_key: 'sk-cgshkFfimHx5fGgriRsB6EFJihjV20CEV2yDHI996X8r9Hjp'
     upload_puzzlePieces: '%kernel.project_dir%/public/uploads/puzzlePieces'
     upload_puzzleMain: '%kernel.project_dir%/public/uploads/puzzleMain'
+    upload_iconBadge: '%kernel.project_dir%/public/uploads/badges'
+    memory_card_directory: '%kernel.project_dir%/public/uploads/memoryCards'
 
 services:
     App\Service\BadWordFilterService: ~
@@ -39,6 +41,8 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+
+          
     
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

@@ -21,6 +21,9 @@ class Games
     #[ORM\OneToMany(targetEntity: Puzzle::class, mappedBy: 'game')]
     private Collection $puzzles;
 
+    #[ORM\OneToMany(targetEntity: MemoryCard::class, mappedBy: 'game')]
+    private Collection $cards;
+
     public function __construct()
     {
         $this->puzzles = new ArrayCollection();
@@ -57,6 +60,29 @@ class Games
     public function removePuzzle(Puzzle $puzzle): static
     {
         if ($this->puzzles->removeElement($puzzle)) {
+            // set the owning side to null (unless already changed)
+            if ($puzzle->getGame() === $this) {
+                $puzzle->setGame(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+    public function addCard(MemoryCard $puzzle): static
+    {
+        if (!$this->cards->contains($puzzle)) {
+            $this->cards->add($puzzle);
+            $puzzle->setGame($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCard(MemoryCard $puzzle): static
+    {
+        if ($this->cards->removeElement($puzzle)) {
             // set the owning side to null (unless already changed)
             if ($puzzle->getGame() === $this) {
                 $puzzle->setGame(null);
