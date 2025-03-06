@@ -1,0 +1,77 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Ajouter un Puzzle{% endblock %}
+
+{% block body %}
+<div class="content container-fluid pt-4 px-4">
+    <div class="row g-4 mb-4">
+        <div class="col-sm-12 col-xl-6">
+            <div class="bg-secondary rounded h-100 p-4">
+                <h4 class="mb-4">Ajouter un Puzzle</h4>
+
+                {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'enctype': 'multipart/form-data'}}) }}
+                {{ form_label(form.finalImage, 'Image complète du Puzzle') }}
+                <div class="form-floating mb-3">
+                    {{ form_widget(form.finalImage, { 'attr': {'class': 'form-label mb-4 form-control bg-dark', 'type':'file'} }) }}
+                    
+                </div>
+
+                <div id="pieces-container">
+                    {% for piece in form.pieces %}
+                        <div class="piece-item d-flex align-items-center mb-2">
+                            {{ form_widget(piece, { 'attr': {'class': 'form-control bg-dark', 'type': 'file'} }) }}
+                            <button type="button" class="btn btn-danger btn-sm ms-2 remove-piece">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <button type="button" id="add-piece" class="btn btn-primary btn-sm mb-3">
+                    <i class="fas fa-plus"></i> Ajouter une pièce
+                </button>
+
+                <script>
+                    document.addEventListener("DOMContentLoaded", function () {
+                        let container = document.getElementById("pieces-container");
+                        let addButton = document.getElementById("add-piece");
+                        let index = container.children.length;
+                
+                        addButton.addEventListener("click", function () {
+                            let newPiece = document.createElement("div");
+                            newPiece.classList.add("piece-item", "d-flex", "align-items-center", "mb-2");
+
+                            // Manually create the input field (not using form_widget)
+                            newPiece.innerHTML = `
+                                <input type="file" name="puzzle[pieces][]" class="form-control bg-dark">
+                                <button type="button" class="btn btn-danger btn-sm ms-2 remove-piece">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            `;
+                
+                            container.appendChild(newPiece);
+                        });
+
+                        container.addEventListener("click", function (e) {
+                            if (e.target.closest(".remove-piece")) {
+                                e.target.closest(".piece-item").remove();
+                            }
+                        });
+                    });
+                </script>
+
+                <!-- Ajouter un champ de sélection de jeux -->
+                <div class="form-floating mb-3">
+                    {{ form_widget(form.game, { 'attr': {'class': 'form-control bg-dark'} }) }}
+                    {{ form_label(form.game, 'Sélectionner un jeu') }}
+                </div>
+
+                <br><button type="submit" class="btn btn-primary">Enregistrer</button></br>
+
+                {{ form_end(form) }}
+                
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

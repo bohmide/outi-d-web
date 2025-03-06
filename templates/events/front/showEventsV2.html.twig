@@ -3,34 +3,83 @@
 {% block title %}Gestion des Événements -
 {% endblock %}
 
-
 {% block body %}
-	<body>
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&family=Roboto:wght@300&display=swap" rel="stylesheet">
-		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"/>
+<body>
+
+	<div class="cardEvent-container">
+		<form method="get" action="{{ path('app_front_etudiant_show_events') }}" class="row g-3 align-items-center">
+			<div class="col-md-4">
+				<input type="text" name="search" class="form-control form-control-lg" placeholder="🔍 Search events..." value="{{ searchTerm }}">
+			</div>
+
+			<div class="col-md-3">
+				<select name="genre" class="form-select form-select-lg">
+					<option value="">🎭 Select Genre</option>
+					{% for genre in genres %}
+						<option value="{{ genre.id }}" {% if genre.id == app.request.query.get('genre') %} selected {% endif %}>
+							{{ genre.getNomGenre() }}
+						</option>
+					{% endfor %}
+				</select>
+			</div>
+
+			<div class="col-md-2">
+				<input type="number" name="min_price" class="form-control form-control-lg" placeholder="💰 Min Price" value="{{ minPrice }}">
+			</div>
+
+			<div class="col-md-2">
+				<input type="number" name="max_price" class="form-control form-control-lg" placeholder="💰 Max Price" value="{{ maxPrice }}">
+			</div>
+
+			<div class="col-md-1 text-center">
+				<button type="submit" class="btn btn-outline-dark btn-lg w-100" style="padding: 0.6rem; display: flex; align-items: center; justify-content: center;">
+					<i class="fas fa-search"></i>
+				</button>
+			</div>
+		</form>
+	</div>
+
+
+	{% if events is empty %}
 		<main>
-			<div class="card-container">
+
+			<p>vide</p>
+		</main>
+
+	{% else %}
+		<main>
+			<div
+				class="cardEvent-container">
+				<!-- Updated to match CSS -->
 				{% for event in events %}
-					<div class="card">
+					<div
+						class="cardEvent">
+						<!-- Updated to match CSS -->
 						{% if event.getImagePath() %}
-							<img src="{{ asset('uploads/events_images/' ~ event.imagePath) }}" alt="Event Image" height="50">
+							<img src="{{ asset('uploads/events_images/' ~ event.imagePath) }}" alt="Event Image">
 						{% else %}
-							Aucune image
+							<img src="{{ asset('img/event/eventDefaultPic.jpg') }}" alt="Event Image">
+
 						{% endif %}
 						<div class="card-content">
 							<h2>{{ event.getNomEvent() }}</h2>
 							<p>{{ event.getDescription() }}</p>
-							<a href="{{path('app_show_details_events', {'id': event.getId()})}}" class="button">
+							<a href="{{ path('app_show_details_events', {'id': event.getId()}) }}" class="button">
 								Find out more
 								<span class="material-symbols-outlined">arrow_right_alt</span>
 							</a>
 						</div>
 					</div>
 				{% endfor %}
-			</main>
-		</body>
+			</div>
+			<br>
+			<div class="pagination">
+				{{ knp_pagination_render(events) }}
+			</div>
+		</main>
+	{% endif %}
 
 </body>
+
+	
 	{% endblock %}

@@ -145,24 +145,24 @@
                         {{ form_start(forms2, {'attr': {'novalidate':'novalidate'}}) }}
 						<form>
 							<div class="form-group">
-								{{ form_label(forms2.fn,"Student's First Name :" ) }}
-								{{ form_widget(forms2.fn, {'attr': {'class': 'form-control'}}) }}
-								{{form_errors(forms2.fn)}}
+								{{ form_label(forms2.firstName,"Student's First Name :" ) }}
+								{{ form_widget(forms2.firstName, {'attr': {'class': 'form-control'}}) }}
+								{{form_errors(forms2.firstName)}}
 							</div>
 							<div class="form-group">
-								{{ form_label(forms2.ln,"Student's Last Name :") }}
-								{{ form_widget(forms2.ln, {'attr': {'class': 'form-control'}}) }}
-								{{form_errors(forms2.ln)}}
+								{{ form_label(forms2.lastName,"Student's Last Name :") }}
+								{{ form_widget(forms2.lastName, {'attr': {'class': 'form-control'}}) }}
+								{{form_errors(forms2.lastName)}}
 							</div>
 							<div class="form-group">
-								{{ form_label(forms2.pw,"Password :") }}
-								{{ form_widget(forms2.pw, {'attr': {'class': 'form-control'}}) }}
-								{{form_errors(forms2.pw)}}
+								{{ form_label(forms2.password,"Password :") }}
+								{{ form_widget(forms2.password, {'attr': {'class': 'form-control'}}) }}
+								{{form_errors(forms2.password)}}
 							</div>
 							<div class="form-group">
-								{{ form_label(forms2.pv,"Password verfication:") }}
-								{{ form_widget(forms2.pv, {'attr': {'class': 'form-control'}}) }}
-								{{form_errors(forms2.pv)}}
+								{{ form_label(forms2.password_verif,"Password verfication:") }}
+								{{ form_widget(forms2.password_verif, {'attr': {'class': 'form-control'}}) }}
+								{{form_errors(forms2.password_verif)}}
 							</div>
 							<div class="form-group">
 								{{ form_label(forms2.email,"Email adress :") }}
@@ -179,11 +179,7 @@
 								{{ form_widget(forms2.sexe, {'attr': {'class': 'form-check'}}) }}
 								{{form_errors(forms2.sexe)}}
 							</div>
-							<div class="form-group">
-								{{ form_label(forms2.ld,"Do you have any learning difficulties ?") }}
-								{{ form_widget(forms2.ld, {'attr': {'class': 'form-check'}}) }}
-								{{form_errors(forms2.ld)}}
-							</div>
+							
 							<button type="submit">Sign Up</button>
 						</form>
 						{{ form_end(forms2) }}

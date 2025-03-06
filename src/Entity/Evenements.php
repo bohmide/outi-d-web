@@ -19,14 +19,14 @@ class Evenements
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Assert\NotBlank(message:"nom is require")]
+    #[Assert\NotBlank(message: "nom is require")]
     #[ORM\Column(length: 255)]
     private ?string $nom_event = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
 
-    #[Assert\NotBlank(message:"date is require")]
+    #[Assert\NotBlank(message: "date is require")]
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $date_event = null;
 
@@ -36,9 +36,9 @@ class Evenements
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image_path = null;
 
-    #[Assert\NotBlank(message:"genre is require")]
+    #[Assert\NotBlank(message: "genre is require")]
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false,onDelete: "CASCADE")]
+    #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
     private ?EventGenre $genre = null;
 
     /**
@@ -47,9 +47,17 @@ class Evenements
     #[ORM\ManyToMany(targetEntity: Sponsors::class, inversedBy: 'evenements')]
     private Collection $sponsors;
 
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTimeInterface $dateCreation = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
+    private ?float $prix = null;
+
+
     public function __construct()
     {
         $this->sponsors = new ArrayCollection();
+        $this->dateCreation = new \DateTime();
     }
 
     public function getId(): ?int
@@ -152,4 +160,29 @@ class Evenements
 
         return $this;
     }
+
+    public function getDateCreation(): ?\DateTimeInterface
+    {
+        return $this->dateCreation;
+    }
+
+    public function setDateCreation(\DateTimeInterface $dateCreation): static
+    {
+        $this->dateCreation = $dateCreation;
+
+        return $this;
+    }
+
+    public function getPrix(): ?float
+    {
+        return $this->prix;
+    }
+
+    public function setPrix(?float $prix): static
+    {
+        $this->prix = $prix;
+
+        return $this;
+    }
+
 }

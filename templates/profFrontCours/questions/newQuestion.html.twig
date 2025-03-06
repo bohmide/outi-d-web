@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter une Question{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <h1 class="text-center mb-4">Ajouter une Question</h1>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'form-horizontal'}}) }}
+
+    <!-- Champ Question -->
+    <div class="form-group mb-3">
+        {{ form_label(form.question, 'Question', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.question, {'attr': {'class': 'form-control' ~ (form.question.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+        {{ form_errors(form.question) }}
+    </div>
+
+    <!-- Champ Type -->
+    <div class="form-group mb-3">
+        {{ form_label(form.type, 'Type de Question', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.type, {'attr': {'class': 'form-control' ~ (form.type.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+        {{ form_errors(form.type) }}
+    </div>
+
+    {{ form_end(form) }}
+</div>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %} List of Games {% endblock %}
+
+{% block body %}
+<div class="content container-fluid pt-4 px-4">
+    <div class="row g-4 mb-4">
+        <div class="col-12">
+            <div class="bg-secondary rounded h-100 p-4">
+                <h6 class="mb-4">Games Table</h6>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Nom du jeu</th>
+                                
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for game in games %}
+                                <tr>
+                                    <td>{{ game.id }}</td>
+                                    <td>{{ game.name }}</td>
+                                    
+                                    <td>
+                                        <a href="{{ path('game_update', { id: game.id }) }}" class="btn btn-sm btn-primary mb-2">
+                                            <i class="fas fa-edit"></i> <!-- Icône de modification -->
+                                        </a>
+                                        <a href="{{ path('game_delete', { id: game.id }) }}" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce jeu ?');">
+                                            <i class="fas fa-trash-alt"></i> <!-- Icône de suppression -->
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="4" class="text-center">Aucun jeu ajouté pour le moment.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <a href="{{ path('game_create') }}" class="btn btn-success mt-3">Ajouter un Jeu</a>
+            </div>
+        </div>
+    </div>
+</div>        
+{% endblock %}

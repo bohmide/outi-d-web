@@ -16,6 +16,8 @@
         "h4cc/wkhtmltopdf-amd64": "^0.12.4",
         "h4cc/wkhtmltopdf-i386": "^0.12.4",
         "knplabs/knp-paginator-bundle": "^6.6",
+        "nelmio/cors-bundle": "^2.5",
+        "stripe/stripe-php": "^16.6",
         "symfony/asset": "6.4.*",
         "symfony/asset-mapper": "6.4.*",
         "symfony/console": "6.4.*",
@@ -24,14 +26,16 @@
         "symfony/form": "6.4.*",
         "symfony/framework-bundle": "6.4.*",
         "symfony/mime": "6.4.*",
+        "symfony/password-hasher": "6.4.*",
         "symfony/runtime": "6.4.*",
         "symfony/twig-bundle": "6.4.*",
         "symfony/validator": "6.4.*",
         "symfony/yaml": "6.4.*",
         "twig/extra-bundle": "^2.12|^3.0",
+        "twig/intl-extra": "^3.20",
         "twig/twig": "^3.19",
         "twilio/sdk": "^8.3",
-        "vich/uploader-bundle": "^2.5"
+        "vich/uploader-bundle": "*"
     },
     "require-dev": {
         "symfony/mailer": "6.4.*",

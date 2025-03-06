@@ -15,6 +15,15 @@ class CompetitionRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Competition::class);
     }
+    public function searchCompetitions(string $query): array
+{
+    return $this->createQueryBuilder('c')
+        ->where('LOWER(c.nom_comp) LIKE LOWER(:query)')
+        ->orWhere('LOWER(c.nom_entreprise) LIKE LOWER(:query)')
+        ->setParameter('query', '%' . strtolower($query) . '%')
+        ->getQuery()
+        ->getResult();
+}
 
     //    /**
     //     * @return Competition[] Returns an array of Competition objects

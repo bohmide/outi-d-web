@@ -7,6 +7,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Form\QuestionType;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+
 
 
 #[ORM\Entity(repositoryClass: QuestionRepository::class)]
@@ -22,8 +25,9 @@ class Question
     #[Assert\Length(min: 5, minMessage: "La question doit comporter au moins {{ limit }} caractères.")]
     private ?string $question = null;
  
-    #[Assert\NotBlank(message: "Le type ne peut pas être vide.")]
-    #[ORM\Column(length: 100, nullable: true)]
+    #[ORM\Column(length: 20)]
+    #[Assert\NotBlank(message: "Le type de question est obligatoire.")]
+    #[Assert\Choice(choices: ['choix_unique', 'choix_multiple'], message: "Le type doit être 'choix_unique' ou 'choix_multiple'.")]
     private ?string $type = null;
 
     #[ORM\ManyToOne(inversedBy: 'questions', cascade: ['persist', 'remove'])]
@@ -111,4 +115,23 @@ class Question
 
         return $this;
     }
+    
+    #[Assert\Callback]
+    public function validateCorrectAnswers(ExecutionContextInterface $context)
+    {
+        $correctAnswers = $this->$this->getReponses()->filter(fn(Reponse $reponse) => $reponse->isCorrect());
+    
+        if ($this->type === 'choix_unique' && count($correctAnswers) > 1) {
+            $context->buildViolation('Une seule réponse correcte est autorisée pour un choix unique.')
+                ->atPath('reponses')
+                ->addViolation();
+        }
+    
+        if ($this->type === 'choix_multiple' && count($correctAnswers) < 1) {
+            $context->buildViolation('Au moins une bonne réponse est requise pour un choix multiple.')
+                ->atPath('reponses')
+                ->addViolation();
+        }
+    }    
+
 }

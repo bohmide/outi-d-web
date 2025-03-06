@@ -147,29 +147,29 @@
 						) }}
 						<form>
 							<div class="form-group">
-								{{ form_label(formp2.fnpr,"Prof's First Name :") }}
-								{{ form_widget(formp2.fnpr, {'attr': {'class': 'form-control', 'placeholder': 'Enter you first name'}}) }}
-								{{form_errors(formp2.fnpr)}}
+								{{ form_label(formp2.firstName,"Prof's First Name :") }}
+								{{ form_widget(formp2.firstName, {'attr': {'class': 'form-control', 'placeholder': 'Enter you first name'}}) }}
+								{{form_errors(formp2.firstName)}}
 							</div>
 							<div class="form-group">
-								{{ form_label(formp2.lnpr,"Prof's Last Name :") }}
-								{{ form_widget(formp2.lnpr, {'attr': {'class': 'form-control', 'placeholder': 'Enter your last name'}}) }}
-								{{form_errors(formp2.lnpr)}}
+								{{ form_label(formp2.lastName,"Prof's Last Name :") }}
+								{{ form_widget(formp2.lastName, {'attr': {'class': 'form-control', 'placeholder': 'Enter your last name'}}) }}
+								{{form_errors(formp2.lastName)}}
 							</div>
 							<div class="form-group">
-								{{ form_label(formp2.pwpr,"Password :") }}
-								{{ form_widget(formp2.pwpr, {'attr': {'class': 'form-control', 'placeholder': 'Enter your password'}}) }}
-								{{form_errors(formp2.pwpr)}}
+								{{ form_label(formp2.password,"Password :") }}
+								{{ form_widget(formp2.password, {'attr': {'class': 'form-control', 'placeholder': 'Enter your password'}}) }}
+								{{form_errors(formp2.password)}}
 							</div>
 							<div class="form-group">
-								{{ form_label(formp2.pvpr,"Password verfication :") }}
-								{{ form_widget(formp2.pvpr, {'attr': {'class': 'form-control', 'placeholder': 'Confirm your password'}}) }}
-								{{form_errors(formp2.pvpr)}}
+								{{ form_label(formp2.password_verif,"Password verfication :") }}
+								{{ form_widget(formp2.password_verif, {'attr': {'class': 'form-control', 'placeholder': 'Confirm your password'}}) }}
+								{{form_errors(formp2.password_verif)}}
 							</div>
 							<div class="form-group">
-								{{ form_label(formp2.emailpr,"Email adress :") }}
-								{{ form_widget(formp2.emailpr, {'attr': {'class': 'form-control', 'placeholder': 'Enter your email'}}) }}
-								{{form_errors(formp2.emailpr)}}
+								{{ form_label(formp2.email,"Email adress :") }}
+								{{ form_widget(formp2.email, {'attr': {'class': 'form-control', 'placeholder': 'Enter your email'}}) }}
+								{{form_errors(formp2.email)}}
 							</div>
 							<div class="form-group">
 								{{ form_label(formp2.interdate,"date of interview :") }}
@@ -186,7 +186,7 @@
 									{% endfor %}
 								</div>
 							</div>
-							<button type="submit">Sign Up</button>
+							<button type="submit">edit</button>
 						</form>
 						{{ form_end(formp2) }}
 					</div>

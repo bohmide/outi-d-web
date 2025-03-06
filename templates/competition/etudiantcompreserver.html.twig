@@ -1,0 +1,50 @@
+{% extends "base.html.twig" %}
+
+{% block title %} Réservation - {{ competition.nomComp }} {% endblock %}
+
+{% block body %}
+<div class="reservation-body">
+    <div class="reservation-container">
+        <h1 class="reservation-title">Réservation pour {{ competition.nomComp }}</h1>
+        
+        <form class="reservation-form">
+            <div class="mb-3">
+                <label class="form-label">Nom de la compétition</label>
+                <input type="text" class="form-control" value="{{ competition.nomComp }}" readonly>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Nom de l'équipe</label>
+                <input type="text" class="form-control" placeholder="Entrez le nom de l'équipe">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Nom de l'ambassadeur</label>
+                <input type="text" class="form-control" placeholder="Entrez votre nom">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Membres de l'équipe (E-mails)</label>
+                <div id="membres-container">
+                    <input type="email" class="form-control mb-2" placeholder="E-mail du membre">
+                </div>
+                <button type="button" class="btn btn-secondary" onclick="ajouterMembre()">Ajouter un membre</button>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Envoyer la demande</button>
+        </form>
+    </div>
+</div>
+
+<script>
+function ajouterMembre() {
+    const container = document.getElementById("membres-container");
+    const input = document.createElement("input");
+    input.type = "email";
+    input.className = "form-control mb-2";
+    input.placeholder = "E-mail du membre";
+    container.appendChild(input);
+}
+</script>
+
+{% endblock %}

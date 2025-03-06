@@ -1,0 +1,165 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container my-5">
+    
+    
+    <h1 class="mb-4 text-center">Mon Panier</h1>
+    
+    {% if cart is empty %}
+    {% if app.flashes('success') %}
+    <div class="alert alert-success text-center" role="alert">
+        {% for message in app.flashes('success') %}
+        <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% elseif app.flashes('error') %}
+    <div class="alert alert-danger text-center" role="alert">
+        {% for message in app.flashes('error') %}
+        <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-warning text-center" role="alert">
+        Votre panier est vide.
+    </div>
+    {% endif %}
+
+    {% else %}
+    <div class="table-responsive">
+        <table class="table table-bordered text-center align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Produit</th>
+                    <th>Prix unitaire</th>
+                    <th>Quantité</th>
+                    <th>Sous-total</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for key, item in cart %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.price|format_currency('USD') }}</td>
+                    <td>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <a href="{{ path('cart_decrease', {'key': key}) }}"
+                                class="btn btn-sm btn-outline-secondary">-</a>
+                            <span class="mx-2">{{ item.quantity }}</span>
+                            <a href="{{ path('cart_add', {'id': item.id}) }}"
+                                class="btn btn-sm btn-outline-secondary">+</a>
+                        </div>
+                    </td>
+                    <td>{{ (item.price * item.quantity)|format_currency('USD') }}</td>
+                    <td>
+                        <a href="{{ path('cart_remove', {'key': key}) }}" class="btn btn-sm btn-danger">❌</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr class="table-info">
+                    <td colspan="3" class="text-end">
+                        <strong>Total :</strong>
+                    </td>
+                    <td colspan="2">
+                        <strong>{{ total|format_currency('USD') }}</strong>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <div class="text-center mt-4">
+            <a href="{{ path('cart_clear') }}" class="btn btn-danger">Vider le panier</a>
+            <a href="{{ path('payment_checkout') }}" class="btn btn-success">Passer au paiement</a>
+            {# <a href="{{ path('app_stripe_history') }}" class="btn btn-info mt-3">Voir l'historique des paiements</a> #}
+    
+</div>
+    {% endif %}
+    <div class="text-center mb-4">
+        <a href="{{ path('app_stripe_history') }}" class="btn btn-primary btn-lg rounded-pill shadow-lg px-4 py-2 d-inline-flex align-items-center transition-all hover-effect">
+            <i class="fas fa-history mr-2"></i> Voir l'historique des paiements
+        </a>
+    </div>
+</div>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const stripe = Stripe('{{ stripe_key }}');
+    const elements = stripe.elements();
+    
+    // Style personnalisé pour la carte
+    const card = elements.create('card', {
+        style: {
+            base: {
+                fontSize: '16px',
+                color: '#32325d',
+                '::placeholder': {
+                    color: '#aab7c4'
+                }
+            },
+            invalid: {
+                color: '#fa755a'
+            }
+        }
+    });
+
+    // Montage de l'élément de carte
+    card.mount('#card-element');
+
+    // Gestion des erreurs en temps réel
+    card.on('change', (event) => {
+        const displayError = document.getElementById('card-errors');
+        displayError.textContent = event.error ? event.error.message : '';
+    });
+
+    // Soumission du formulaire
+    const form = document.getElementById('payment-form');
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const submitBtn = document.getElementById('submit-btn');
+        submitBtn.disabled = true;
+
+        // Création du PaymentMethod
+        const { paymentMethod, error } = await stripe.createPaymentMethod({
+            type: 'card',
+            card: card
+        });
+
+        if (error) {
+            document.getElementById('card-errors').textContent = error.message;
+            submitBtn.disabled = false;
+            return;
+        }
+
+        // Envoi au serveur
+        try {
+            const response = await fetch("{{ path('payment_create_charge') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    paymentMethodId: paymentMethod.id,
+                    amount: {{ total * 100 }}
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                window.location.href = data.redirect;
+            } else {
+                throw new Error(data.error || 'Erreur de paiement');
+            }
+        } catch (error) {
+            document.getElementById('card-errors').textContent = error.message;
+            submitBtn.disabled = false;
+        }
+    });
+});
+</script>
+{% endblock %}
