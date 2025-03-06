@@ -47,6 +47,8 @@ class StripeController extends AbstractController
         ]);
     }
 
+    // src/Controller/StripeController.php
+
     #[Route('/payment/create-charge', name: 'payment_create_charge', methods: ['POST'])]
     public function createCharge(
         Request $request,
@@ -61,7 +63,7 @@ class StripeController extends AbstractController
         try {
             // 1. Validation des données
             $data = json_decode($request->getContent(), true);
-            
+
             if (json_last_error() !== JSON_ERROR_NONE) {
                 throw new \RuntimeException('Requête JSON invalide');
             }
@@ -78,7 +80,7 @@ class StripeController extends AbstractController
 
             // 3. Création du PaymentIntent
             $paymentIntent = PaymentIntent::create([
-                'amount' => (int)($amount * 100),
+                'amount' => (int) ($amount * 100),
                 'currency' => 'usd',
                 'automatic_payment_methods' => [
                     'enabled' => true,
@@ -115,7 +117,7 @@ class StripeController extends AbstractController
             $payment
                 ->setOrderId('PAY-' . uniqid())
                 ->setAmount($amount)
-                ->setStatus($confirmedIntent->status)
+                ->setStatus($confirmedIntent->status) // Enregistrement du statut du paiement
                 ->setStripePaymentId($confirmedIntent->id)
                 ->setCreatedAt(new \DateTimeImmutable());
 
@@ -149,7 +151,7 @@ class StripeController extends AbstractController
             ]);
 
             $response['error'] = $e->getMessage();
-            
+
             if ($em->isOpen()) {
                 $em->clear();
             }

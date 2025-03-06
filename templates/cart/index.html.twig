@@ -2,8 +2,10 @@
 
 {% block body %}
 <div class="container my-5">
+    
+    
     <h1 class="mb-4 text-center">Mon Panier</h1>
-
+    
     {% if cart is empty %}
     {% if app.flashes('success') %}
     <div class="alert alert-success text-center" role="alert">
@@ -72,9 +74,15 @@
     <div class="text-center mt-4">
             <a href="{{ path('cart_clear') }}" class="btn btn-danger">Vider le panier</a>
             <a href="{{ path('payment_checkout') }}" class="btn btn-success">Passer au paiement</a>
+            {# <a href="{{ path('app_stripe_history') }}" class="btn btn-info mt-3">Voir l'historique des paiements</a> #}
     
 </div>
     {% endif %}
+    <div class="text-center mb-4">
+        <a href="{{ path('app_stripe_history') }}" class="btn btn-primary btn-lg rounded-pill shadow-lg px-4 py-2 d-inline-flex align-items-center transition-all hover-effect">
+            <i class="fas fa-history mr-2"></i> Voir l'historique des paiements
+        </a>
+    </div>
 </div>
 
 <script src="https://js.stripe.com/v3/"></script>
