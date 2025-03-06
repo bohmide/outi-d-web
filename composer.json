@@ -12,6 +12,9 @@
         "doctrine/doctrine-migrations-bundle": "^3.4",
         "doctrine/orm": "^3.3",
         "endroid/qr-code": "^6.0",
+        "endroid/qr-code-bundle": "^6.0",
+        "h4cc/wkhtmltopdf-amd64": "^0.12.4",
+        "h4cc/wkhtmltopdf-i386": "^0.12.4",
         "knplabs/knp-paginator-bundle": "^6.6",
         "nelmio/cors-bundle": "^2.5",
         "stripe/stripe-php": "^16.6",
@@ -31,6 +34,7 @@
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/intl-extra": "^3.20",
         "twig/twig": "^3.19",
+        "twilio/sdk": "^8.3",
         "vich/uploader-bundle": "*"
     },
     "require-dev": {
@@ -42,6 +46,7 @@
     },
     "config": {
         "allow-plugins": {
+            "endroid/installer": true,
             "php-http/discovery": true,
             "symfony/flex": true,
             "symfony/runtime": true

@@ -3,51 +3,154 @@
 {% block title %}Créer un Forum - {% endblock %}
 
 {% block body %}
-<div class="container my-5">
-    <h1 class="text-center mb-4">Créer un Forum</h1>
-
-    <!-- Affichage des messages de succès -->
-    {% for message in app.flashes('success') %}
-        <div class="alert alert-success text-center">{{ message }}</div>
-    {% endfor %}
-
-    <!-- Gestion des erreurs générales du formulaire -->
-    {% if form.vars.errors|length > 0 %}
-        <div class="alert alert-danger">
-            {{ form_errors(form) }}
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Créer un Forum</h1>
+                </div>
+            </div>
         </div>
-    {% endif %}
-
-    <!-- Début du formulaire -->
-    {{ form_start(form, { enctype: 'multipart/form-data', attr: { class: 'needs-validation', novalidate: 'novalidate' } }) }}
-
-    <div class="mb-3">
-        {{ form_label(form.nom, 'Nom du Forum', {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(form.nom, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le nom du forum'}}) }}
-        {{ form_errors(form.nom) }}
     </div>
 
-    <div class="mb-3">
-        {{ form_label(form.theme, 'Thème du Forum', {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(form.theme, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le thème du forum'}}) }}
-        {{ form_errors(form.theme) }}
-    </div>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card card-dark">
+                        <div class="card-header">
+                            <h3 class="card-title">Formulaire de création</h3>
+                        </div>
+                        <div class="card-body">
+                            <!-- Affichage des messages de succès -->
+                            {% for message in app.flashes('success') %}
+                                <div class="alert alert-success alert-dismissible">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
 
-    <div class="mb-3">
-        {{ form_label(form.image_forum, 'Image du Forum', {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(form.image_forum, {'attr': {'class': 'form-control'}}) }}
-        {{ form_errors(form.image_forum) }}
-    </div>
+                            <!-- Gestion des erreurs générales du formulaire -->
+                            {% if form.vars.errors|length > 0 %}
+                                <div class="alert alert-danger">
+                                    {{ form_errors(form) }}
+                                </div>
+                            {% endif %}
 
-    <div class="text-center">
-        {# Vérifiez si `form.save` existe dans ForumType, sinon utilisez un bouton classique #}
-        {% if form.save is defined %}
-            {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}}) }}
-        {% else %}
-            <button type="submit" class="btn btn-primary">Créer le Forum</button>
-        {% endif %}
-    </div>
+                            <!-- Début du formulaire -->
+                            {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'enctype': 'multipart/form-data', 'class': 'form-horizontal'}}) }}
 
-    {{ form_end(form) }}
+                            <div class="form-group">
+                                {{ form_label(form.nom, 'Nom du Forum') }}
+                                {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.nom) }}
+                            </div>
+
+                            <div class="form-group">
+                                {{ form_label(form.theme, 'Thème du Forum') }}
+                                {{ form_widget(form.theme, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.theme) }}
+                            </div>
+
+                            <div class="card card-dark mb-3">
+                                <div class="card-header">
+                                    <h4 class="card-title">Image du Forum</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        {{ form_label(form.image_forum, 'Télécharger une image') }}
+                                        {{ form_widget(form.image_forum, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form.image_forum) }}
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Ou générer une image avec IA</label>
+                                        <div class="input-group">
+                                            <input type="text" id="image_prompt" class="form-control" placeholder="Décrivez l'image que vous souhaitez générer...">
+                                            <div class="input-group-append">
+                                                <button type="button" id="generate_image" class="btn btn-primary">Générer</button>
+                                            </div>
+                                        </div>
+                                        <div id="generated_image_preview" class="mt-3" style="display: none;">
+                                            <img id="preview_image" src="" alt="Image générée" class="img-fluid" style="max-height: 200px;">
+                                            <button type="button" id="use_generated_image" class="btn btn-success mt-2">Utiliser cette image</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}}) }}
+                            </div>
+
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </div>
+
+{% block javascripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const generateButton = document.getElementById('generate_image');
+    const promptInput = document.getElementById('image_prompt');
+    const previewContainer = document.getElementById('generated_image_preview');
+    const previewImage = document.getElementById('preview_image');
+    const useGeneratedButton = document.getElementById('use_generated_image');
+    const imageForumInput = document.getElementById('forum_image_forum');
+
+    generateButton.addEventListener('click', async function() {
+        const prompt = promptInput.value.trim();
+        if (!prompt) {
+            alert('Veuillez entrer une description pour l\'image');
+            return;
+        }
+
+        generateButton.disabled = true;
+        generateButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Génération...';
+
+        try {
+            const response = await fetch('{{ path('app_back_generate_image') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ prompt: prompt })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                previewImage.src = data.imageUrl;
+                previewContainer.style.display = 'block';
+                useGeneratedButton.onclick = function() {
+                    // Create a File object from the generated image
+                    fetch(data.imageUrl)
+                        .then(res => res.blob())
+                        .then(blob => {
+                            const file = new File([blob], data.filename, { type: 'image/png' });
+                            const dataTransfer = new DataTransfer();
+                            dataTransfer.items.add(file);
+                            imageForumInput.files = dataTransfer.files;
+                            previewContainer.style.display = 'none';
+                        });
+                };
+            } else {
+                alert(data.error || 'La génération d\'image a échoué');
+            }
+        } catch (error) {
+            alert('Une erreur est survenue lors de la génération de l\'image');
+            console.error(error);
+        } finally {
+            generateButton.disabled = false;
+            generateButton.innerHTML = 'Générer';
+        }
+    });
+});
+</script>
+{% endblock %}
 {% endblock %}
