@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Statut du paiement{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>Statut de la commande #{{ payment.orderId }}</h1>
+    
+    <div class="card">
+        <div class="card-body">
+            <p class="card-text">
+                Statut : 
+                <span class="badge bg-{{ payment.status == 'succeeded' ? 'success' : 'danger' }}">
+                    {{ payment.status|upper }}
+                </span>
+            </p>
+            <p class="card-text">Montant : {{ payment.amount|format_currency('USD') }}</p>
+            <p class="card-text">Date : {{ payment.createdAt|date('d/m/Y H:i') }}</p>
+        </div>
+    </div>
+    
+    <a href="{{ path('app_stripe') }}" class="btn btn-primary mt-3">Retour</a>
+</div>
+{% endblock %}

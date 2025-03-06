@@ -1,0 +1,208 @@
+{
+    "status": false,
+    "message": "Erroneous provided data",
+    "code": 54,
+    "errors": [
+        {
+            "webhook_url": "Webhook URL must start with https:\/\/"
+        },
+        {
+            "return_url": "Return URL must start with https:\/\/"
+        },
+        {
+            "cancel_url": "Cancel URL must start with https:\/\/"
+        }
+    ]
+}{
+    "status": true,
+    "message": "Success",
+    "code": 50,
+    "data": {
+        "note": "Payment for event participation",
+        "phone": "+21611223344",
+        "token": "0b8a879dc6541e290f31a96e974cfe1c",
+        "last_name": "Doe",
+        "binding_id": null,
+        "order_id": "67c964f1b14b8",
+        "amount": 15,
+        "payment_url": "https:\/\/sandbox.paymee.tn\/gateway\/0b8a879dc6541e290f31a96e974cfe1c",
+        "first_name": "Ahmed",
+        "email": "ahmed@example.com"
+    }
+}{
+    "status": true,
+    "message": "Success",
+    "code": 50,
+    "data": {
+        "note": "Payment for event participation",
+        "phone": "+21611223344",
+        "token": "d743ccb7c23819f39125e0630adc3edb",
+        "last_name": "Doe",
+        "binding_id": null,
+        "order_id": "67c966583a90d",
+        "amount": 15,
+        "payment_url": "https:\/\/sandbox.paymee.tn\/gateway\/d743ccb7c23819f39125e0630adc3edb",
+        "first_name": "Ahmed",
+        "email": "ahmed@example.com"
+    }
+}{
+    "status": true,
+    "message": "Success",
+    "code": 50,
+    "data": {
+        "note": "Payment for event participation",
+        "phone": "+21611223344",
+        "token": "ebaba661f1157ca24bcdff8b8d388259",
+        "last_name": "Doe",
+        "binding_id": null,
+        "order_id": "67c966f496b86",
+        "amount": 15,
+        "payment_url": "https:\/\/sandbox.paymee.tn\/gateway\/ebaba661f1157ca24bcdff8b8d388259",
+        "first_name": "Ahmed",
+        "email": "ahmed@example.com"
+    }
+}{
+    "status": true,
+    "message": "Success",
+    "code": 50,
+    "data": {
+        "note": "Payment for event participation",
+        "phone": "+21611223344",
+        "token": "f9d046b260590d60860353fc1977a8aa",
+        "last_name": "Doe",
+        "binding_id": null,
+        "order_id": "67c96eb78e8dc",
+        "amount": 15,
+        "payment_url": "https:\/\/sandbox.paymee.tn\/gateway\/f9d046b260590d60860353fc1977a8aa",
+        "first_name": "Ahmed",
+        "email": "ahmed@example.com"
+    }
+}{
+    "status": true,
+    "message": "Success",
+    "code": 50,
+    "data": {
+        "note": "Payment for event participation",
+        "phone": "+21611223344",
+        "token": "5771f03764c286dafc342607f643f340",
+        "last_name": "Doe",
+        "binding_id": null,
+        "order_id": "67c974eba05e4",
+        "amount": 15,
+        "payment_url": "https:\/\/sandbox.paymee.tn\/gateway\/5771f03764c286dafc342607f643f340",
+        "first_name": "Ahmed",
+        "email": "ahmed@example.com"
+    }
+}{
+    "status": true,
+    "message": "Success",
+    "code": 50,
+    "data": {
+        "note": "Payment for event participation",
+        "phone": "+21611223344",
+        "token": "a59cfb75787421383fb4ca2ebab928af",
+        "last_name": "Doe",
+        "binding_id": null,
+        "order_id": "67c977b32e17f",
+        "amount": 15,
+        "payment_url": "https:\/\/sandbox.paymee.tn\/gateway\/a59cfb75787421383fb4ca2ebab928af",
+        "first_name": "Ahmed",
+        "email": "ahmed@example.com"
+    }
+}{
+    "status": true,
+    "message": "Success",
+    "code": 50,
+    "data": {
+        "note": "Payment for event participation",
+        "phone": "+21611223344",
+        "token": "c2daec2f86dc7f7edf504314f5e9de68",
+        "last_name": "Doe",
+        "binding_id": null,
+        "order_id": "67c979a0dc2d4",
+        "amount": 15,
+        "payment_url": "https:\/\/sandbox.paymee.tn\/gateway\/c2daec2f86dc7f7edf504314f5e9de68",
+        "first_name": "Ahmed",
+        "email": "ahmed@example.com"
+    }
+}{
+    "status": true,
+    "message": "Success",
+    "code": 50,
+    "data": {
+        "note": "Payment for event participation",
+        "phone": "+21611223344",
+        "token": "7d68163716e5172ce9329b5348079f2c",
+        "last_name": "Doe",
+        "binding_id": null,
+        "order_id": "67c97b63e7dd3",
+        "amount": 15,
+        "payment_url": "https:\/\/sandbox.paymee.tn\/gateway\/7d68163716e5172ce9329b5348079f2c",
+        "first_name": "Ahmed",
+        "email": "ahmed@example.com"
+    }
+}{
+    "status": true,
+    "message": "Success",
+    "code": 50,
+    "data": {
+        "note": "Payment for event participation",
+        "phone": "+21611223344",
+        "token": "31cbdf5366c4c79a99253a9a5aeb1492",
+        "last_name": "Doe",
+        "binding_id": null,
+        "order_id": "67c97bb5b656e",
+        "amount": 15,
+        "payment_url": "https:\/\/sandbox.paymee.tn\/gateway\/31cbdf5366c4c79a99253a9a5aeb1492",
+        "first_name": "Ahmed",
+        "email": "ahmed@example.com"
+    }
+}{
+    "status": true,
+    "message": "Success",
+    "code": 50,
+    "data": {
+        "note": "Payment for event participation",
+        "phone": "+21611223344",
+        "token": "8966c43f9e5bdc2365f0b745971bf846",
+        "last_name": "Doe",
+        "binding_id": null,
+        "order_id": "67c97c4b6b43a",
+        "amount": 15,
+        "payment_url": "https:\/\/sandbox.paymee.tn\/gateway\/8966c43f9e5bdc2365f0b745971bf846",
+        "first_name": "Ahmed",
+        "email": "ahmed@example.com"
+    }
+}{
+    "status": true,
+    "message": "Success",
+    "code": 50,
+    "data": {
+        "note": "Payment for event participation",
+        "phone": "+21611223344",
+        "token": "85dc02f197b4684323435fe0bddd3e6b",
+        "last_name": "Doe",
+        "binding_id": null,
+        "order_id": "67c97eae2a7d9",
+        "amount": 15,
+        "payment_url": "https:\/\/sandbox.paymee.tn\/gateway\/85dc02f197b4684323435fe0bddd3e6b",
+        "first_name": "Ahmed",
+        "email": "ahmed@example.com"
+    }
+}{
+    "status": true,
+    "message": "Success",
+    "code": 50,
+    "data": {
+        "note": "Payment for event participation",
+        "phone": "+21611223344",
+        "token": "3ce3d392ad0b5c7f802095e72f5f9b47",
+        "last_name": "Doe",
+        "binding_id": null,
+        "order_id": "67c97ed1b87cc",
+        "amount": 15,
+        "payment_url": "https:\/\/sandbox.paymee.tn\/gateway\/3ce3d392ad0b5c7f802095e72f5f9b47",
+        "first_name": "Ahmed",
+        "email": "ahmed@example.com"
+    }
+}
