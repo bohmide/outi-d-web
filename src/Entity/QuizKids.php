@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\Choice;
 
 #[ORM\Entity(repositoryClass: QuizKidsRepository::class)]
 class QuizKids
@@ -18,16 +19,30 @@ class QuizKids
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: "Le nom de la question est obligatoire.")]
+    #[Assert\Length(min: 10, minMessage: "La question doit contenir au moins 10 caractères.")]
+
     private ?string $question = null;
 
     
     #[ORM\Column(type: Types::JSON)]
-    #[Assert\Count(min: 2, minMessage: "Il faut ajouter au moins deux options.")]
+    #[Assert\Count(
+        min: 2,
+        max: 4,
+        minMessage: "Ajoutez au moins {{ limit }} options.",
+        maxMessage: "Maximum {{ limit }} options autorisées."
+    )]
+    #[Assert\Unique(message: "Les options doivent être uniques")]
+    #[Assert\All([
+        new Assert\NotBlank(message: "Une option ne peut être vide"),
+        new Assert\Length(
+            max: 100,
+            maxMessage: "Une option ne peut dépasser {{ limit }} caractères"
+        )
+    ])]
     private array $options = [];
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: "La réponse exacte est obligatoire.")]
+    #[Assert\NotBlank(message: "Sélectionnez la réponse correcte.")]
     private ?string $correctAnswer = null;
 
     #[Vich\UploadableField(mapping: "quiz_media", fileNameProperty: "media")]
@@ -39,7 +54,8 @@ class QuizKids
     private ?string $media = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: "Le level est obligatoire.")]
+   
+    #[Assert\NotBlank(message: "Sélectionnez un niveau de difficulté.")]
     private ?string $level = null;
 
     #[ORM\Column(length: 255)]
@@ -50,12 +66,16 @@ class QuizKids
     private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: "Le genre est obligatoire.")]
+    #[Assert\NotBlank(message: "Sélectionnez un genre.")]
     private ?string $genre = null;
 
     #[ORM\ManyToOne(inversedBy: 'quizzes')]
     #[ORM\JoinColumn(nullable: true, onDelete: 'CASCADE')]
     private ?Challenge $challenge = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    
+    private ?string $country;
 
     public function setMediaFile(?File $file = null): void
     {
@@ -166,6 +186,18 @@ class QuizKids
     public function setIdChallenge(?Challenge $challenge): static
     {
         $this->challenge = $challenge;
+
+        return $this;
+    }
+
+    public function getCountry(): ?string
+    {
+        return $this->country;
+    }
+
+    public function setCountry(string $country): self
+    {
+        $this->country = $country;
 
         return $this;
     }

@@ -17,7 +17,7 @@
                 <div class="form-floating " >
                     {{ form_widget(form.question, { 'attr': {'class': 'form-control mb-4', 'placeholder': 'Leave question here'} }) }}
                     {{ form_label(form.question, 'Question') }}
-                    <div class="invalid-feedbacks d-block">
+                    <div class="invalid-feedback d-block">
                         {{ form_errors(form.question) }}  
                     </div>
                 </div>
@@ -104,13 +104,24 @@
 
                    
 
+                    <div class="form-floating mb-3">
+                        {{ form_widget(form.country, { 'attr': {'class': 'form-select'} }) }}
+                        {{ form_label(form.country, 'Choisir le pays de la question si tu veux') }}
+                        <div class="invalid-feedbacks d-block">
+                            {{ form_errors(form.country) }}  
+                        </div>
+                    </div>
+
+
                     <div class="mb-3">
                         {{ form_widget(form.mediaFile, { 'attr': {'class': 'form-label mb-4 form-control bg-dark' ,'type':'file'} }) }}
                             
                                 
 
                         
-                    </div>    
+                    </div>  
+                    
+                    
 
 
                 

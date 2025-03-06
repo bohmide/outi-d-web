@@ -1,0 +1,66 @@
+{% extends 'base_kids.html.twig' %}
+
+{% block title %} Globetrotter Junior {% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+        <div class="text-center">
+            <h2 class="display-3 text-primary mb-5">Explore the World with Globetrotter Junior!</h2>
+        </div>
+
+        {% if quiz %}
+            <div class="quiz-card border border-primary rounded p-4 mb-4" id="quizCard">
+                <h4 class="text-dark text-center mb-4">{{ quiz.question }}</h4>
+                <img src="{{ quiz.imageUrl }}" alt="Image du lieu" class="img-fluid mb-4">
+                <form action="{{ path('check_answer', {'id': quiz.id}) }}" method="POST">
+                    <input type="hidden" name="answer" id="selectedAnswer{{ quiz.id }}">
+
+                    <div class="options">
+                        {% for option in quiz.choices %}
+                            <button type="button" class="btn btn-lg btn-outline-primary w-100 mb-3 option-btn" 
+                                    data-option="{{ option }}" onclick="selectAnswer('{{ quiz.id }}', '{{ option }}')">
+                                {{ option }}
+                            </button>
+                        {% endfor %}
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Answer</button>
+                </form>    
+            </div>
+        {% else %}
+            <p class="text-center text-muted">{{ error }}</p>
+        {% endif %}
+    </div>
+
+    <!-- Hidden audio elements -->
+    <audio id="quizSound" src="{{ asset('audio/quizPlaying.mp3') }}"></audio>
+
+   <script src="{{ asset('js/globetrotter.js') }}"></script>
+
+    <style>
+        .quiz-card {
+            background-color: #f9f9f9;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .option-btn {
+            font-size: 18px;
+            padding: 15px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .option-btn:hover {
+            background-color: #007bff;
+            transform: scale(1.05);
+            color: white;
+        }
+
+        .option-btn:focus {
+            box-shadow: 0 0 5px 3px rgba(0, 123, 255, 0.5);
+        }
+
+        h4 {
+            font-weight: bold;
+        }
+    </style>
+{% endblock %}
