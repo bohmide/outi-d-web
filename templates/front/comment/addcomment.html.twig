@@ -6,6 +6,13 @@
 <div class="container my-5">
     <h1 class="text-center mb-4">Ajouter un Commentaire au Post: {{ post.nom }}</h1>
 
+    <!-- Affichage des messages flash -->
+    {% for message in app.flashes('danger') %}
+        <div class="alert alert-danger">
+            {{ message }}
+        </div>
+    {% endfor %}
+
     {{ form_start(form, {'attr': {'class': 'form', 'novalidate': 'novalidate'}}) }}
 
     <div class="form-group mb-3">
@@ -23,3 +30,4 @@
     <a href="{{ path('app_showcomments', {'id': post.id}) }}" class="btn btn-secondary mt-3">Retour</a>
 </div>
 {% endblock %}
+
