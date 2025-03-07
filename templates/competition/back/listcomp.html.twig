@@ -5,7 +5,6 @@
 {% block body %}
 <!-- Content Start -->
 <div class="content container-fluid pt-4 px-4">
-    
     <div class="col-12">
         <div class="bg-secondary rounded h-100 p-4">
             <h6 class="mb-4">Liste des Compétitions</h6>
@@ -18,30 +17,54 @@
             {% endfor %}
 
             <div class="table-responsive">
-                {% for competition in competitions %}
-                <div class="competition">
-                    <h2>{{ competition.nomComp }}</h2>
-                    <p class="date">Du {{ competition.dateDebut|date('d/m/Y') }} au {{ competition.dateFin|date('d/m/Y') }}</p>
-                    <p class="description">{{ competition.description }}</p>
-                    <p>Organisée par : {{ competition.nomEntreprise }}</p>
-                    {% if competition.fichier %}
-                        <a href="{{ asset('uploads/' ~ competition.fichier) }}" target="_blank" class="button">Voir le fichier</a>
-                    {% else %}
-                        <p>Aucun fichier disponible</p>
-                    {% endif %}
-                    <div>
-                        
-                        <form method="post" action="{{ path('delete_competition_admin', {'id': competition.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette compétition ?');" style="display: inline;">
-                            <input type="hidden" name="_method" value="DELETE">
-                            <button type="submit" class="button btn-danger">Supprimer</button>
-                        </form>
-                    </div>
-                </div>
-            {% else %}
-                <p>Aucune compétition trouvée.</p>
-            {% endfor %} 
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nom de la compétition</th>
+                            <th>Dates</th>
+                            <th>Description</th>
+                            <th>Organisée par</th>
+                            <th>Fichier</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for competition in competitions %}
+                            <tr>
+                                <td>{{ competition.nomComp }}</td>
+                                <td>
+                                    Du {{ competition.dateDebut|date('d/m/Y') }}<br>
+                                    au {{ competition.dateFin|date('d/m/Y') }}
+                                </td>
+                                <td style="word-wrap: break-word; white-space: normal; max-width: 300px;">
+                                    {{ competition.description }}
+                                </td>
+                                <td>{{ competition.nomEntreprise }}</td>
+                                <td>
+                                    {% if competition.fichier %}
+                                        <a href="{{ asset('uploads/' ~ competition.fichier) }}" target="_blank" class="btn btn-primary btn-sm">
+                                            Voir le fichier
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted">Aucun fichier</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <form method="post" action="{{ path('delete_competition_admin', {'id': competition.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette compétition ?');" style="display: inline;">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center">Aucune compétition trouvée.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-</div>        
+</div>
 {% endblock %}

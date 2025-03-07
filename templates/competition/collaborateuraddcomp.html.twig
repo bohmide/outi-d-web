@@ -65,7 +65,39 @@
         {{ form_errors(form.organisation) }}  {# Affiche le message d'erreur si le champ est invalide #}
     
     </div>
-</div>   
+</div>  
+ {# 🌍 Ajout de la carte pour la localisation #}
+<div class="form-group">
+    <label>Localisation</label>
+    <div id="map" style="height: 400px;"></div> {# Carte OpenStreetMap #}
+    {{ form_widget(form.localisation, {'id': 'localisation', 'attr': {'type': 'hidden'}}) }}
+
+</div>
+
+<script>
+   document.addEventListener("DOMContentLoaded", function () {
+    var map = L.map('map').setView([36.8065, 10.1815], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    var marker;
+    var localisationField = document.getElementById('localisation');
+
+    map.on('click', function (e) {
+        if (marker) {
+            marker.setLatLng(e.latlng);
+        } else {
+            marker = L.marker(e.latlng).addTo(map);
+        }
+        localisationField.value = e.latlng.lat + "," + e.latlng.lng;
+        console.log("Localisation sélectionnée :", localisationField.value); // Vérification
+    });
+});
+
+</script>
+
 <button type="submit" class="submit-button">Publier la Compétition</button>
 
 
@@ -74,4 +106,7 @@
 
     </div>
 </div>
+
+
+
 {% endblock %}

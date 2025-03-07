@@ -13,6 +13,7 @@ parameters:
     upload_directory: '%kernel.project_dir%/public/uploads'
     upload_puzzlePieces: '%kernel.project_dir%/public/uploads/puzzlePieces'
     upload_puzzleMain: '%kernel.project_dir%/public/uploads/puzzleMain'
+    upload_Travail: '%kernel.project_dir%/public/uploads/competition'
 
 
 services:

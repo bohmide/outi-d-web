@@ -6,6 +6,7 @@ use App\Repository\OrganisationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert; 
 
 #[ORM\Entity(repositoryClass: OrganisationRepository::class)]
 class Organisation
@@ -16,13 +17,25 @@ class Organisation
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le nom de l'organisation est obligatoire.")] // Champ obligatoire
+    #[Assert\Length(
+        min: 3,
+        max: 255,
+        minMessage: "Le nom de l'organisation doit contenir au moins {{ limit }} caractères.",
+        maxMessage: "Le nom de l'organisation ne peut pas dépasser {{ limit }} caractères."
+    )] // Longueur minimale et maximale
     private ?string $nomOrganisation = null;
 
+   
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: "Le nom de l'organisation est obligatoire.")] // Champ obligatoire
+    #[Assert\Length(
+        max: 255,
+        maxMessage: "Le domaine ne peut pas dépasser {{ limit }} caractères."
+    )] // Longueur maximale
     private ?string $domaine = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $motDePasse = null;
+    
 
     /**
      * @var Collection<int, Competition>
@@ -64,17 +77,7 @@ class Organisation
         return $this;
     }
 
-    public function getMotDePasse(): ?string
-    {
-        return $this->motDePasse;
-    }
-
-    public function setMotDePasse(string $motDePasse): static
-    {
-        $this->motDePasse = $motDePasse;
-
-        return $this;
-    }
+    
 
     /**
      * @return Collection<int, Competition>

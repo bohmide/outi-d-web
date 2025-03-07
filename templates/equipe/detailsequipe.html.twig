@@ -1,0 +1,34 @@
+{% extends "base.html.twig" %}
+
+{% block title %} Détails de l'Équipe {% endblock %}
+
+{% block body %}
+<div class="participation-body">
+    <div class="participation-container">
+        <h1 class="participation-title">{{ equipe.nomEquipe }}</h1>
+        <p><strong>Ambassadeur :</strong> {{ equipe.ambassadeur }}</p>
+        <p><strong>Compétitions auxquelles l'équipe participe :</strong></p>
+<ul>
+    {% for competition in equipe.competitions %}
+    <li>{{ competition.nomComp }}</li> 
+{% else %}
+    <p>Aucune compétition associée.</p>
+{% endfor %}
+</ul>
+
+
+        <h2>Membres de l'Équipe</h2>
+        {% if equipe.membres is not empty %}
+            <ul>
+                {% for membre in equipe.membres %}
+                    <li>{{ membre }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p><em>Aucun membre ajouté</em></p>
+        {% endif %}
+
+        <a href="{{ path('equipe_list') }}" class="btn btn-secondary">Retour à la liste</a>
+    </div>
+</div>
+{% endblock %}

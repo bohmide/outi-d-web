@@ -17,7 +17,7 @@ class OrganisationType extends AbstractType
         $builder
             ->add('nomOrganisation')
             ->add('domaine')
-            ->add('motDePasse')
+            
             
         ;
     }
