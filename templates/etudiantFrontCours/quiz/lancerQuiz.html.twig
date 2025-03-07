@@ -4,36 +4,41 @@
 
 {% block body %}
     <div class="container mt-4">
-        <h2 class="text-center">{{ quiz.titre }}</h2>
+        <h2 class="text-center mb-4">{{ quiz.titre }}</h2>
 
         <form method="post" action="{{ path('quiz_submit', {'id': quiz.id}) }}">
+
             {% for question in quiz.getQuestion %}
-                <div class="card mt-3">
+                <div class="card mt-3 shadow-sm">
                     <div class="card-body">
-                        <h5>{{ loop.index }}. {{ question.question }}</h5>
-                        {% if question.type == 'choix_multiple' %}
-                            <p><strong>(Plusieurs réponses possibles)</strong></p>
-                            {% for reponse in question.reponse %}
-                                <div class="form-check">
-                                    <input type="checkbox" name="reponses[{{ question.id }}][]" value="{{ reponse.id }}" class="form-check-input">
-                                    <label class="form-check-label">{{ reponse.reponse }}</label>
-                                </div>
-                            {% endfor %}
-                        {% else %}
-                            <p><strong>(Une seule réponse est correcte)</strong></p>
-                            {% for reponse in question.reponse %}
-                                <div class="form-check">
-                                    <input type="radio" name="reponses[{{ question.id }}]" value="{{ reponse.id }}" class="form-check-input" required>
-                                    <label class="form-check-label">{{ reponse.reponse }}</label>
-                                </div>
-                            {% endfor %}
-                        {% endif %}
+                        <h5 class="card-title">{{ loop.index }}. {{ question.question }}</h5>
+                        <div class="question-options">
+                            {% if question.type == 'choix_multiple' %}
+                                <p><strong>(Plusieurs réponses possibles)</strong></p>
+                                {% for reponse in question.reponse %}
+                                    <div class="form-check">
+                                        <input type="checkbox" name="reponses[{{ question.id }}][]" value="{{ reponse.id }}" class="form-check-input" id="reponse_{{ reponse.id }}">
+                                        <label class="form-check-label" for="reponse_{{ reponse.id }}">{{ reponse.reponse }}</label>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <p><strong>(Une seule réponse est correcte)</strong></p>
+                                {% for reponse in question.reponse %}
+                                    <div class="form-check">
+                                        <input type="radio" name="reponses[{{ question.id }}]" value="{{ reponse.id }}" class="form-check-input" id="reponse_{{ reponse.id }}" required>
+                                        <label class="form-check-label" for="reponse_{{ reponse.id }}">{{ reponse.reponse }}</label>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             {% endfor %}
+
             <div class="text-center mt-4">
-                <button type="submit" class="btn btn-success">Valider</button>
+                <button type="submit" class="btn btn-lg btn-success px-4">Valider le Quiz</button>
             </div>
         </form>
     </div>
+
 {% endblock %}

@@ -23,6 +23,10 @@ class Certification
     #[ORM\OneToOne(mappedBy: 'certification')]
     private ?Cours $cours = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $pdfFilename = null;
+
+
     public function getId(): ?int
     {
         return $this->id;
@@ -61,4 +65,15 @@ class Certification
 
         return $this;
     }
+    public function getPdfFilename(): ?string
+{
+    return $this->pdfFilename;
+}
+
+public function setPdfFilename(?string $pdfFilename): self
+{
+    $this->pdfFilename = $pdfFilename;
+
+    return $this;
+}
 }

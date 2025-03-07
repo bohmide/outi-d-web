@@ -13,6 +13,8 @@ parameters:
     upload_directory: '%kernel.project_dir%/public/uploads'
     upload_puzzlePieces: '%kernel.project_dir%/public/uploads/puzzlePieces'
     upload_puzzleMain: '%kernel.project_dir%/public/uploads/puzzleMain'
+    # Ajout du répertoire de stockage des PDFs générés
+    pdf_directory: '%kernel.project_dir%/public/uploads/certifications'
 
 
 services:
@@ -20,6 +22,7 @@ services:
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -32,3 +35,7 @@ services:
     
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+     # Service pour la génération des PDFs
+    App\Service\PdfGenerator:
+        arguments:
+            $pdfDirectory: '%pdf_directory%'

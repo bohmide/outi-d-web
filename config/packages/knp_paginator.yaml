@@ -1,5 +1,5 @@
 knp_paginator:
-    page_range: 4         # Nombre de pages affichées dans la pagination
+    page_range: 2      # Nombre de pages affichées dans la pagination
     default_options:
         page_name: page    # Le paramètre de requête utilisé pour indiquer la page actuelle
         sort_field_name: sort

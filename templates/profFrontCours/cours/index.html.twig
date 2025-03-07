@@ -1,49 +1,118 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Gestion des Cours -
-{% endblock %}
+{% block title %}Gestion des Cours -{% endblock %}
 
 {% block body %}
-	<div class="content container-fluid pt-4 px-4">
-		<div class="container my-5">
-			<h1 class="text-center mb-4">Gestion des Cours</h1>
+<div class="content container-fluid pt-4 px-4">
+    <div class="container my-5">
+        <h1 class="text-center mb-4">Gestion des Cours</h1>
 
-			<a href="{{ path('admin_cours_new') }}" class="btn btn-primary mb-4">Créer un nouveau cours</a>
+        <a href="{{ path('admin_cours_new') }}" class="btn btn-primary mb-4">Créer un nouveau cours</a>
 
-			{% for message in app.flashes('success') %}
-				<div class="alert alert-success">{{ message }}</div>
-			{% endfor %}
+        {% for label, messages in app.flashes %}
+        <div class="alert alert-{{ label }}">
+            <ul>
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
 
-			{% for message in app.flashes('error') %}
-				<div class="alert alert-danger">{{ message }}</div>
-			{% endfor %}
+        <!-- Barre de recherche -->
+        <div class="mb-4">
+            <input type="text" id="search-bar" class="form-control" placeholder="Rechercher un cours..." />
+        </div>
 
-			<table class="table">
-				<thead>
-					<tr>
-						<th>Nom</th>
-						<th>État</th>
-						<th>Date de création</th>
-						<th>Actions</th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for cours in cours %}
-						<tr>
-							<td>{{ cours.nom }}</td>
-							<td>{{ cours.etat }}</td>
-							<td>{{ cours.dateCreation|date('d/m/Y') }}</td>
-							<td>
-								<a href="{{ path('admin_cours_update', {'id': cours.id}) }}" class="btn btn-warning">Modifier</a>
-								<form action="{{ path('admin_cours_delete', {'id': cours.id}) }}" method="post" class="d-inline">
-									<button type="submit" class="btn btn-danger">Supprimer</button>
-								</form>
-								<a href="{{ path('admin_cours_chapitres', {'id': cours.id}) }}" class="btn btn-info">Voir les chapitres</a>
-							</td>
-						</tr>
-					{% endfor %}
-				</tbody>
-			</table>
-		</div>
-	</div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>État</th>
+                    <th>Date de création</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="course-list">
+                {% for cours in pagination.items %}
+                <tr>
+                    <td>{{ cours.nom }}</td>
+                    <td>{{ cours.etat }}</td>
+                    <td>{{ cours.dateCreation|date('d/m/Y') }}</td>
+                    <td>
+                        <a href="{{ path('admin_cours_chapitres', {'id': cours.id}) }}" class="btn btn-info">Voir les chapitres</a>
+                        <a href="{{ path('admin_cours_update', {'id': cours.id}) }}" class="btn btn-warning">Modifier</a>
+                        <form action="{{ path('admin_cours_delete', {'id': cours.id}) }}" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-danger">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" class="text-center">Aucun cours trouvé.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <div class="d-flex justify-content-center mt-4">
+            <ul class="pagination">
+                {% if pagination.previousPageNumber is defined %}
+                <li class="page-item">
+                    <a class="page-link btn btn-primary" href="{{ path(app.request.attributes.get('_route'), app.request.query.all | merge({'page': pagination.previousPageNumber})) }}">← Précédent</a>
+                </li>
+                {% endif %}
+                {% for page in range(1, pagination.pageCount) %}
+                <li class="page-item {% if page == pagination.currentPageNumber %}active{% endif %}">
+                    <a class="page-link btn btn-light" href="{{ path(app.request.attributes.get('_route'), app.request.query.all | merge({'page': page})) }}">{{ page }}</a>
+                </li>
+                {% endfor %}
+                {% if pagination.nextPageNumber is defined %}
+                <li class="page-item">
+                    <a class="page-link btn btn-primary" href="{{ path(app.request.attributes.get('_route'), app.request.query.all | merge({'page': pagination.nextPageNumber})) }}">Suivant →</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('search-bar').addEventListener('input', function() {
+        let query = this.value;
+
+        fetch('{{ path('search_courses') }}?query=' + query)
+            .then(response => response.json())
+            .then(data => {
+                let courseList = document.getElementById('course-list');
+                courseList.innerHTML = '';  // Vide la liste existante des cours
+
+                // Si des cours sont retournés
+                if (data.courses.length > 0) {
+                    data.courses.forEach(course => {
+                        let row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${course.nom}</td>
+                            <td>${course.etat}</td>
+                            <td>${course.dateCreation}</td>
+                            <td>
+                                <a href="/Profshow/${course.id}/chapitres" class="btn btn-info">Voir les chapitres</a>
+                                <a href="/Profshow/${course.id}/update" class="btn btn-warning">Modifier</a>
+                                <form action="/Profshow/${course.id}/delete" method="POST" class="d-inline">
+                                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                                </form>
+                            </td>
+                        `;
+                        courseList.appendChild(row);
+                    });
+                } else {
+                    // Si aucun cours n'est trouvé, affiche un message
+                    courseList.innerHTML = `<tr><td colspan="4" class="text-center">Aucun cours trouvé.</td></tr>`;
+                }
+            })
+            .catch(error => console.error('Erreur:', error));
+    });
+</script>
+
 {% endblock %}

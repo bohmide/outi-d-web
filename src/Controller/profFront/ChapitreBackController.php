@@ -166,7 +166,29 @@ final class ChapitreBackController extends AbstractController
             ]);
         }
 
+        #[Route('/uploads/chapitres/{file}', name :'serve_file')]
+    public function serveFile(string $file): Response
+    {
+        $filePath = $this->getParameter('chapitres_directory') . '/chapitres/' . $file;
 
+        // Check if the file exists
+        if (!file_exists($filePath)) {
+            throw $this->createNotFoundException('Le fichier n\'existe pas');
+        }
+
+        // Get the file's MIME type
+        $mimeType = mime_content_type($filePath);
+
+        // Create the response with the file content and proper headers
+        return new Response(
+            file_get_contents($filePath),
+            200,
+            [
+                'Content-Type' => $mimeType,
+                'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"',
+            ]
+        );
+    }    
 
 }
 

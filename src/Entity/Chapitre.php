@@ -6,6 +6,8 @@ use App\Repository\ChapitreRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\File\File;
+
 
 
 #[ORM\Entity(repositoryClass: ChapitreRepository::class)]
@@ -36,15 +38,15 @@ class Chapitre
     private ?string $contenu = null; // Stocke le chemin du fichier en base de données
 
     #[Assert\File(
-        maxSize: "5M",
+        maxSize: '5M',
         mimeTypes: [
-            "application/pdf",  // PDF
-            "application/msword",  // DOC
-            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",  // DOCX
-            "application/vnd.ms-powerpoint",  // PPT
-            "application/vnd.openxmlformats-officedocument.presentationml.presentation"  // PPTX
+            'application/pdf',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/vnd.ms-powerpoint',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation'
         ],
-        mimeTypesMessage: "Seuls les fichiers PDF, DOC, DOCX, PPT et PPTX sont autorisés."
+        mimeTypesMessage: 'Veuillez uploader un fichier PDF, DOC, DOCX, PPT ou PPTX valide.'
     )]
     private ?UploadedFile $file = null; // Propriété non mappée pour l'upload
 
