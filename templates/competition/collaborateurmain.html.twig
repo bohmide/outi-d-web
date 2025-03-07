@@ -39,10 +39,24 @@
                         <p>Aucun fichier disponible</p>
                     {% endif %}
                     <a href="{{ path('competition_details', {'id': competition.id}) }}" class="btn btn-info2">Détails</a>
+                    <div class="dots-menu" tabindex="0"> <!-- Ajouter tabindex pour permettre le focus -->
+                        <i class="bi bi-three-dots-vertical dots-icon"></i> <!-- Icône par défaut -->
+                        <i class="bi bi-x close-icon"></i> <!-- Icône de fermeture -->
+                        <div class="dropdown-content">
+                            <a href="{{ path('app_competition_edit', {'id': competition.id}) }}" class="dropdown-item">Modifier</a>
+                            <form method="post" action="{{ path('app_competition_delete', {'id': competition.id}) }}" 
+                                  onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette compétition ?');">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit" class="dropdown-item">Supprimer</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
+
             {% else %}
                 <p id="noResults">Aucune compétition trouvée.</p>
             {% endfor %}
+
         </div>
     </div>
 </div>

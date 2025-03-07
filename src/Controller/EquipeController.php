@@ -52,7 +52,7 @@ final class EquipeController extends AbstractController
         ]);
     }
 
-    #[Route('/delete/{id}', name: 'equipe_delete')]
+    #[Route('/delete/{id}', name: 'equipe_deleteF')]
     public function delete(Equipe $equipe, EntityManagerInterface $entityManager): Response
     {
         $entityManager->remove($equipe);
@@ -67,7 +67,7 @@ final class EquipeController extends AbstractController
     public function listback(EquipeRepository $equipeRepository): Response
     {
         $equipes = $equipeRepository->findAll();
-        return $this->render('equipe/back/listeequipe.html.twig', [
+        return $this->render('equipe/back/listeequipeback.html.twig', [
             'equipes' => $equipes,
         ]);
     }
