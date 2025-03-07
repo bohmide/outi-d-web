@@ -40,4 +40,25 @@ class CoursRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+    public function searchCours(array $criteria): array
+    {
+        $qb = $this->createQueryBuilder('c');
+
+        if (!empty($criteria['nom'])) {
+            $qb->andWhere('c.nom LIKE :nom')
+               ->setParameter('nom', '%' . $criteria['nom'] . '%');
+        }
+
+        if (!empty($criteria['etat'])) {
+            $qb->andWhere('c.etat = :etat')
+               ->setParameter('etat', $criteria['etat']);
+        }
+
+        if (!empty($criteria['dateCreation'])) {
+            $qb->andWhere('c.date_creation = :dateCreation')
+               ->setParameter('dateCreation', new \DateTime($criteria['dateCreation']));
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 }

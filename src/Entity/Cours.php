@@ -133,8 +133,18 @@ class Cours
 
     public function setCertification(?Certification $certification): static
     {
+        if ($this->isCertifie() && !$certification) {
+            throw new \LogicException('Un cours certifié doit avoir une certification');
+        }
         $this->certification = $certification;
-
+        if ($certification) {
+            $certification->setCours($this);
+        }
         return $this;
     }
+    public function getCertificationPath(): string
+{
+    return '/public/uploads/certifications/' . $this->id . '.pdf';
+}
+
 }

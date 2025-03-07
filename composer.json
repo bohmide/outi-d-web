@@ -11,6 +11,7 @@
         "doctrine/doctrine-bundle": "^2.13",
         "doctrine/doctrine-migrations-bundle": "^3.4",
         "doctrine/orm": "^3.3",
+        "dompdf/dompdf": "^3.1",
         "google/cloud-text-to-speech": "^2.0",
         "guzzlehttp/guzzle": "^7.9",
         "intervention/image": "^3.11",
@@ -28,6 +29,7 @@
         "symfony/flex": "^2",
         "symfony/form": "6.4.*",
         "symfony/framework-bundle": "6.4.*",
+        "symfony/mailer": "6.4.*",
         "symfony/http-client": "6.4.*",
         "symfony/mime": "6.4.*",
         "symfony/password-hasher": "6.4.*",
@@ -42,7 +44,6 @@
         "vich/uploader-bundle": "*"
     },
     "require-dev": {
-        "symfony/mailer": "6.4.*",
         "symfony/maker-bundle": "^1.62",
         "symfony/security-bundle": "6.4.*",
         "symfonycasts/reset-password-bundle": "^1.23",

@@ -11,14 +11,23 @@ use App\Repository\ChapitreRepository;
 use App\Entity\Chapitre;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\QuizRepository;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\Address;
+
 
 final class CoursFrontController extends AbstractController
 {
     #[Route('/cours', name: 'app_showcours')]
-    public function index(CoursRepository $coursRepository): Response
+    public function index(CoursRepository $coursRepository, Request $request): Response
     {
-        // Récupérer tous les cours pour les afficher
-        $cours = $coursRepository->findAll();
+        $searchCriteria = [
+            'nom' => $request->query->get('nom'),
+            'etat' => $request->query->get('etat'),
+            'dateCreation' => $request->query->get('dateCreation'),
+        ];
+
+        $cours = $coursRepository->searchCours($searchCriteria);
 
         return $this->render('etudiantFrontCours/cours/showCours.html.twig', [
             'cours' => $cours,
@@ -91,7 +100,7 @@ final class CoursFrontController extends AbstractController
         ]);
     }
     #[Route('/quiz/{id}/submit', name: 'quiz_submit')]
-    public function validerQuiz(int $id, Request $request, QuizRepository $quizRepository): Response
+    public function validerQuiz(int $id, Request $request, QuizRepository $quizRepository,MailerInterface $mailer): Response
     {
         $quiz = $quizRepository->find($id);
     
@@ -144,11 +153,41 @@ final class CoursFrontController extends AbstractController
             }
         }
     
-        $this->addFlash('success', 'Votre score est : ' . $score . '/' . count($quiz->getQuestion()));
-    
-        return $this->redirectToRoute('front_cours_show', [
-            'id' => $quiz->getChapitre()->getCours()->getId()
-        ]);
+        $totalQuestions = count($quiz->getQuestion());
+
+    if ($score === $totalQuestions) {
+        // Email statique pour test
+        $emailEtudiant = 'mejria742@gmail.com'; 
+
+        // Récupérer la certification associée au cours
+        $cours = $quiz->getChapitre()->getCours();
+        $projectDir = $this->getParameter('kernel.project_dir');
+        $certificationPath = $projectDir . '/public/uploads/certifications/certif_' . $cours->getId() . '.pdf';
+
+        if (!file_exists($certificationPath)) {
+            throw new \Exception('Fichier de certification introuvable : ' . $certificationPath);
+        }
+
+        // Créer l'email
+        $email = (new Email())
+            ->from(new Address('outid@gmail.com', 'Plateforme E-learning OUTID'))
+            ->to($emailEtudiant)
+            ->subject('Félicitations ! Voici votre certification')
+            ->text('Félicitations ! Vous avez obtenu un score parfait au quiz du cours "' . $cours->getNom(). '". Vous trouverez en pièce jointe votre certification.')
+            ->attachFromPath($certificationPath, 'certification.pdf');
+
+        // Envoyer l'email
+        $mailer->send($email);
+
+        $this->addFlash('success', 'Félicitations ! La certification a été envoyée à ' . $emailEtudiant);
+    } else {
+        $this->addFlash('success', 'Votre score est : ' . $score . '/' . $totalQuestions);
+    }
+
+    return $this->redirectToRoute('front_cours_show', [
+        'id' => $quiz->getChapitre()->getCours()->getId()
+    ]);
+
     }
     
     

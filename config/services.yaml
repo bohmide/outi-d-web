@@ -14,6 +14,7 @@ parameters:
     stability_ai_api_key: 'sk-cgshkFfimHx5fGgriRsB6EFJihjV20CEV2yDHI996X8r9Hjp'
     upload_puzzlePieces: '%kernel.project_dir%/public/uploads/puzzlePieces'
     upload_puzzleMain: '%kernel.project_dir%/public/uploads/puzzleMain'
+    pdf_directory: '%kernel.project_dir%/public/uploads/certifications'
     upload_iconBadge: '%kernel.project_dir%/public/uploads/badges'
     memory_card_directory: '%kernel.project_dir%/public/uploads/memoryCards'
 
@@ -28,11 +29,9 @@ services:
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
-    
     App\Service\PaymeeService:
         arguments:
             $client: '@http_client'
-
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:
@@ -46,3 +45,7 @@ services:
     
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+     # Service pour la génération des PDFs
+    App\Service\PdfGenerator:
+        arguments:
+            $pdfDirectory: '%pdf_directory%'

@@ -4,20 +4,44 @@
 
 {% block body %}
 <div class="container my-5">
-    <h1 class="text-center mb-4">Liste des Cours</h1>
-   
-
+    <h1 class="text-center mb-4 text-primary">📚 Liste des Cours</h1>
+    
+    <!-- Formulaire de recherche -->
+    <form method="get" action="{{ path('app_showcours') }}" class="mb-4 p-3 bg-light rounded shadow-sm">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <input type="text" name="nom" class="form-control" placeholder="🔍 Nom du cours" value="{{ app.request.query.get('nom', '') }}">
+            </div>
+            <div class="col-md-3">
+                <select name="etat" class="form-select">
+                    <option value="">📌 Tous les états</option>
+                    <option value="Facile" {{ app.request.query.get('etat') == 'Facile' ? 'selected' : '' }}>✅ Facile</option>
+                    <option value="Moyen" {{ app.request.query.get('etat') == 'Moyen' ? 'selected' : '' }}>⚖️ Moyen</option>
+                    <option value="Avancé" {{ app.request.query.get('etat') == 'Avancé' ? 'selected' : '' }}>🚀 Avancé</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <input type="date" name="dateCreation" class="form-control" value="{{ app.request.query.get('dateCreation', '') }}">
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-primary w-100">🔎 Rechercher</button>
+            </div>
+        </div>
+    </form>
+    
     <div class="row">
         {% for cours in cours %}
             <div class="col-md-4 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ cours.nom }}</h5>
-                        <p class="card-text">État : {{ cours.etat }}</p>
-                        <a href="{{ path('front_cours_show', {'id': cours.id}) }}" class="btn btn-primary">Voir les détails</a>
+                <div class="card shadow-sm border-0">
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-primary">{{ cours.nom }}</h5>
+                        <p class="card-text"><strong>État :</strong> <span class="badge bg-info text-dark">{{ cours.etat }}</span></p>
+                        <a href="{{ path('front_cours_show', {'id': cours.id}) }}" class="btn btn-outline-primary">📖 Voir les détails</a>
                     </div>
                 </div>
             </div>
+        {% else %}
+            <p class="text-center text-muted">😔 Aucun cours trouvé.</p>
         {% endfor %}
     </div>
 </div>
