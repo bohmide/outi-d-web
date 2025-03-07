@@ -149,7 +149,7 @@ class GamificationController extends AbstractController
         $entityManager->remove($question);
         $entityManager->flush();
 
-        return $this->redirectToRoute('QuizKids_admin');
+        return $this->redirectToRoute('QuizKids_list_admin');
     }
     // Modifier une question
     #[Route('/backQuizKids/edit/{id}', name: 'edit_QuizKids')]
