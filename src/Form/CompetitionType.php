@@ -10,11 +10,13 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
+
 
 class CompetitionType extends AbstractType
 {
@@ -49,8 +51,7 @@ class CompetitionType extends AbstractType
         ])
         ->add('fichierFile', FileType::class, [
             'label' => 'Fichier à Télécharger (Image, PDF, Excel)',
-             // Ne pas chercher ce champ dans l'entité
-            'required' => false, // Symfony ne force pas la saisie, on gère ça dans l'entité
+            'required' => false,
             'attr' => [
                 'class' => 'file-upload-input',
                 'accept' => 'image/*, .pdf, .xlsx, .xls',
@@ -63,16 +64,18 @@ class CompetitionType extends AbstractType
                     'maxSizeMessage' => 'Le fichier ne doit pas dépasser 5MB.',
                 ]),
             ],
-        
         ])
-        
-        
         ->add('organisation', EntityType::class, [
             'class' => Organisation::class,
             'choice_label' => 'nomOrganisation', 
             'label' => 'Organisation Associée',
             'placeholder' => 'Sélectionnez une organisation',
             'required' => true,
+        ])
+        
+        ->add('localisation', HiddenType::class, [
+            'required' => false,
+            'attr' => ['id' => 'localisation'],
         ]);
     }
     public function configureOptions(OptionsResolver $resolver): void

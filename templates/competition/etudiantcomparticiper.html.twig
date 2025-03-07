@@ -11,7 +11,16 @@
         <p><strong>Organisée par :</strong> {{ competition.nomEntreprise }}</p>
 
         <h3>Soumettre votre fichier</h3>
-        <form action="#" method="POST" enctype="multipart/form-data" class="participation-form">
+        <form action="{{ path('competition_participation', {'id': competition.id}) }}" method="POST" enctype="multipart/form-data" class="participation-form">
+            <div class="form-group">
+                <label for="equipe" class="form-label">Choisissez une équipe</label>
+                <select name="equipe" id="equipe" class="form-control" required>
+                    <option value="" disabled selected>-- Sélectionnez une équipe --</option>
+                    {% for equipe in equipes %}
+                        <option value="{{ equipe.id }}">{{ equipe.nomEquipe }}</option>
+                    {% endfor %}
+                </select>
+            </div>
             <div class="form-group">
                 <label for="file" class="form-label">Sélectionnez un fichier (ex. .zip)</label>
                 <input type="file" name="file" id="file" class="form-control" required>

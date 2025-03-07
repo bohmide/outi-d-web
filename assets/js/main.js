@@ -279,38 +279,5 @@ function toggleMenu(element) {
   } else {
       dropdown.style.display = 'block';
   }
-}document.getElementById('searchCompetition').addEventListener('keyup', function() {
-  let query = this.value.trim();
-  console.log("Recherche en cours :", query); // Debugging
+}
 
-  if (query === "") {
-      document.querySelector('.competition-grid').innerHTML = '<p>Aucune compétition trouvée.</p>';
-      return;
-  }
-
-  fetch(`/competition/search/${encodeURIComponent(query)}`)
-      .then(response => response.json())
-      .then(data => {
-          console.log("Résultats retournés :", data); // Debugging
-
-          let container = document.querySelector('.competition-grid');
-          container.innerHTML = ''; // Clear existing competitions
-
-          if (data.length === 0) {
-              container.innerHTML = '<p>Aucune compétition trouvée.</p>';
-          } else {
-              data.forEach(comp => {
-                  let competitionDiv = `
-                      <div class="competition">
-                          <h2>${comp.nomComp}</h2>
-                          <p class="date">Du ${comp.dateDebut} au ${comp.dateFin}</p>
-                          <p class="description">${comp.description}</p>
-                          <p>Organisée par : ${comp.nomEntreprise}</p>
-                      </div>
-                  `;
-                  container.innerHTML += competitionDiv;
-              });
-          }
-      })
-      .catch(error => console.error('Erreur AJAX:', error));
-});

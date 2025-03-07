@@ -1,0 +1,77 @@
+{% extends "base_admin.html.twig" %}
+
+{% block title %} Liste des Équipes {% endblock %}
+
+{% block body %}
+<div class="content container-fluid pt-4 px-4">
+    <div class="col-12">
+        <div class="bg-secondary rounded h-100 p-4">
+            <h1>Liste des Équipes</h1>
+        </div>
+
+        {# Flash messages #}
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        {# Team list #}
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Nom de l'équipe</th>
+                        <th>Ambassadeur</th>
+                        <th>Membres</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for equipe in equipes %}
+                        <tr>
+                            <td>{{ equipe.nomEquipe }}</td>
+                            <td>{{ equipe.ambassadeur }}</td>
+                            <td>
+                                <ul class="list-unstyled">
+                                    {% for membre in equipe.membres %}
+                                        <li>{{ membre }}</li>
+                                    {% else %}
+                                        <li>Aucun membre inscrit</li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                            <td>
+                                <ul class="list-unstyled">
+                                    {% if equipe.travail %}
+                            <a href="{{ asset('uploads/competition/' ~ equipe.travail) }}" target="_blank" class="btn btn-info">Voir le fichier</a>
+                            
+                        {% else %}
+                        <p>Aucun fichier disponible</p>
+                        {% endif %}
+                                </ul>
+                            </td>
+                            <td>
+                                    
+                                        <li>
+                                            <form method="post" action="{{ path('equipe_delete', {'id': equipe.id}) }} "onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette compétition ?');" style="display: inline;" >
+                                                 
+                                                  <input type="hidden" name="_method" value="DELETE">
+                                                  <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                                            </form>
+                                        </li>
+                                    
+                                
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center">Aucune équipe trouvée.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
