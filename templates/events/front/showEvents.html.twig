@@ -5,58 +5,158 @@
 
 {% block body %}
 	<div class="container my-5">
-		<h1 class="text-center mb-4">Gestion des Événements</h1>
+		<h1 class="text-center mb-4">🎉 Gestion des Événements</h1>
 
-		<a href="{{ path('app_front_add_event') }}" class="btn btn-primary mb-4">Ajouter un Nouvel Événement</a>
+		<a href="{{ path('app_front_add_event') }}" class="btn btn-primary btn-lg mb-4">
+			<i class="fas fa-plus"></i>
+			Ajouter un Événement
+		</a>
 
+		<div class="filter-container">
+			<form method="get" action="{{ path('app_front_prof_show_events') }}" class="row g-3">
+				<div class="col-lg-3">
+					<input type="text" name="search" class="form-control form-control-lg" placeholder="🔍 Rechercher..." value="{{ searchTerm }}">
+				</div>
+
+				<div class="col-lg-3">
+					<select name="genre" class="form-select form-select-lg">
+						<option value="">🎭 Sélectionner un Genre</option>
+						{% for genre in genres %}
+							<option value="{{ genre.id }}" {% if genre.id == app.request.query.get('genre') %} selected {% endif %}>
+								{{ genre.getNomGenre() }}
+							</option>
+						{% endfor %}
+					</select>
+				</div>
+
+				<div class="col-lg-2">
+					<input type="number" name="min_price" class="form-control form-control-lg" placeholder="💰 Min Prix" value="{{ minPrice }}">
+				</div>
+
+				<div class="col-lg-2">
+					<input type="number" name="max_price" class="form-control form-control-lg" placeholder="💰 Max Prix" value="{{ maxPrice }}">
+				</div>
+
+				<div class="col-md-1 text-center">
+					<button type="submit" class="btn btn-outline-dark btn-lg w-100" style="padding: 0.6rem; display: flex; align-items: center; justify-content: center;">
+						<i class="fas fa-search"></i>
+					</button>
+				</div>
+			</form>
+		</div>
+
+		<!-- TABLEAU STYLISÉ -->
 		{% if events is empty %}
-			<p colspan="8" class="text-center">Aucun événement trouvé.</p>
+			<p class="text-center mt-4">Aucun événement trouvé.</p>
 		{% else %}
-			<table class="table">
-				<thead>
-					<tr>
-						<th>Nom</th>
-						<th>Description</th>
-						<th>Date</th>
-						<th>Membres</th>
-						<th>Genre</th>
-						<th>Sponsors</th>
-						<th>Image</th>
-						<th>Actions</th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for event in events %}
-						<tr>
-							<td>
-								<strong>{{ event.getNomEvent() }}</strong>
-							</td>
-							<td>{{ event.getDescription() }}</td>
-							<td>{{ event.getDateEvent()|date('d/m/Y') }}</td>
-							<td>{{ event.getNbrMembers() ?? 'Illimité' }}</td>
-							<td>{{ event.genre.getNomGenre() }}</td>
-							<td>
-								{% for sponsor in event.getSponsors() %}
-									{{ sponsor.getNomSponsor() }}<br>
-								{% endfor %}
-							</td>
-							<td>
-								{% if event.getImagePath() %}
-									<img src="{{ asset('uploads/events_images/' ~ event.imagePath) }}" alt="Event Image" height="50">
-								{% else %}
-									Aucune image
-								{% endif %}
-							</td>
-							<td>
-								<a href="{{ path('app_front_update_event', {'id': event.getId()}) }}" class="btn btn-warning mb-2">Modifier</a>
-								<form action="{{ path('app_delete_event', {'id': event.getId()}) }}" method="post" class="d-inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet événement ?');">
-									<button type="submit" class="btn btn-danger">Supprimer</button>
-								</form>
-							</td>
+			<div class="table-responsive mt-4">
+				<table class="table table-hover align-middle">
+					<thead class="table-dark">
+						<tr class="text-center">
+							<th>Nom</th>
+							<th>Description</th>
+							<th>Date</th>
+							<th>Membres</th>
+							<th>Genre</th>
+							<th>Sponsors</th>
+							<th>Image</th>
+							<th>Prix</th>
+							<th>Date de Création</th>
+							<th>Actions</th>
 						</tr>
-                    {% endfor %}
-				</tbody>
-			</table>
+					</thead>
+					<tbody>
+						{% for event in events %}
+							<tr class="text-center">
+								<td>
+									<strong>{{ event.getNomEvent() }}</strong>
+								</td>
+								<td>{{ event.getDescription()|slice(0, 50) ~ '...' }}</td>
+								<td>{{ event.getDateEvent()|date('d/m/Y') }}</td>
+								<td>{{ event.getNbrMembers() ?? 'Illimité' }}</td>
+								<td>{{ event.genre.getNomGenre() }}</td>
+								<td>
+									{% for sponsor in event.getSponsors() %}
+										{{ sponsor.getNomSponsor() }}<br>
+									{% endfor %}
+								</td>
+								<td>
+									{% if event.getImagePath() %}
+										<img src="{{ asset('uploads/events_images/' ~ event.imagePath) }}" alt="Image" class="rounded shadow-sm" style="width: 60px; height: 60px; object-fit: cover;">
+									{% else %}
+										<span class="text-muted">Aucune image</span>
+									{% endif %}
+								</td>
+								<td>
+									{% if event.getPrix() is not null %}
+										{{ event.getPrix()|number_format(2, '.', ',') }}
+										dt
+									{% else %}
+										<span class="text-muted">Gratuit</span>
+									{% endif %}
+								</td>
+								<td>{{ event.getDateCreation()|date('d/m/Y') }}</td>
+								<td>
+									<div
+										class="d-flex justify-content-center gap-2">
+										<!-- Modifier -->
+										<a href="{{ path('app_front_update_event', {'id': event.getId()}) }}" class="btn btn-outline-warning d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+											<i class="fas fa-edit"></i>
+										</a>
+
+										<!-- Supprimer -->
+										<form action="{{ path('app_delete_event', {'id': event.getId()}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet événement ?');">
+											<button class="btn btn-outline-danger delete-event" data-id="{{ event.id }}" style="width: 40px; height: 40px;">
+												<i class="fas fa-trash"></i>
+											</button>
+										</form>
+
+										<!-- QR Code -->
+										<a href="{{ path('app_qrcode', {'id': event.id}) }}" class="btn btn-outline-success d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+											<i class="fas fa-qrcode"></i>
+										</a>
+									</div>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
 		{% endif %}
 	</div>
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script>
+$(".delete-event").click(function() {
+    let eventId = $(this).data("id");
+    console.log("ID envoyé :", eventId); // Vérifie dans la console
+
+    if (!eventId) {
+        alert("Erreur : ID non trouvé.");
+        return;
+    }
+
+    if (confirm("Êtes-vous sûr de vouloir supprimer cet événement ?")) {
+        $.ajax({
+            url: "/event/delete/" + eventId,
+            type: "DELETE",
+            success: function(response) {
+                console.log("Réponse du serveur :", response);
+                if (response.success) {
+                    alert("Événement supprimé !");
+                    location.reload(); // Rafraîchir la page
+                } else {
+                    alert("Erreur : " + response.error);
+                }
+            },
+            error: function(xhr) {
+                console.error("Erreur AJAX :", xhr.responseText);
+                alert("Erreur interne du serveur.");
+            }
+        });
+    }
+});
+
+	</script>
+
 {% endblock %}

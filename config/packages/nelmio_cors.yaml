@@ -1,0 +1,16 @@
+nelmio_cors:
+    defaults:
+        allow_origin: ['*']
+        allow_methods: ['POST', 'GET', 'OPTIONS', 'PUT', 'DELETE']
+        allow_headers: ['Content-Type', 'Authorization']
+        expose_headers: ['Link']
+        max_age: 3600
+        hosts: []
+        origin_regex: false
+        forced_allow_origin_value: ~
+
+    paths:
+        '^/payment/initiate':  # Autoriser uniquement les requêtes vers /payment/initiate
+            allow_origin: ['*']
+            allow_methods: ['POST', 'OPTIONS']
+            allow_headers: ['Content-Type', 'Authorization']

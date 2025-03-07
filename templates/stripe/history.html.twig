@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Historique des paiements{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>Historique des transactions</h1>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Commande</th>
+                <th>Montant</th>
+                <th>Statut</th>
+                <th>Date</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for payment in payments %}
+            <tr>
+                <td>#{{ payment.orderId }}</td>
+                <td>{{ payment.amount|format_currency('USD') }}</td>
+                <td>
+                    <span class="badge bg-{{ payment.status == 'succeeded' ? 'success' : 'danger' }}">
+                        {{ payment.status|upper }}
+                    </span>
+                </td>
+                <td>{{ payment.createdAt|date('d/m/Y H:i') }}</td>
+                <td>
+                    <a href="{{ path('app_stripe_status', {'orderId': payment.orderId}) }}" class="btn btn-sm btn-info">
+                        Détails
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

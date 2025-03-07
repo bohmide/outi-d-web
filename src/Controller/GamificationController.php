@@ -2,11 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\Badge;
 use App\Entity\Games;
+use App\Entity\MemoryCard;
 use App\Entity\Puzzle;
 use App\Entity\QuizKids;
+use App\Form\BadgeType;
 use App\Form\GamesType;
+use App\Form\MemoryCardType;
 use App\Form\PuzzleGameType;
+use App\Repository\BadgeRepository;
+use App\Repository\MemoryCardRepository;
 use App\Repository\PuzzleRepository;
 use App\Repository\QuizKidsRepository;
 use App\Form\QuizKidsType;
@@ -27,6 +33,46 @@ class GamificationController extends AbstractController
     {
         $this->entityManager = $entityManager;
     }
+    
+    #[Route('/badge/search', name: 'badge_search')]
+    public function badgeList(Request $request,BadgeRepository $badgeRepository): Response
+    {
+        $searchQuery = $request->query->get('search', '');
+        
+        // Utilisation de l'EntityManager pour récupérer les badges filtrés
+        $badges = $badgeRepository->findBySearchQuery($searchQuery);
+
+        return $this->render('gamification/badge/list.html.twig', [
+            'badges' => $badges,
+        ]);
+    }
+    #[Route('/quizKids/search', name: 'quizKids_search')]
+    public function QuizKidsList(Request $request,QuizKidsRepository $quizKidsRepository): Response
+    {
+        $searchQuery = $request->query->get('search', '');
+        
+        // Utilisation de l'EntityManager pour récupérer les badges filtrés
+        $quizzes = $quizKidsRepository->findBySearchQuery($searchQuery);
+
+        return $this->render('gamification/quiz/list.html.twig', [
+            'questions' => $quizzes,
+        ]);
+    }
+    #[Route('/puzzle/search', name: 'puzzle_search')]
+    public function PuzzleList(Request $request,PuzzleRepository $puzzleRepository): Response
+    {
+        $searchQuery = $request->query->get('search', '');
+        
+        // Utilisation de l'EntityManager pour récupérer les badges filtrés
+        $puzzles = $puzzleRepository->findBySearchQuery($searchQuery);
+
+        return $this->render('gamification/game/puzzleList.html.twig', [
+            'puzzles' => $puzzles,
+        ]);
+    }
+   
+   
+
     #[Route('/backQuizKids/create', name: 'QuizKids_create_admin')]
     public function addQuestion(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger, QuizKidsRepository $quizKidsRepository): Response
     {
@@ -98,7 +144,7 @@ class GamificationController extends AbstractController
     }
     // Supprimer une question
     #[Route('/backQuizKids/delete/{id}', name: 'delete_QuizKids')]
-    public function delete(QuizKids $question, EntityManagerInterface $entityManager): Response
+    public function deleteQ(QuizKids $question, EntityManagerInterface $entityManager): Response
     {
         $entityManager->remove($question);
         $entityManager->flush();
@@ -289,6 +335,9 @@ class GamificationController extends AbstractController
         ]);
     }
 
+
+
+
     #[Route('/quiz/check/{id}', name: 'check_answer')]
     public function checkAnswer(int $id, Request $request, EntityManagerInterface $entityManager)
     {
@@ -362,96 +411,9 @@ class GamificationController extends AbstractController
         return $this->redirectToRoute('select_quizKids');
     }
 
-
-
-#[Route('/play/puzzle/{id}', name: 'puzzle_play')]
-public function playPuzzle(int $id, PuzzleRepository $puzzleRepository): Response
-    {
-        // Supposons que chaque pièce soit stockée dans une collection ou sous forme de chemins dans la base de données.
-        $pieces = $puzzle = $puzzleRepository->find($id)->getPieces();  // C'est ici que vous récupérez les chemins des pièces de puzzle
-        $finalImage = $puzzle = $puzzleRepository->find($id)->getFinalImage();  // Chemin vers l'image finale du puzzle
-
-        return $this->render('gamification/game/puzzle.html.twig', [
-            'pieces' => $pieces,
-            'finalImage' => $finalImage,
-        ]);
-    }
-
-    
-
-
-
-
-
-#[Route('/game/puzzle/upload', name: 'puzzle_upload')]
-public function addPuzzle(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
-{
-    $puzzle = new Puzzle();
-
-    $form = $this->createForm(PuzzleGameType::class, $puzzle, [
-        'games' => $entityManager->getRepository(Games::class)->findAll(),
-    ]);
-    $form->handleRequest($request);
-
-    if ($form->isSubmitted() && $form->isValid()) {
-        // Gestion de l'image complète du puzzle
-        $finalImageFile = $form->get('finalImage')->getData();
-        if ($finalImageFile) {
-            $originalFilename = pathinfo($finalImageFile->getClientOriginalName(), PATHINFO_FILENAME);
-            $safeFilename = $slugger->slug($originalFilename);
-            $newFilename = $safeFilename . '-' . uniqid() . '.' . $finalImageFile->guessExtension();
-
-            try {
-                $finalImageFile->move(
-                    $this->getParameter('upload_puzzleMain'), 
-                    $newFilename
-                );
-                $puzzle->setFinalImage($newFilename);
-            } catch (FileException $e) {
-                $this->addFlash('error', 'Erreur lors de l\'upload de l\'image complète.');
-            }
-        }
-
-        // Gestion des pièces du puzzle
-        $piecesFiles = $request->files->get('puzzle')['pieces']; // Récupérer les fichiers
-        if ($piecesFiles) {
-            $piecesNames = [];
-            
-            foreach ($piecesFiles as $pieceFile) {
-                if ($pieceFile ) {
-                    $originalFilename = pathinfo($pieceFile->getClientOriginalName(), PATHINFO_FILENAME);
-                    $safeFilename = $slugger->slug($originalFilename);
-                    $newFilename = $safeFilename . '-' . uniqid() . '.' . $pieceFile->guessExtension();
-
-                    try {
-                        $pieceFile->move(
-                            $this->getParameter('upload_puzzlePieces'), 
-                            $newFilename
-                        );
-                        $piecesNames[] = $newFilename;
-                    } catch (FileException $e) {
-                        $this->addFlash('error', 'Erreur lors de l\'upload des pièces.');
-                    }
-                }
-            }
-
-            $puzzle->setPieces($piecesNames); // Enregistrer tous les noms des fichiers de pièces
-        }
-
-        // Sauvegarde du puzzle
-        $entityManager->persist($puzzle);
-        $entityManager->flush();
-
-        return $this->redirectToRoute('puzzle_list');
-    }
-
-    return $this->render('gamification/game/puzzleUplaod.html.twig', [
-        'form' => $form->createView(),
-    ]);
-}
-
-
-
+////////////////////////////////////////////////////////////////////////////////////////////////////:
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////game//////////
 
 
 #[Route('/back/game/create', name: 'game_create')]
@@ -523,6 +485,106 @@ public function deleteGame(Games $question, EntityManagerInterface $entityManage
 
         return $this->redirectToRoute('game_list');
     }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////::
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////puzzle/////
+
+#[Route('/puzzleFront', name: 'puzzle_front')]
+public function listPlayF(PuzzleRepository $puzzleRepository): Response
+{
+    // Récupérer tous les puzzles depuis la base de données
+    $puzzles = $puzzleRepository->findAll();
+
+    // Rendre la vue avec les puzzles
+    return $this->render('gamification/game/puzzleChooseToPlay.html.twig', [
+        'puzzles' => $puzzles,
+    ]);
+}
+
+
+#[Route('/play/puzzle/{id}', name: 'puzzle_play')]
+    public function playPuzzle(int $id, PuzzleRepository $puzzleRepository): Response
+        {
+            // Supposons que chaque pièce soit stockée dans une collection ou sous forme de chemins dans la base de données.
+            $pieces = $puzzle = $puzzleRepository->find($id)->getPieces();  // C'est ici que vous récupérez les chemins des pièces de puzzle
+            $finalImage = $puzzle = $puzzleRepository->find($id)->getFinalImage();  // Chemin vers l'image finale du puzzle
+
+            return $this->render('gamification/game/puzzle.html.twig', [
+                'pieces' => $pieces,
+                'finalImage' => $finalImage,
+            ]);
+        }
+
+
+#[Route('/game/puzzle/upload', name: 'puzzle_upload')]
+public function addPuzzle(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+{
+    $puzzle = new Puzzle();
+
+    $form = $this->createForm(PuzzleGameType::class, $puzzle, [
+        'games' => $entityManager->getRepository(Games::class)->findAll(),
+    ]);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        // Gestion de l'image complète du puzzle
+        $finalImageFile = $form->get('finalImage')->getData();
+        if ($finalImageFile) {
+            $originalFilename = pathinfo($finalImageFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $safeFilename = $slugger->slug($originalFilename);
+            $newFilename = $safeFilename . '-' . uniqid() . '.' . $finalImageFile->guessExtension();
+
+            try {
+                $finalImageFile->move(
+                    $this->getParameter('upload_puzzleMain'), 
+                    $newFilename
+                );
+                $puzzle->setFinalImage($newFilename);
+            } catch (FileException $e) {
+                $this->addFlash('error', 'Erreur lors de l\'upload de l\'image complète.');
+            }
+        }
+
+        // Gestion des pièces du puzzle
+        $piecesFiles = $request->files->get('puzzle')['pieces']; // Récupérer les fichiers
+        if ($piecesFiles) {
+            $piecesNames = [];
+            
+            foreach ($piecesFiles as $pieceFile) {
+                if ($pieceFile ) {
+                    $originalFilename = pathinfo($pieceFile->getClientOriginalName(), PATHINFO_FILENAME);
+                    $safeFilename = $slugger->slug($originalFilename);
+                    $newFilename = $safeFilename . '-' . uniqid() . '.' . $pieceFile->guessExtension();
+
+                    try {
+                        $pieceFile->move(
+                            $this->getParameter('upload_puzzlePieces'), 
+                            $newFilename
+                        );
+                        $piecesNames[] = $newFilename;
+                    } catch (FileException $e) {
+                        $this->addFlash('error', 'Erreur lors de l\'upload des pièces.');
+                    }
+                }
+            }
+
+            $puzzle->setPieces($piecesNames); // Enregistrer tous les noms des fichiers de pièces
+        }
+
+        // Sauvegarde du puzzle
+        $entityManager->persist($puzzle);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('puzzle_list');
+    }
+
+    return $this->render('gamification/game/puzzleUplaod.html.twig', [
+        'form' => $form->createView(),
+    ]);
+}
+
+
     #[Route('/back/puzzle/list', name: 'puzzle_list')]
     public function listPuzzles(EntityManagerInterface $entityManager,PuzzleRepository $puzzleRepository): Response
 {
@@ -542,4 +604,253 @@ public function deletePuzzle(Puzzle $puzzle, EntityManagerInterface $entityManag
         return $this->redirectToRoute('puzzle_list');
     }
 
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////    
+//Badge//
+
+#[Route('/back/badge/add', name: 'badge_add')]
+public function addBadge(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+{
+    $badge = new Badge();
+    $form = $this->createForm(BadgeType::class, $badge);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $iconFile = $form->get('iconFile')->getData();
+        if ($iconFile) {
+            $originalFilename = pathinfo($iconFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $safeFilename = $slugger->slug($originalFilename);
+            $newFilename = $safeFilename . '-' . uniqid() . '.' . $iconFile->guessExtension();
+
+            try {
+                $iconFile->move(
+                    $this->getParameter('upload_iconBadge'), 
+                    $newFilename
+                );
+                $badge->setIcon($newFilename);
+            } catch (FileException $e) {
+                $this->addFlash('error', 'Erreur lors de l\'upload de l\'image complète.');
+            }
+        }
+        $entityManager->persist($badge);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Badge ajouté avec succès !');
+        return $this->redirectToRoute('badge_list'); // Redirection après ajout
+    }
+
+    // Compter le nombre total de badges
+    $totalBadges = $entityManager->getRepository(Badge::class)->count([]);
+
+    return $this->render('gamification/badge/createBadge.html.twig', [
+        'form' => $form->createView(),
+       
+    ]);
 }
+
+#[Route('/back/badge/list', name: 'badge_list')]
+public function listBadges(EntityManagerInterface $entityManager): Response
+{
+    $badges = $entityManager->getRepository(Badge::class)->findAll();
+
+    return $this->render('gamification/badge/list.html.twig', [
+        'badges' => $badges,
+    ]);
+}
+
+#[Route('/back/badge/delete/{id}', name: 'badge_delete')]
+public function deleteBadge(Badge $puzzle, EntityManagerInterface $entityManager): Response
+    {
+        
+        $entityManager->remove($puzzle);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('badge_list');
+    }
+    
+
+#[Route('/back/badge/update/{id}', name: 'badge_update')]
+public function updateBadge(int $id, Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+{
+    // Récupérer le badge à partir de l'ID
+    $badge = $entityManager->getRepository(Badge::class)->find($id);
+
+    if (!$badge) {
+        $this->addFlash('error', 'Le badge demandé n\'existe pas.');
+        return $this->redirectToRoute('badge_list'); // Rediriger si le badge n'est pas trouvé
+    }
+
+    // Créer le formulaire avec les données du badge
+    $form = $this->createForm(BadgeType::class, $badge);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $iconFile = $form->get('iconFile')->getData();
+
+        if ($iconFile) {
+            // Supprimer l'ancienne image s'il y en a une
+            $oldFilename = $badge->getIcon();
+            if ($oldFilename) {
+                $oldFilepath = $this->getParameter('upload_iconBadge') . '/' . $oldFilename;
+                if (file_exists($oldFilepath)) {
+                    unlink($oldFilepath); // Supprimer l'ancien fichier
+                }
+            }
+
+            // Gérer la nouvelle image
+            $originalFilename = pathinfo($iconFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $safeFilename = $slugger->slug($originalFilename);
+            $newFilename = $safeFilename . '-' . uniqid() . '.' . $iconFile->guessExtension();
+
+            try {
+                $iconFile->move(
+                    $this->getParameter('upload_iconBadge'),
+                    $newFilename
+                );
+                $badge->setIcon($newFilename); // Mettre à jour l'icône
+            } catch (FileException $e) {
+                $this->addFlash('error', 'Erreur lors de l\'upload de l\'image complète.');
+            }
+        }
+
+        $entityManager->flush(); // Sauvegarder les modifications
+
+        $this->addFlash('success', 'Badge mis à jour avec succès !');
+        return $this->redirectToRoute('badge_list'); // Redirection après mise à jour
+    }
+
+    // Compter le nombre total de badges
+    $totalBadges = $entityManager->getRepository(Badge::class)->count([]);
+
+    return $this->render('gamification/badge/updateBadge.html.twig', [
+        'form' => $form->createView(),
+        'badge' => $badge,
+    ]);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////
+////MemoryCard///////////////////////////////////////////////////////////////////////////
+#[Route('/memoryCard/play/{id}', name: 'memory_card_play')]
+    public function index(int $id, MemoryCardRepository $puzzleRepository): Response
+    {   
+        $images = $puzzleRepository->find($id)->getImages();
+        return $this->render('gamification/game/memoryCard.html.twig',[
+            'pieces' => $images,
+        ]);
+    }  
+
+#[Route('/memory-cards', name: 'app_memory_card_choose')]
+    public function choose(MemoryCardRepository $memoryCardRepository): Response
+    {
+        return $this->render('gamification/game/memoryCardChoose.html.twig', [
+            'memoryCards' => $memoryCardRepository->findAll(),
+        ]);
+    }    
+    
+    #[Route('/back/memory-card/new', name: 'app_memory_card_new')]
+    public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+    {
+        $memoryCard = new MemoryCard();
+        $form = $this->createForm(MemoryCardType::class, $memoryCard);
+        $form->handleRequest($request);
+    
+        // Liste des noms prédéfinis pour les images
+        $imageNames = [
+            'cat', 'dog', 'rabbit', 'frog',
+            'apple',  'banana',  'strawberry',  'pineapple'
+        ];
+    
+        if ($form->isSubmitted() && $form->isValid()) {
+            $imagesFiles = $form->get('images')->getData();
+    
+            if ($imagesFiles) {
+                // Vérifier que le nombre d'images correspond exactement à la liste
+                if (count($imagesFiles) !== count($imageNames)) {
+                    $this->addFlash('error', 'Veuillez uploader exactement ' . count($imageNames) . ' images.');
+                    return $this->redirectToRoute('app_memory_card_new');
+                }
+    
+                $images = [];
+                foreach ($imagesFiles as $index => $imageFile) {
+                    // Vérifier si l'index existe dans la liste
+                    if (!isset($imageNames[$index])) {
+                        continue;
+                    }
+    
+                    // Définir le nouveau nom en fonction de la liste
+                    $newFilename = $imageNames[$index]  . '.' . $imageFile->guessExtension();
+    
+                    try {
+                        // Déplacer l'image dans le dossier uploads/memoryCards/
+                        $imageFile->move(
+                            $this->getParameter('memory_card_directory'),
+                            $newFilename
+                        );
+                        $images[] = $newFilename;
+                    } catch (\Exception $e) {
+                        // Gérer l'erreur d'upload
+                        $this->addFlash('error', 'Une erreur est survenue lors de l\'upload des images.');
+                        return $this->redirectToRoute('app_memory_card_new');
+                    }
+                }
+    
+                // Enregistrer les images dans la base de données
+                $memoryCard->setImages($images);
+    
+                // Persister l'entité
+                $entityManager->persist($memoryCard);
+                $entityManager->flush();
+    
+                $this->addFlash('success', 'Les cartes mémoire ont été ajoutées avec succès!');
+                return $this->redirectToRoute('app_memory_card_list');
+            }
+        }
+    
+        return $this->render('gamification/game/memoryCardAdd.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+    
+    
+    #[Route('/back/memory-card/list', name: 'app_memory_card_list')]
+    public function list(MemoryCardRepository $memoryCardRepository): Response
+    {
+        $memoryCards = $memoryCardRepository->findAll();
+        
+        return $this->render('gamification/game/memoryCardList.html.twig', [
+            'memoryCards' => $memoryCards,
+        ]);
+    }   
+    
+    #[Route('/back/memory-card/delete/{id}', name: 'app_memory_card_delete', methods: ['POST', 'GET'])]
+    public function delete(Request $request, MemoryCard $memoryCard, EntityManagerInterface $entityManager): Response
+    {
+        if (!$memoryCard) {
+            $this->addFlash('error', 'Carte mémoire introuvable.');
+            return $this->redirectToRoute('app_memory_card_list');
+        }
+    
+        // Supprimer les fichiers image du serveur
+        $imageDir = $this->getParameter('memory_card_directory');
+        foreach ($memoryCard->getImages() as $image) {
+            $imagePath = $imageDir . '/' . $image;
+            if (file_exists($imagePath)) {
+                unlink($imagePath); // Supprime le fichier
+            }
+        }
+    
+        // Supprimer l'entité de la base de données
+        $entityManager->remove($memoryCard);
+        $entityManager->flush();
+    
+        $this->addFlash('success', 'Carte mémoire supprimée avec succès.');
+        return $this->redirectToRoute('app_memory_card_list');
+    }
+       
+
+
+}
+
+

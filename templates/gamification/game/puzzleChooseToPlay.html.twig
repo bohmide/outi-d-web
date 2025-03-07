@@ -1,0 +1,20 @@
+{% extends 'base_kids.html.twig' %}
+
+{% block title %}Puzzles{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <h2 class="text-center display-3 text-primary mb-5">Choisissez le puzzle</h2>
+    <div class="row justify-content-center">
+        {% for puzzle in puzzles %}
+            <div class="col-md-3 mb-3">
+                <a href="{{ path('puzzle_play', {'id': puzzle.id}) }}" class="btn btn-primary w-100 py-3">
+                    {{ puzzle.game.name }}
+                </a>
+            </div>
+        {% else %}
+            <p class="text-center text-muted">Aucun puzzle disponible pour le moment.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

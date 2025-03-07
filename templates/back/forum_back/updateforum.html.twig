@@ -3,57 +3,83 @@
 {% block title %}Mettre à jour le Forum{% endblock %}
 
 {% block body %}
-<div class="container my-5">
-    <h1 class="text-center mb-4">Mettre à jour le Forum</h1>
-
-    <!-- Messages de succès -->
-    {% for message in app.flashes('success') %}
-        <div class="alert alert-success text-center">{{ message }}</div>
-    {% endfor %}
-
-    <!-- Début du formulaire -->
-    {{ form_start(form, { enctype: 'multipart/form-data', attr: { class: 'form-horizontal needs-validation', novalidate: 'novalidate' } }) }}
-
-    <div class="form-group mb-3">
-        {{ form_label(form.nom, 'Titre du forum', {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
-        {{ form_errors(form.nom) }}
-    </div>
-
-    <div class="form-group mb-3">
-        {{ form_label(form.theme, 'Thème du forum', {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(form.theme, {'attr': {'class': 'form-control'}}) }}
-        {{ form_errors(form.theme) }}
-    </div>
-
-    <div class="form-group mb-3">
-        <label class="form-label">Image du forum</label>
-
-        <!-- Affichage de l'image actuelle -->
-        {% if forum.imageForum %}
-            <div class="mb-2">
-                <img src="{{ asset('uploads/forum_images/' ~ forum.imageForum) }}" alt="Image actuelle" class="img-thumbnail" style="max-width: 200px;">
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Mettre à jour le Forum</h1>
+                </div>
             </div>
-        {% else %}
-            <p>Aucune image actuelle.</p>
-        {% endif %}
-
-        <!-- Champ de téléchargement pour une nouvelle image -->
-        {{ form_widget(form.image_forum, {'attr': {'class': 'form-control'}}) }}
-        {{ form_errors(form.image_forum) }}
+        </div>
     </div>
 
-    <div class="form-group mb-3">
-        <label class="form-label">Date de création</label>
-        <input type="text" class="form-control" value="{{ forum.dateCreation|date('d/m/Y') }}" disabled />
-    </div>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card card-dark">
+                        <div class="card-header">
+                            <h3 class="card-title">Formulaire de mise à jour</h3>
+                        </div>
+                        <div class="card-body">
+                            <!-- Messages de succès -->
+                            {% for message in app.flashes('success') %}
+                                <div class="alert alert-success alert-dismissible">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
 
-    <div class="form-group text-center">
-        <button type="submit" class="btn btn-success">
-            Mettre à jour
-        </button>
-    </div>
+                            <!-- Début du formulaire -->
+                            {{ form_start(form, { enctype: 'multipart/form-data' }) }}
 
-    {{ form_end(form) }}
+                            <div class="form-group">
+                                {{ form_label(form.nom, 'Titre du forum') }}
+                                {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.nom) }}
+                            </div>
+
+                            <div class="form-group">
+                                {{ form_label(form.theme, 'Thème du forum') }}
+                                {{ form_widget(form.theme, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.theme) }}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Image actuelle</label>
+                                {% if forum.imageForum %}
+                                    <div>
+                                        <img src="{{ asset('uploads/forums/' ~ forum.imageForum) }}" 
+                                             alt="Image actuelle" 
+                                             style="max-width: 200px; height: auto;">
+                                    </div>
+                                {% else %}
+                                    <div class="text-muted">Aucune image actuelle</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                {{ form_label(form.image_forum, 'Nouvelle image') }}
+                                {{ form_widget(form.image_forum, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.image_forum) }}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Date de création</label>
+                                <input type="text" class="form-control" value="{{ forum.dateCreation|date('d/m/Y') }}" disabled>
+                            </div>
+
+                            <div class="form-group">
+                                {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}}) }}
+                            </div>
+
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </div>
 {% endblock %}

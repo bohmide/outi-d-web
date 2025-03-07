@@ -61,7 +61,10 @@ use Symfony\Component\Validator\Constraints as Assert;
     )]
     protected ?string $password = null;
     private $password_verif;
-
+    
+    #[ORM\ManyToMany(targetEntity: Badge::class, inversedBy: 'users')]
+    #[ORM\JoinTable(name:'users_badges')]
+    private $badges;
     
     #[ORM\Column(type: 'json')]
     protected array $roles = [];
@@ -164,4 +167,13 @@ public function eraseCredentials()
         return (string) $this->email; // Assuming 'email' is your user identifier
     }
 
+    public function addBadge(Badge $badge): void
+    {
+        $this->badges[] = $badge;
+    }
+
+    public function getBadges(): array
+    {
+        return $this->badges;
+    }
 }

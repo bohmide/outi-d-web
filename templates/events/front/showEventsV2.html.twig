@@ -4,60 +4,82 @@
 {% endblock %}
 
 {% block body %}
-	<body>
+<body>
 
-		<!-- Genre Filter Form -->
-		<div class="filter-container">
-			<form method="get" action="{{ path('app_front_etudiant_show_events') }}">
-				<select name="genre" id="genre">
-					<option value="">Select Genre</option>
+	<div class="cardEvent-container">
+		<form method="get" action="{{ path('app_front_etudiant_show_events') }}" class="row g-3 align-items-center">
+			<div class="col-md-4">
+				<input type="text" name="search" class="form-control form-control-lg" placeholder="🔍 Search events..." value="{{ searchTerm }}">
+			</div>
+
+			<div class="col-md-3">
+				<select name="genre" class="form-select form-select-lg">
+					<option value="">🎭 Select Genre</option>
 					{% for genre in genres %}
-						<option value="{{ genre.id }}" {% if genre.id == app.request.query.get('genre') %} selected {% endif %}>{{ genre.getNomGenre() }}</option>
+						<option value="{{ genre.id }}" {% if genre.id == app.request.query.get('genre') %} selected {% endif %}>
+							{{ genre.getNomGenre() }}
+						</option>
 					{% endfor %}
 				</select>
-				<button type="submit">Filter</button>
-			</form>
-		</div>
+			</div>
 
-		{% if events is empty %}
-			<main>
+			<div class="col-md-2">
+				<input type="number" name="min_price" class="form-control form-control-lg" placeholder="💰 Min Price" value="{{ minPrice }}">
+			</div>
 
-				<p>vide</p>
-			</main>
+			<div class="col-md-2">
+				<input type="number" name="max_price" class="form-control form-control-lg" placeholder="💰 Max Price" value="{{ maxPrice }}">
+			</div>
 
-		{% else %}
-			<main>
-				<div
-					class="cardEvent-container">
-					<!-- Updated to match CSS -->
-					{% for event in events %}
-						<div
-							class="cardEvent">
-							<!-- Updated to match CSS -->
-							{% if event.getImagePath() %}
-								<img src="{{ asset('uploads/events_images/' ~ event.imagePath) }}" alt="Event Image">
-							{% else %}
-								<img src="{{ asset('img/event/eventDefaultPic.jpg') }}" alt="Event Image">
+			<div class="col-md-1 text-center">
+				<button type="submit" class="btn btn-outline-dark btn-lg w-100" style="padding: 0.6rem; display: flex; align-items: center; justify-content: center;">
+					<i class="fas fa-search"></i>
+				</button>
+			</div>
+		</form>
+	</div>
 
-							{% endif %}
-							<div class="card-content">
-								<h2>{{ event.getNomEvent() }}</h2>
-								<p>{{ event.getDescription() }}</p>
-								<a href="{{ path('app_show_details_events', {'id': event.getId()}) }}" class="button">
-									Find out more
-									<span class="material-symbols-outlined">arrow_right_alt</span>
-								</a>
-							</div>
+
+	{% if events is empty %}
+		<main>
+
+			<p>vide</p>
+		</main>
+
+	{% else %}
+		<main>
+			<div
+				class="cardEvent-container">
+				<!-- Updated to match CSS -->
+				{% for event in events %}
+					<div
+						class="cardEvent">
+						<!-- Updated to match CSS -->
+						{% if event.getImagePath() %}
+							<img src="{{ asset('uploads/events_images/' ~ event.imagePath) }}" alt="Event Image">
+						{% else %}
+							<img src="{{ asset('img/event/eventDefaultPic.jpg') }}" alt="Event Image">
+
+						{% endif %}
+						<div class="card-content">
+							<h2>{{ event.getNomEvent() }}</h2>
+							<p>{{ event.getDescription() }}</p>
+							<a href="{{ path('app_show_details_events', {'id': event.getId()}) }}" class="button">
+								Find out more
+								<span class="material-symbols-outlined">arrow_right_alt</span>
+							</a>
 						</div>
-					{% endfor %}
-				</div>
-				<br>
-				<div class="pagination">
-					{{ knp_pagination_render(events) }}
-				</div>
-			</main>
-		{% endif %}
+					</div>
+				{% endfor %}
+			</div>
+			<br>
+			<div class="pagination">
+				{{ knp_pagination_render(events) }}
+			</div>
+		</main>
+	{% endif %}
 
-	</body>
+</body>
 
-{% endblock %}
+	
+	{% endblock %}

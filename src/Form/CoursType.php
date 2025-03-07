@@ -12,7 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use App\Entity\Certification;
-
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 class CoursType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -39,12 +39,15 @@ class CoursType extends AbstractType
             'required' => true,
             'disabled' => true, // L'utilisateur ne peut pas modifier 
         ])
-        // ->add('is_certifie', CheckboxType::class, [
-        //     'label'    => 'Ce cours est certifié ?',
-        // 'required' => false,
-        // 'mapped'   => false, // Ne modifie pas directement l'entité
-        // 'data'     => $options['data']->isCertifie(), // Affiche l'état actuel 
-        // ])
+
+      
+        ->add('is_certifie', CheckboxType::class, [
+            'label'    => 'Ce cours est certifié ?',
+            'required' => false,
+            'mapped'   => false, // Ne modifie pas directement l'entité Cours
+            'data'     => $options['data']->isCertifie(), // Utilise la méthode existante pour récupérer l'état actuel
+        ])
+        
 
         // ->add('certification', ChoiceType::class, [
         //     'choices' => [
@@ -56,12 +59,16 @@ class CoursType extends AbstractType
         //     'required' => false,
         // ])
 
-        ->add('certification', EntityType::class, [
-            'class' => Certification::class,
-            'choice_label' => 'nom_certification', // Assurez-vous que 'nom' est un champ valide de l'entité Certification
-            'placeholder' => 'Choisir une certification (optionnel)',
-            'required' => false,
-        ])
+
+
+        // ->add('certification', EntityType::class, [
+        //     'class' => Certification::class,
+        //     'choice_label' => 'nom_certification', // Assurez-vous que 'nom' est un champ valide de l'entité Certification
+        //     'placeholder' => 'Choisir une certification (optionnel)',
+        //     'required' => false,
+        // ])
+
+
         ->add('etat', ChoiceType::class, [
             'label' => 'Niveau de difficulté',
             'choices' => [

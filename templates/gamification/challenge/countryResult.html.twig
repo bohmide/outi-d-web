@@ -1,0 +1,336 @@
+{% extends 'base_kids.html.twig' %}
+
+{% block title %} Quiz Result {% endblock %}
+
+{% block body %}
+    <!-- OVERLAY -->
+    <div id="popup-overlay-1" class="overlay">
+        <div class="popup">
+            <span class="close-btn" onclick="closePopup()">✖</span>
+
+            <!-- IMAGE -->
+            <div class="image-container">
+                {% if isCorrect %}
+                    <img src="{{ asset('img/globtrotter-happy.png') }}" alt="Correct Answer" class="result-image">
+                {% else %}
+                    <img src="{{ asset('img/globtrotter-happy.png') }}" alt="Incorrect Answer" class="result-image">
+                {% endif %}
+            </div>
+
+            <!-- TEXTE -->
+            <h1 class="result-title">
+                {% if isCorrect %}
+                    🎉 Bravo, GlobeTrotter Junior ! 🌍
+                {% else %}
+                    😢 Oups, essaie encore ! 💪
+                {% endif %}
+            </h1>
+
+            <h3 class="earned-points">
+                {% if isCorrect %}
+                    🏆 Tu as gagné <strong>{{ points }}</strong> points !
+                {% else %}
+                    ❌ Pas de points cette fois, réessaie !
+                {% endif %}
+            </h3>
+
+            <p class="result-message">
+                {% if isCorrect %}
+                    ✨ Continue l'exploration, aventurier ! ✨
+                {% else %}
+                    🚀 Tous les grands explorateurs font des erreurs, recommence !
+                {% endif %}
+            </p>
+
+            <h2 class="total-score">Total Score: <span>{{ totalScore }}</span></h2>
+
+            <a href="{{ path('app_map') }}" class="btn btn-lg btn-play">🌏 Continuer l'Aventure !</a>
+        </div>
+    </div>
+
+    {% if badgeMessage %}
+    <div id="popup-overlay-2" class="popup-overlay-2">
+        <div class="popup">
+            <button class="popup-close" onclick="closePopup()">×</button>
+            <h2>🎉 Félicitations !</h2>
+            <p>{{ badgeMessage }}</p>
+            {% if badgeIcon %}
+                <img src="{{ asset('uploads/badges/' ~ badgeIcon) }}" alt="{{ badgeName }}" style="width: 50px;">
+            {% endif %}
+        </div>
+    </div>
+{% endif %}
+
+
+
+   
+    <audio id="mapS" src="{{ asset('audio/feli.mp3') }}"></audio>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Play sound when the quiz card is visible
+            var quizSound = document.getElementById('mapS');
+           
+
+            
+                quizSound.play(); // Play sound when quiz appears
+            
+        });
+
+        
+    </script>
+    <script>
+        
+
+        function closePopup() {
+            window.location.href = "{{ path('app_map') }}";
+        }
+
+        function closePopup() {
+            document.querySelector('.popup-overlay-2').style.display = 'none';
+        }
+        
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll(".close-popup-btn").forEach(button => {
+                button.addEventListener("click", function () {
+                    let popupToClose = this.closest(".popup-overlay-2"); // Trouve uniquement le pop-up félicitations
+                    if (popupToClose) {
+                        popupToClose.style.display = "none"; // Ferme uniquement ce pop-up
+                    }
+                });
+            });
+        });
+        
+        
+        
+        
+        
+        
+    </script>
+
+    <style>
+        /* Overlay */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
+
+        /* Pop-up */
+        .popup {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            animation: zoomIn 0.5s ease-in-out;
+            position: relative;
+        }
+
+        /* Animation d'apparition */
+        @keyframes zoomIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Bouton de fermeture */
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #555;
+        }
+
+        .close-btn:hover {
+            color: red;
+        }
+
+        /* Image */
+        .image-container {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 20px;
+            overflow: hidden;
+            border-radius: 50%;
+            border: 5px solid #ffcc00;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .result-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Texte */
+        .result-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .earned-points {
+            font-size: 22px;
+            font-weight: bold;
+            color: rgb(239, 36, 36);
+            margin-top: 10px;
+        }
+
+        .total-score {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+            margin-top: 20px;
+        }
+
+        .result-message {
+            font-size: 18px;
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        /* Bouton */
+        .btn-play {
+            font-size: 22px;
+            font-weight: bold;
+            border-radius: 12px;
+            padding: 15px 30px;
+            background: #ffcc00;
+            color: white;
+            text-decoration: none;
+            transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        .btn-play:hover {
+            background: #ff9900;
+            transform: scale(1.05);
+        }
+        #popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .popup-box {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        .popup-box h2 {
+            color: #28a745;
+            margin-bottom: 10px;
+        }
+        
+        .popup-box p {
+            font-size: 18px;
+            color: #333;
+        }
+        
+        .popup-box button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .popup-box button:hover {
+            background: #218838;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .popup-overlay-2 {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1050;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%; /* S'assurer que l'overlay prend toute la largeur */
+            height: 100%; /* S'assurer que l'overlay prend toute la hauteur */
+            background: rgba(0, 0, 0, 0.6); /* Un peu plus sombre pour attirer l'attention */
+        }
+        
+        .popup-overlay {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1040; /* Moins grand que le pop-up félicitations */
+        }
+        .popup-overlay-2 .popup {
+            width: 80%; /* Augmenter la largeur */
+            max-width: 700px; /* Augmenter la largeur maximale */
+            padding: 50px; /* Ajouter plus de padding pour un meilleur espacement */
+            font-size: 20px; /* Ajuster la taille de la police si nécessaire */
+        }
+        
+        .popup-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: red;
+            border: none;
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            transition: 0.3s;
+        }
+        
+        .popup-close:hover {
+            background: darkred;
+        }
+        
+                
+    </style>
+{% endblock %}

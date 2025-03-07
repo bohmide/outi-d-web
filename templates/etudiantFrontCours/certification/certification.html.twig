@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificat d'Achèvement</title>
+    <style>
+        /* Définir l'orientation de la page en paysage */
+        @page {
+            size: A4 landscape; /* Format A4 en orientation paysage */
+            margin: 0;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Utiliser min-height pour s'assurer que la page prend toute la hauteur */
+        }
+
+        .certificate-container {
+            background-color: white;
+            border: 2px solid #2196F3; /* Bordure bleue pour un look élégant */
+            border-radius: 15px;
+            padding: 40px;
+            width: 90%; /* Largeur augmentée pour occuper plus d'espace */
+            max-width: 1000px; /* Largeur maximale ajustée pour l'orientation paysage */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin: auto; /* Centrer horizontalement */
+        }
+
+        .logo {
+            width: 150px; /* Taille du logo */
+            margin-bottom: 20px; /* Espacement sous le logo */
+        }
+
+        h1 {
+            color: #2196F3; /* Bleu pour le titre principal */
+            font-size: 48px; /* Taille de police augmentée pour l'orientation paysage */
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #333;
+            font-size: 36px; /* Taille de police augmentée pour l'orientation paysage */
+            margin-bottom: 30px;
+        }
+
+        .class-project {
+            font-size: 24px; /* Taille de police augmentée pour l'orientation paysage */
+            color: #333;
+            margin: 20px 0;
+        }
+
+        .class-project strong {
+            color: #2196F3; /* Bleu pour le nom du cours/projet */
+        }
+
+        .date-presenter {
+            font-size: 20px; /* Taille de police augmentée pour l'orientation paysage */
+            color: #777;
+            margin-top: 40px;
+        }
+
+        .divider {
+            margin: 30px 0; /* Espacement augmenté pour l'orientation paysage */
+            height: 2px;
+            background-color: #f1f1f1;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="certificate-container">
+        <!-- Logo -->
+        <h1>OUTID</h1>
+        <h2>CERTIFICAT D'ACHÈVEMENT</h2>
+        <div class="divider"></div>
+        <p class="class-project">pour avoir terminé avec succès<br><strong>{{ cours.nom }}</strong></p>
+        <div class="divider"></div>
+        <p class="date-presenter">Délivré le : <strong>{{ cours.getDateCreation()|date('d/m/Y') }}</strong><br><br>Signature : ____________________</p>
+    </div>
+</body>
+</html>

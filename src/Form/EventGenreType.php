@@ -9,6 +9,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 class EventGenreType extends AbstractType
 {
@@ -17,9 +19,10 @@ class EventGenreType extends AbstractType
         $builder
             ->add('nom_genre')
             //->add('nbr')
+
             ->add('image_file', FileType::class, [
                 'label' => 'Upload Image',
-                'mapped' => false, // This is important! It tells Symfony not to map this field to the entity directly.
+                'mapped' => false, // Do not map this field to the entity
                 'required' => false,
                 'constraints' => [
                     new File([
@@ -28,7 +31,7 @@ class EventGenreType extends AbstractType
                         'mimeTypesMessage' => 'Please upload a valid image (JPEG, PNG, WEBP)',
                     ])
                 ],
-            ]);
+            ])
         ;
     }
 

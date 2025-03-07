@@ -55,7 +55,6 @@ class Forum
     public function setNom(string $nom): static
     {
         $this->nom = $nom;
-
         return $this;
     }
 
@@ -67,7 +66,6 @@ class Forum
     public function setTheme(string $theme): static
     {
         $this->theme = $theme;
-
         return $this;
     }
 
@@ -79,7 +77,6 @@ class Forum
     public function setDateCreation(\DateTimeInterface $date_creation): static
     {
         $this->date_creation = $date_creation;
-
         return $this;
     }
 
@@ -91,7 +88,6 @@ class Forum
     public function setImageForum(?string $image_forum): static
     {
         $this->image_forum = $image_forum;
-
         return $this;
     }
 
@@ -109,19 +105,16 @@ class Forum
             $this->posts->add($post);
             $post->setForum($this);
         }
-
         return $this;
     }
 
     public function removePost(Post $post): static
     {
         if ($this->posts->removeElement($post)) {
-            // set the owning side to null (unless already changed)
             if ($post->getForum() === $this) {
                 $post->setForum(null);
             }
         }
-
         return $this;
     }
 }

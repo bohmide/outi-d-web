@@ -1,0 +1,55 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %} Modifier un Badge {% endblock %}
+
+{% block body %}
+<!-- Content Start -->
+<div class="content container-fluid pt-4 px-4">
+    <div class="row g-4 mb-4">
+        <div class="col-sm-12 col-xl-6" mb-3>
+            <div class="bg-secondary rounded h-100 p-4">
+                <h4 class="mb-4">Modifier le Badge : {{ badge.name }}</h4>
+                
+                {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                
+                <div class="form-floating mb-3">
+                    {{ form_widget(form.name, { 'attr': {'class': 'form-control', 'placeholder': 'Nom du badge'} }) }}
+                    {{ form_label(form.name, 'Nom du Badge') }}
+                    <div class="invalid-feedbacks d-block">
+                        {{ form_errors(form.name) }}  
+                    </div>
+                </div>
+                
+                <div class="form-floating mb-3">
+                    {{ form_widget(form.requiredScore, { 'attr': {'class': 'form-control', 'placeholder': 'Score requis'} }) }}
+                    {{ form_label(form.requiredScore, 'Score Requis') }}
+                    <div class="invalid-feedbacks d-block">
+                        {{ form_errors(form.requiredScore) }}  
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    {{ form_widget(form.iconFile, { 'attr': {'class': 'form-label form-control bg-dark', 'type':'file'} }) }}
+                    <div class="invalid-feedbacks d-block">
+                        {{ form_errors(form.iconFile) }}  
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <h5>Image actuelle</h5>
+                    {% if badge.icon %}
+                        <img src="{{ asset('/uploads/badges/' ~ badge.icon) }}" alt="Badge icon" class="img-fluid" style="max-width: 150px;">
+                    {% else %}
+                        <p>Aucune image pour ce badge.</p>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="btn btn-primary">Modifier</button>
+                
+                {{ form_end(form) }}
+            </div>
+        </div>
+        
+    </div>
+</div>
+{% endblock %}

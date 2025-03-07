@@ -8,7 +8,7 @@
         <meta content="" name="description">
         <!-- Favicon -->
         <link href="{{asset('img/LOGO.png')}}" rel="icon">
-    
+        
         <!-- Google Web Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -76,7 +76,9 @@
                                         <a href="{{ path('challenge_list') }}" class="dropdown-item {% if app.request.pathinfo == path('challenge_list') %}active{% endif %}">Challenge</a>
                                         <a href="{{ path('QuizKids_list_admin') }}" class="dropdown-item {% if app.request.pathinfo == path('QuizKids_list_admin') %}active{% endif %}">QuizKids</a>
                                         <a href="{{ path('game_create') }}" class="dropdown-item {% if app.request.pathinfo == path('QuizKids_list_admin') %}active{% endif %}">Games</a>
-                                        <a href="{{ path('puzzle_upload') }}" class="dropdown-item {% if app.request.pathinfo == path('QuizKids_list_admin') %}active{% endif %}">Puzzle</a>
+                                        <a href="{{ path('puzzle_list') }}" class="dropdown-item {% if app.request.pathinfo == path('QuizKids_list_admin') %}active{% endif %}">Puzzle</a>
+                                        <a href="{{ path('app_memory_card_new') }}" class="dropdown-item {% if app.request.pathinfo == path('app_memory_card_new') %}active{% endif %}">MemoryCard</a>
+                                        <a href="{{ path('badge_list') }}" class="dropdown-item {% if app.request.pathinfo == path('badge_list') %}active{% endif %}">Badge</a>
                                     </div>
                                 </div>
                     
@@ -133,8 +135,10 @@
                                 <i class="fa fa-bars" style="color: #1932d2;"       ></i>
                             </a>
                             <form class="d-none d-md-flex ms-4">
-                                <input class="form-control bg-dark border-0" type="search" placeholder="Search">
+                                <input class="form-control bg-dark border-0" type="search" id="searchInput" name="search" placeholder="Search">
                             </form>
+                            
+                            
                             <div class="navbar-nav align-items-center ms-auto">
                                 <div class="nav-item dropdown">
                                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
@@ -226,7 +230,11 @@
                 
             </div>
 
+            
+
         </header>
+        
+        
         <!-- header -->    
 {% endblock %}
 
@@ -268,12 +276,18 @@
     <script src="{{asset('admin/lib/tempusdominus/js/moment.min.js')}}"></script>
     <script src="{{asset('admin/lib/tempusdominus/js/moment-timezone.min.js')}}"></script>
     <script src="{{asset('admin/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js')}}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- Template Javascript -->
     <script src="{{asset('js/backoffice/js/main.js')}}"></script>
     <!-- Back to Top -->
         <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>
+
+    
+    
+    <div id="searchResults" class="list-group position-absolute" style="top: 50px; left: 0; right: 0; background: white; z-index: 1000;"></div>
+    
 
 
 
