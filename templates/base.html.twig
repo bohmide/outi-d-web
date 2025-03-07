@@ -26,6 +26,8 @@
 
 		{% block stylesheets %}
 			<!-- Vendor CSS Files -->
+			<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet"> 
+
 			<link href="{{asset('js/frontoffice/vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
 			<link href="{{asset('js/frontoffice/vendor/bootstrap-icons/bootstrap-icons.css')}}" rel="stylesheet">
 			<link href="{{asset('js/frontoffice/vendor/aos/aos.css')}}" rel="stylesheet">
@@ -37,6 +39,7 @@
 
 			<link href="{{asset('styles/frontoffice/css/main.css')}}" rel="stylesheet">
 			<link href="{{asset('styles/frontoffice/Event_utils/Card_style.css')}}" rel="stylesheet">
+
 
 		{% endblock %}
 		{% block header %}
@@ -209,6 +212,7 @@
 				<script src="{{asset('js/frontoffice/vendor/glightbox/js/glightbox.min.js')}}"></script>
 				<script src="{{asset('js/frontoffice/vendor/purecounter/purecounter_vanilla.js')}}"></script>
 				<script src="{{asset('js/frontoffice/vendor/swiper/swiper-bundle.min.js')}}"></script>
+				<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 				<!-- Scroll Top -->
 				<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center">
@@ -223,6 +227,7 @@
 
 
 				{% block javascripts %}{% endblock %}
+            {% block importmap %}{{ importmap('app') }}{% endblock %}
 			</html>
 		</body>
 	</head>
