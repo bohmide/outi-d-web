@@ -1,0 +1,83 @@
+{% extends "base.html.twig" %}
+
+{% block title %} Ajouter une équipe {% endblock %}
+
+{% block body %}
+<div class="reservation-body">
+    <div class="reservation-container">
+        <h1 class="reservation-title">Ajouter une équipe</h1>
+        
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'EquipeForm'}}) }}
+        
+        <div class="mb-3">
+            <label class="form-label">Nom de la compétition</label>
+            <input type="text" class="form-control" value="{{ competition.nomComp }}" readonly>
+        </div>
+        <div class="mb-3">
+            {{ form_label(form.nomEquipe, 'Nom de l\'Équipe', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.nomEquipe, {'attr': {'class': 'form-control', 'placeholder': 'Entrer le nom de l\'équipe'}}) }}
+            <div class="alert-danger">
+                {{ form_errors(form.nomEquipe) }}
+            </div>
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.ambassadeur, 'Ambassadeur', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.ambassadeur, {'attr': {'class': 'form-control'}}) }}
+            <div class="alert-danger">
+                {{ form_errors(form.ambassadeur) }}
+            </div>
+        </div>
+
+        <div class="mb-3" id="membres-container">
+            {{ form_label(form.membres, 'Liste des membres (au moins 3)', {'label_attr': {'class': 'form-label fw-bold'}}) }} 
+            <div id="membres-list" data-prototype="{{ form_widget(form.membres.vars.prototype)|e('html_attr') }}">
+                {% for membre in form.membres %}
+                    <div class="membre-item">
+                        {{ form_widget(membre, {'attr': {'class': 'form-control mb-2', 'placeholder': 'E-mail du membre'}}) }}
+                        <div class="alert-danger">
+                            {{ form_errors(membre) }} {# Afficher les erreurs pour chaque membre #}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="alert-danger">
+                {{ form_errors(form.membres) }} {# Afficher les erreurs globales du champ membres #}
+            </div>
+        </div>
+
+        <button type="button" class="btn btn-secondary" onclick="ajouterMembre()">Ajouter un membre</button>
+        <button type="submit" class="btn btn-primary">creer</button>
+        
+        {{ form_end(form) }}
+    </div>
+</div>
+
+<script>
+    function ajouterMembre() {
+        const container = document.getElementById("membres-list");
+        const prototype = container.dataset.prototype;
+        const index = container.children.length;
+        const newForm = prototype.replace(/__name__/g, index);
+        const newFormElement = document.createElement("div");
+        newFormElement.classList.add("membre-item");
+        newFormElement.innerHTML = newForm;
+        container.appendChild(newFormElement);
+    }
+</script>
+
+<style>
+    .alert-danger {
+    color: #dc3545; /* Couleur rouge */
+    font-size: 0.875rem; /* Taille de police */
+    margin-top: 5px; /* Espacement */
+    padding: 5px; /* Ajouter un peu de padding */
+    border-radius: 4px; /* Bordures arrondies */
+   
+}
+
+    .membre-item .alert-danger {
+        margin-bottom: 10px; /* Espacement pour les erreurs des membres */
+    }
+</style>
+{% endblock %}

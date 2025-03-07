@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Résumé de la Compétition</title>
+    <style>
+      /* Basic reset for margins and padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body Styling */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    line-height: 1.6;
+    background-color: rgb(172, 213, 241); 
+    padding: 30px;
+    position: relative; /* Ajout pour permettre un positionnement absolu correct */
+}
+
+/* Logo Styling */
+.logo {
+    position: absolute; /* Position absolue par rapport au body */
+    top: -27; /* Collé en haut */
+    left: -10; /* Collé à gauche */
+    width: 170px; /* Taille du logo */
+    height: auto;
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.1));
+    margin: 20px; /* Marge pour éviter que le logo ne touche les bords */
+}
+
+h1 {
+    
+    margin-bottom: 20px;
+    text-align: center;
+    
+    padding-top: 90px; /* Ajout de padding pour éviter que le titre chevauche le logo */
+    }
+
+    /* Style pour "nom de la competition :" */
+ h1 .label {
+    color: #000000; /* Noir */
+    font-size: 20px;
+    font-weight: 500;
+        }
+
+        /* Style pour la valeur de competition.nomComp */
+h1 .value {
+     
+     color: #06099a; /* Bleu */
+     font-size: 32px;
+     font-weight: 600;
+        }
+/* Paragraph Styling */
+p {
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: #555;
+}
+
+/* Strong Text Styling */
+strong {
+    color: #2c3e50;
+    font-weight: bold;
+}
+
+/* Date Range Styling */
+.date-range {
+    font-size: 18px;
+    font-weight: bold;
+    color: #2980b9;
+}
+
+/* Box for Competition Info */
+.competition-info {
+    background-color: rgba(255, 255, 255, 0.678);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    padding: 20px;
+    margin: 20px 0;
+}
+
+/* Styled Links */
+a {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #1abc9c;
+}
+
+/* Footer Styling */
+.footer {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 14px;
+    color: #777;
+}
+
+/* Map and Image Styling */
+.map-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+img.map-image {
+    width: 100%;
+    max-width: 600px;
+    border-radius: 8px;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+    body {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 24px;
+        padding-top: 60px; /* Ajustement du padding pour les petits écrans */
+    }
+
+    .competition-info {
+        padding: 15px;
+    }
+
+    .date-range {
+        font-size: 16px;
+    }
+
+    .logo {
+        width: 120px; /* Réduction de la taille du logo pour les petits écrans */
+        margin: 10px; /* Réduction de la marge */
+    }
+}
+    </style>
+</head>
+
+<body>
+
+    <!-- Logo en haut à gauche -->
+    <img src="{{ logo_base64 }}" alt="Logo de la compétition" class="logo">
+    
+    <h1>
+        <span class="label">competition</span>
+        <span class="value">{{ competition.nomComp }}</span>
+    </h1>
+
+    <div class="competition-info">
+        <p class="date-range">
+            <strong>Date :</strong> Du {{ competition.dateDebut | date('d/m/Y') }} au {{ competition.dateFin | date('d/m/Y') }}
+        </p>
+        <p><strong>Description :</strong> {{ competition.description }}</p>
+        <p><strong>Organisée par :</strong> {{ competition.nomEntreprise }}</p>
+
+        {% if competition.localisation %}
+        <p><strong>Localisation :</strong> {{ competition.localisation }}</p>
+        <div class="map-container">
+            <a href="https://www.google.com/maps/place/{{ competition.localisation | replace({',': ' '}) }}?entry=ttu" target="_blank">
+                <img src="https://staticmap.openstreetmap.de/staticmap.php?center={{ competition.localisation | replace({',': ' '}) }}&zoom=13&size=600x400&markers={{ competition.localisation | replace({',': ' '}) }},red" alt="Carte de la compétition" class="map-image">
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="footer">
+        <p>© 2025 Tous droits réservés.</p>
+    </div>
+
+</body>
+
+</html>
+
+
+

@@ -4,7 +4,7 @@
 
 {% block body %}
 <div class="participation-body">
-    <div class="participation-container">
+    <div class="participation-container {% if competition.localisation %}with-map{% endif %}">
         <h1 class="participation-title">{{ competition.nomComp }}</h1>
         <p class="date"><strong>Date :</strong> Du {{ competition.dateDebut|date('d/m/Y') }} au {{ competition.dateFin|date('d/m/Y') }}</p>
         <p><strong>Description :</strong> {{ competition.description }}</p>
@@ -16,7 +16,41 @@
             <p><em>Aucun fichier disponible</em></p>
         {% endif %}
 
-        <a href="{{ path('competitionlistetudiant') }}" class="btn btn-secondary">Retour à la liste</a>
+       
+
+        <div class="form-group">
+            <label><strong>Localisation :</strong></label>
+            <div id="map" style="height: 400px;"></div>
+        </div>
+        
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                var localisation = "{{ competition.localisation }}";
+                
+                if (localisation) {
+                    var coords = localisation.split(",");
+                    var lat = parseFloat(coords[0]);
+                    var lng = parseFloat(coords[1]);
+        
+                    var map = L.map('map').setView([lat, lng], 13);
+        
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; OpenStreetMap contributors'
+                    }).addTo(map);
+        
+                    L.marker([lat, lng]).addTo(map)
+                        .bindPopup("Lieu de la compétition")
+                        .openPopup();
+                } else {
+                    document.getElementById('map').innerHTML = "<p>Aucune localisation disponible</p>";
+                }
+            });
+        </script>
+        <a href="{{ path('competition_pdf', { 'id': competition.id }) }}" class="btn btn-primary">
+            Télécharger le PDF
+        </a>
+        
+         <a href="{{ path('competitionlistetudiant') }}" class="btn btn-secondary">Retour à la liste</a>
     </div>
 </div>
 {% endblock %}

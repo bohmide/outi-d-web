@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Entity;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use App\Repository\CompetitionRepository;
 use Doctrine\DBAL\Types\Types;
@@ -15,7 +18,7 @@ class Competition
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-    
+
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Le nom de la compétition est obligatoire.")]
     #[Assert\Length(min: 3, minMessage: "Le nom de la compétition doit contenir au moins {{ limit }} caractères.")]
@@ -28,14 +31,14 @@ class Competition
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     #[Assert\NotBlank(message: "La date de début est obligatoire.")]
-   
-    
+
+
     private ?\DateTime $date_debut = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     #[Assert\NotBlank(message: "La date de fin est obligatoire.")]
-   
-    
+
+
     #[Assert\GreaterThan(propertyPath: "date_debut", message: "La date de fin doit être postérieure à la date de début.")]
     private ?\DateTime $date_fin = null;
 
@@ -45,16 +48,15 @@ class Competition
     private ?string $description = null;
 
     #[Vich\UploadableField(mapping: "quiz_media", fileNameProperty: "fichier")]
-    #[Assert\NotBlank(message: "Le fichier est obligatoire.")]
     #[Assert\File(
-        
-    maxSize: "5M",
-    mimeTypes: ["image/jpeg", "image/png", "application/pdf", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"],
-    mimeTypesMessage: "Seuls les fichiers de type JPG, PNG, PDF, Excel sont autorisés."
+        maxSize: "5M",
+        mimeTypes: ["image/jpeg", "image/png", "application/pdf", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"],
+        mimeTypesMessage: "Seuls les fichiers de type JPG, PNG, PDF, Excel sont autorisés."
     )]
     private ?File $fichierFile = null;
 
-    #[ORM\Column(length: 255)]
+   
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $fichier = null;
 
     #[ORM\ManyToOne(inversedBy: 'competition')]
@@ -62,8 +64,22 @@ class Competition
     #[Assert\NotBlank(message: "L'organisation est obligatoire.")]
     private ?Organisation $organisation = null;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $localisation = null;
+
+    /**
+     * @var Collection<int, Equipe>
+     */
+    #[ORM\ManyToMany(targetEntity: Equipe::class, mappedBy: 'competitions')]
+    private Collection $equipes;
+
+
+    public function __construct()
+    {
+        $this->equipes = new ArrayCollection();
+    }
     
-    
+
 
 
     public function getId(): ?int
@@ -164,5 +180,40 @@ class Competition
         return $this;
     }
 
-    
+    public function getLocalisation(): ?string
+    {
+        return $this->localisation;
+    }
+
+    public function setLocalisation(?string $localisation): self
+    {
+        $this->localisation = $localisation;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Equipe>
+     */
+    public function getEquipes(): Collection
+    {
+        return $this->equipes;
+    }
+
+    public function addEquipe(Equipe $equipe): static
+{
+    if (!$this->equipes->contains($equipe)) {
+        $this->equipes->add($equipe);
+        $equipe->addCompetition($this); // Synchronisation bidirectionnelle
+    }
+    return $this;
+}
+
+    public function removeEquipe(Equipe $equipe): static
+    {
+        if ($this->equipes->removeElement($equipe)) {
+            $equipe->removeCompetition($this);
+        }
+
+        return $this;
+    }
 }
