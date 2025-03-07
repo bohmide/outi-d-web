@@ -1,0 +1,145 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Paiement Sécurisé{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">Paiement</h2>
+                    
+                    <div id="payment-messages">
+                        {% for message in app.flashes('success') %}
+                            <div class="alert alert-success">{{ message }}</div>
+                        {% endfor %}
+                        {% for message in app.flashes('error') %}
+                            <div class="alert alert-danger">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <form id="payment-form" class="needs-validation" novalidate>
+                        <div class="mb-3">
+                            <label for="card-element" class="form-label">Carte de crédit</label>
+                            <div id="card-element" class="form-control p-3"></div>
+                            <div id="card-errors" class="invalid-feedback mt-2"></div>
+                        </div>
+                        
+                        <button id="submit-btn" class="btn btn-primary w-100 py-3">
+                            Payer {{ total|format_currency('USD') }}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    // Configuration Stripe
+    const stripe = Stripe('{{ stripe_key }}');
+    const elements = stripe.elements();
+    const form = document.getElementById('payment-form');
+    
+    // Style personnalisé pour la carte
+    const card = elements.create('card', {
+        style: {
+            base: {
+                color: '#32325d',
+                fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+                fontSmoothing: 'antialiased',
+                fontSize: '16px',
+                '::placeholder': {
+                    color: '#aab7c4'
+                }
+            },
+            invalid: {
+                color: '#fa755a',
+                iconColor: '#fa755a'
+            }
+        }
+    });
+
+    // Montage de l'élément de carte
+    card.mount('#card-element');
+
+    // Gestion des erreurs en temps réel
+    card.addEventListener('change', ({error}) => {
+        const errorElement = document.getElementById('card-errors');
+        errorElement.textContent = error ? error.message : '';
+        errorElement.classList.toggle('visible', !!error);
+    });
+
+    // Soumission du formulaire
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const submitBtn = document.getElementById('submit-btn');
+        const originalBtnText = submitBtn.innerHTML;
+        
+        // Désactiver le bouton pendant le traitement
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `
+            <span class="spinner-border spinner-border-sm" role="status"></span>
+            Traitement du paiement...
+        `;
+
+        try {
+            // Créer le token Stripe
+            const { token, error } = await stripe.createToken(card);
+
+            if (error) {
+                throw new Error(error.message);
+            }
+
+            // Envoyer le token au serveur
+            const response = await fetch("{{ path('app_stripe_charge') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    'stripeToken': token.id
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) throw new Error(data.error || 'Erreur inconnue');
+
+            // Redirection en cas de succès
+            if (data.success) {
+                window.location.href = data.redirect;
+            } else {
+                window.location.reload();
+            }
+
+        } catch (error) {
+            // Afficher l'erreur
+            const errorElement = document.getElementById('card-errors');
+            errorElement.textContent = error.message;
+            errorElement.classList.add('visible');
+            
+            // Réactiver le bouton
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnText;
+            
+            // Scroll vers l'erreur
+            errorElement.scrollIntoView({ behavior: 'smooth' });
+        }
+    });
+
+    // Gestion du rechargement pour les messages flash
+    {% if app.request.method == 'POST' %}
+        window.onload = () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    {% endif %}
+});
+</script>
+{% endblock %}

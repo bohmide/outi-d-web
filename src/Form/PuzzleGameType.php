@@ -24,13 +24,7 @@ class PuzzleGameType extends AbstractType
                 'label' => 'Image complète du puzzle',
                 'mapped' => false,
                 'required' => true,
-                'constraints' => [
-                    new File([
-                        'maxSize' => '2M',
-                        'mimeTypes' => ['image/jpeg', 'image/png'],
-                        'mimeTypesMessage' => 'Veuillez télécharger une image valide (JPG/PNG)',
-                    ])
-                ],
+                
             ])
             // Pièces du puzzle (upload de plusieurs pièces)
             ->add('pieces', CollectionType::class, [
@@ -40,13 +34,7 @@ class PuzzleGameType extends AbstractType
                 'entry_options' => [
                     'label' => false,
                     'required' => true,
-                    'constraints' => [
-                        new File([
-                            'maxSize' => '2M',
-                            'mimeTypes' => ['image/jpeg', 'image/png'],
-                            'mimeTypesMessage' => 'Veuillez télécharger une image valide (JPG/PNG)',
-                        ])
-                    ],
+                
                 ],
                 'allow_add' => true,
                 'by_reference' => false,  // This makes sure the collection is not bound to the entity directly

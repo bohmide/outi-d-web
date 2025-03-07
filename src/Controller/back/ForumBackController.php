@@ -11,6 +11,8 @@ use Symfony\Component\Routing\Attribute\Route;
 Use App\Repository\ForumRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Service\StabilityAIService;
 
 final class ForumBackController extends AbstractController
 {
@@ -33,6 +35,7 @@ final class ForumBackController extends AbstractController
             $em = $doctrine->getManager();
             
             $imageFile = $form->get('image_forum')->getData();
+            
             if ($imageFile) {
                 $newFilename = uniqid().'.'.$imageFile->guessExtension();
                 $imageFile->move(
@@ -52,7 +55,6 @@ final class ForumBackController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-
 
     #[Route('/showbackforum', name: 'app_showbackforum')]
     public function showforum(Request $request,ForumRepository $rep):Response
@@ -75,7 +77,7 @@ final class ForumBackController extends AbstractController
             'tabforum' => $forums,
             'currentPage' => $page,
             'totalPages' => $totalPages,
-            'query' => $query, // Pour garder la valeur de recherche dans l’input
+            'query' => $query, // Pour garder la valeur de recherche dans l'input
         ]);
     }
 
@@ -136,4 +138,44 @@ final class ForumBackController extends AbstractController
         ]);
     }
 
+    #[Route('/back/generate-image', name: 'app_back_generate_image', methods: ['POST'])]
+    public function generateImage(Request $request, StabilityAIService $aiService): JsonResponse
+    {
+        try {
+            $data = json_decode($request->getContent(), true);
+            $prompt = $data['prompt'] ?? '';
+
+            if (empty($prompt)) {
+                return $this->json(['error' => 'Le prompt est requis'], 400);
+            }
+
+            $generatedImage = $aiService->generateImage($prompt);
+            
+            if ($generatedImage) {
+                $imageData = base64_decode($generatedImage);
+                $newFilename = uniqid().'.png';
+                $uploadDir = $this->getParameter('forum_images_directory');
+                
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0777, true);
+                }
+                
+                $filePath = $uploadDir.'/'.$newFilename;
+                if (file_put_contents($filePath, $imageData) === false) {
+                    throw new \Exception('Impossible d\'enregistrer l\'image générée');
+                }
+                
+                return $this->json([
+                    'success' => true, 
+                    'filename' => $newFilename,
+                    'imageUrl' => '/uploads/forums/'.$newFilename
+                ]);
+            }
+
+            return $this->json(['error' => 'La génération d\'image a échoué'], 500);
+        } catch (\Exception $e) {
+            error_log('Erreur lors de la génération d\'image: ' . $e->getMessage());
+            return $this->json(['error' => 'Une erreur est survenue: ' . $e->getMessage()], 500);
+        }
+    }
 }

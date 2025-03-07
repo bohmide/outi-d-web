@@ -21,6 +21,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
         {% block stylesheets %}
           <!-- Libraries Stylesheet -->
+          <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
           <link href="{{asset('babylib/lib/animate/animate.min.css')}}" rel="stylesheet">
           <link href="{{asset('babylib/lib/lightbox/css/lightbox.min.css')}}" rel="stylesheet">
           <link href="{{asset('babylib/lib/owlcarousel/assets/owl.carousel.min.css')}}" rel="stylesheet">
@@ -53,17 +54,38 @@
         </div>
         <div class="container px-0">
             <nav class="navbar navbar-light navbar-expand-xl py-3">
-                <a href="index.html" class="logo d-flex align-items-center me-auto">
+                <a href="{{path('use')}}" class="logo d-flex align-items-center me-auto">
                     <img src="{{asset('img/logo_kids.png')}}" width="120" height="auto">
                 </a>                <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                     <span class="fa fa-bars text-primary"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <div class="navbar-nav mx-auto">
-                        <a href="{{path('main_kids')}}" class="nav-item nav-link {% if app.request.pathinfo == path('main_kids') %}active{% endif %}">Home</a>
-                        <a href="{{path('select_quizKids')}}" class="nav-item nav-link {% if app.request.pathinfo == path('select_quizKids') %}active{% endif %}">QuizKids</a>
-                        <a href="{{path('main_kids')}}" class="nav-item nav-link">Games</a>
-                        <a href="{{path('main_kids')}}" class="nav-item nav-link">Challenge</a>
+                        <a href="{{path('main_kids')}}" class="nav-item nav-link {% if app.request.pathinfo == path('main_kids') %}active{% endif %}"> <i class="fa fa-home me-2"></i> Home</a>
+                        <a href="{{path('select_quizKids')}}" class="nav-item nav-link {% if app.request.pathinfo == path('select_quizKids') %}active{% endif %}"> <i class="fa fa-pencil-alt me-2"></i>QuizKids</a>
+                       
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle {% if app.request.pathinfo starts with path('app_map') or app.request.pathinfo starts with path('app_map') or app.request.pathinfo starts with path('app_map') %}active{% endif %}" data-bs-toggle="dropdown">
+                                <i class="fa fa-dice me-2"></i>Games
+                            </a>
+                            <div class="dropdown-menu bg-transparent border-0">
+                                <a href="{{ path('puzzle_front') }}" class="dropdown-item {% if app.request.pathinfo == path('app_map') %}active{% endif %}"><i class="fa fa-puzzle-piece me-2"></i>Puzzle Game</a>
+                                <a href="{{ path('app_memory_card_choose') }}" class="dropdown-item {% if app.request.pathinfo == path('app_memory_card_choose') %}active{% endif %}"><i class="fa fa-clone me-2"></i>Memory Card Game</a>
+
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle {% if app.request.pathinfo starts with path('app_map') or app.request.pathinfo starts with path('app_map') or app.request.pathinfo starts with path('app_map') %}active{% endif %}" data-bs-toggle="dropdown">
+                                <i class="fa fa-trophy me-2"></i> Challenge
+                            </a>
+                            <div class="dropdown-menu bg-transparent border-0">
+                                <a href="{{ path('app_map') }}" class="dropdown-item {% if app.request.pathinfo == path('app_map') %}active{% endif %}"><i class="fa fa-map me-2"></i>GlobeTrotter Junior</a>
+                                
+                            </div>
+                        </div>
+                        
                         
                         <!-- <a href="program.html" class="nav-item nav-link">Programs</a>
                         <a href="event.html" class="nav-item nav-link">Events</a>
@@ -223,6 +245,7 @@
     <script src="{{asset('babylib/lib/waypoints/waypoints.min.js')}}"></script>
     <script src="{{asset('babylib/lib/lightbox/js/lightbox.min.js')}}"></script>
     <script src="{{asset('babylib/lib/owlcarousel/owl.carousel.min.js')}}"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <!-- Template Javascript -->
     <script src="{{asset('js/frontofficeKids/js/main.js')}}"></script>

@@ -8,6 +8,7 @@ use App\Entity\Sponsors;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -51,6 +52,16 @@ class EvenementsType extends AbstractType
                 'class' => Sponsors::class,
                 'choice_label' => 'nom_sponsor',
                 'multiple' => true,
+            ])
+            ->add('prix', NumberType::class, [
+                'required' => false,
+                'scale' => 2,
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => 'Entrez le prix',
+                    'step' => '0.01',
+                    'min' => '0',
+                ]
             ])
             ->add('image_file', FileType::class, [
                 'label' => 'Upload Image',
